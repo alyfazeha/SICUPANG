@@ -5,16 +5,8 @@ yang bisa diganti sesuai kebutuhan.
 """
 
 from fastapi import FastAPI
-from pydantic import BaseModel
+from app.routes import food_recommendation
 
-app = FastAPI()
+app = FastAPI(title="Emolog API")
 
-class Input(BaseModel):
-    anggota_keluarga: int
-    penghasilan: float
-    pengeluaran: float
-
-
-@app.post("/rekomendasi")
-def rekomendasi(data: Input):
-    return {"rekomendasi": data.penghasilan - data.pengeluaran}
+app.include_router(food_recommendation.router, prefix="/api")
