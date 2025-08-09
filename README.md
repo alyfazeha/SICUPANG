@@ -54,6 +54,7 @@ cd python
 python -m venv venv
 venv\Scripts\activate
 pip install -r requirements.txt
+uvicorn main:app --reload --port 8080
 ```
 
 ### 4️⃣ Jalankan Aplikasi
