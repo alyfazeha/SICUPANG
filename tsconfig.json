@@ -1,0 +1,14 @@
+{
+  "compilerOptions": {
+    "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": true,
+    "module": "ESNext",
+    "moduleResolution": "node",
+    "outDir": "./resources/js",
+    "rootDir": "./resources/ts",
+    "skipLibCheck": true,
+    "strict": true,
+    "target": "ES2016",
+  },
+  "include": ["./resources/ts/**/*.ts"],
+}
