@@ -1,4 +1,5 @@
 import { Metadata } from "next";
+import Sidebar from "@/components/shared/sidebar";
 
 export const metadata: Metadata = {
   title: "Dasbor | SICUPANG",
@@ -13,6 +14,10 @@ export const metadata: Metadata = {
   },
 };
 
-export default function DasborAdmin() {
-  return <main></main>;
+export default function DasborMasyarakat() {
+  return (
+    <>
+      <Sidebar type="MASYARAKAT" />
+    </>
+  );
 }

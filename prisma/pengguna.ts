@@ -1,10 +1,36 @@
-async function seed() {}
+import { hashSync } from "bcryptjs";
+import { Prisma } from "@/lib/prisma";
+
+async function seed() {
+  await Prisma.pengguna.deleteMany();
+  await Prisma.pengguna.createMany({
+    data: [
+      {
+        id_pengguna: 1,
+        nama_lengkap: "Administrator",
+        surel: "admin@sicupang.com",
+        kata_sandi: hashSync("admin123", 10),
+        peran: "ADMIN",
+        created_at: new Date(),
+        updated_at: new Date(),
+      },
+      {
+        id_pengguna: 2,
+        nama_lengkap: "Masyarakat",
+        surel: "masyarakat@sicupang.com",
+        kata_sandi: hashSync("masyarakat123", 10),
+        peran: "MASYARAKAT",
+        created_at: new Date(),
+        updated_at: new Date(),
+      },
+    ],
+  });
+}
 
 seed()
+  .then(() => console.log("✅ Seed data pengguna selesai."))
   .catch((err: unknown) => {
-    console.error(process.env.NODE_ENV !== "production" && `Terjadi kesalahan saat mengisi data pengguna: ${err}`);
+    console.error(`❌ Terjadi kesalahan saat mengisi data pengguna: ${err}`);
     process.exit(1);
   })
-  .finally(async () => {
-    // await Prisma.$disconnect();
-  });
+  .finally(async () => await Prisma.$disconnect());

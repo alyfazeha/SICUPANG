@@ -10,15 +10,10 @@ export const metadata: Metadata = {
   openGraph: {
     title: "Masuk | SICUPANG",
     description: "",
-    images: "/images/polinema.jpg",
-    siteName: "SICUPANG",
   },
   twitter: {
     title: "Masuk | SICUPANG",
     description: "",
-    card: "summary_large_image",
-    site: "https://sicupang.vercel.app",
-    images: "/images/polinema.jpg",
   },
 };
 
@@ -39,6 +34,7 @@ export default function Masuk() {
               src="/images/joyful-farmer-in-lush-bengkulu-rice-fields.jpeg"
               alt="Ilustrasi 1"
               className="absolute bottom-60 left-8 z-10 h-70 w-70 rotate-[-8deg] rounded-2xl border-4 border-white object-cover shadow-xl"
+              priority={true}
             />
             <Image
               height={1920}
@@ -46,6 +42,7 @@ export default function Masuk() {
               src="/images/traditional-market-selling-various-types-of-fruits-and-vegetables.jpg"
               alt="Ilustrasi 2"
               className="absolute left-20 z-20 h-70 w-70 rotate-6 rounded-2xl border-4 border-white object-cover shadow-xl"
+              loading="lazy"
             />
             <Image
               height={1920}
@@ -53,6 +50,7 @@ export default function Masuk() {
               src="/images/prabowo-subianto-visiting-ricefield.jpeg"
               alt="Ilustrasi 3"
               className="absolute top-50 left-12 z-30 h-70 w-70 rotate-2 rounded-2xl border-4 border-white object-cover shadow-xl"
+              loading="lazy"
             />
           </figure>
         </aside>

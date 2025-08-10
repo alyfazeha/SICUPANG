@@ -11,7 +11,7 @@ datasource db {
 model pengguna {
   id_pengguna    Int      @id @default(autoincrement())
   nama_lengkap   String
-  email          String   @unique
+  surel          String   @unique
   kata_sandi     String
   peran          Peran
   remember_token String?  @unique
@@ -27,9 +27,10 @@ model admin {
   id_pengguna Int      @unique
   nip         String   @unique
   jabatan     String
-  pengguna    pengguna @relation(fields: [id_pengguna], references: [id_pengguna])
   created_at  DateTime @default(now())
   updated_at  DateTime @updatedAt
+
+  pengguna    pengguna @relation(fields: [id_pengguna], references: [id_pengguna])
 }
 
 model masyarakat {

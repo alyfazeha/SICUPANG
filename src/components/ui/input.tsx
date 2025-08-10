@@ -4,7 +4,7 @@ import { useState, ChangeEvent, WheelEvent } from "react";
 import type { Input } from "@/types/components";
 import { Eye, EyeOff } from "lucide-react";
 
-export default function Input({ icon, label, name, onChange, placeholder, required, type, variant, info = null, value = undefined }: Input) {
+export default function Input({ icon, label, name, onChange, placeholder, required, type, variant, errors = {}, info = null, value = undefined }: Input) {
   const [showPassword, setShowPassword] = useState(false);
 
   const handleInput = (e: ChangeEvent<HTMLInputElement>) => {
@@ -13,7 +13,8 @@ export default function Input({ icon, label, name, onChange, placeholder, requir
     if (type === "number") newValue = newValue.replace(/[^0-9.,]/g, "").replace(/(,.*?),/g, "$1");
     else if (type === "text") newValue = newValue.replace(/[^a-zA-Z0-9\s.,?!:;'"\-()\/]/g, "");
 
-    onChange(newValue);
+    e.target.value = newValue;
+    onChange(e);
   };
 
   const handleWheel = (e: WheelEvent<HTMLInputElement>) => {
@@ -66,6 +67,25 @@ export default function Input({ icon, label, name, onChange, placeholder, requir
           </span>
         )}
       </div>
+      {errors && Object.values(errors).map((err, idx) => {
+        if (!err) return null;
+        switch (err.type) {
+          case "required":
+            return <h5 key={idx} className="text-red-500 text-sm">Kolom ini wajib diisi.</h5>;
+          case "min":
+            return <h5 key={idx} className="text-red-500 text-sm">Nilai tidak boleh kurang dari {err.min}.</h5>;
+          case "max":
+            return <h5 key={idx} className="text-red-500 text-sm">Nilai tidak boleh lebih dari {err.max}.</h5>;
+          case "minlength":
+            return <h5 key={idx} className="text-red-500 text-sm">Minimal {err.requiredLength} karakter.</h5>;
+          case "maxlength":
+            return <h5 key={idx} className="text-red-500 text-sm">Maksimal {err.requiredLength} karakter.</h5>;
+          case "custom":
+            return <h5 key={idx} className="text-red-500 text-sm">{err.message}</h5>;
+          default:
+            return null;
+        }
+      })}
     </fieldset>
   );
 }

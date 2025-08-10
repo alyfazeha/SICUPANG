@@ -23,3 +23,4 @@ next-env.d.ts
 /src/generated/prisma
 __pycache__
 venv
+prisma/migrations

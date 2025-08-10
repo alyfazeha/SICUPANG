@@ -1,18 +1,18 @@
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Dasbor | SICUPANG",
+  title: "Kontak | SICUPANG",
   description: "",
   openGraph: {
-    title: "Dasbor | SICUPANG",
+    title: "Kontak | SICUPANG",
     description: "",
   },
   twitter: {
-    title: "Dasbor | SICUPANG",
+    title: "Kontak | SICUPANG",
     description: "",
   },
 };
 
-export default function DasborAdmin() {
+export default function Kontak() {
   return <main></main>;
 }

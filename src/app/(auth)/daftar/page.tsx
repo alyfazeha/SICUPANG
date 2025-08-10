@@ -10,15 +10,10 @@ export const metadata: Metadata = {
   openGraph: {
     title: "Daftar | SICUPANG",
     description: "",
-    images: "/images/polinema.jpg",
-    siteName: "SICUPANG",
   },
   twitter: {
     title: "Daftar | SICUPANG",
     description: "",
-    card: "summary_large_image",
-    site: "https://sicupang.vercel.app",
-    images: "/images/polinema.jpg",
   },
 };
 

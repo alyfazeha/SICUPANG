@@ -1,15 +1,10 @@
-export type Roles = "ADMIN" | "MASYARAKAT";
+type Roles = "ADMIN" | "MASYARAKAT";
 
 interface Auth {
-  id_pengguna: string;
+  id_pengguna: number;
   surel: string;
   kata_sandi: string;
   peran: Roles;
 }
 
-interface Token {
-  access_token: string;
-  refresh_token: string;
-}
-
-export { Auth, Token };
+export { Auth, Roles };

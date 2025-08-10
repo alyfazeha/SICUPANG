@@ -10,8 +10,15 @@ const fonts = Plus_Jakarta_Sans({
 export const metadata: Metadata = {
   icons: "/images/polinema.jpg",
   metadataBase: new URL("https://sicupang.vercel.app/"),
-  openGraph: { images: "/images/polinema.jpg" },
-  twitter: { images: "/images/polinema.jpg" },
+  openGraph: {
+    images: "/images/polinema.jpg",
+    siteName: "SICUPANG",
+  },
+  twitter: {
+    images: "/images/polinema.jpg",
+    card: "summary_large_image",
+    site: "https://sicupang.vercel.app",
+  },
 };
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {

@@ -6,7 +6,7 @@ from dotenv import load_dotenv
 from langchain_google_genai import ChatGoogleGenerativeAI
 from langchain.prompts import PromptTemplate
 from polars import DataFrame
-from typing import Optional, TypedDict, Dict, List
+from typing import Dict, Optional, List, TypedDict
 
 load_dotenv()
 

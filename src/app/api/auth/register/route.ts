@@ -1,7 +1,7 @@
 import { NextRequest } from "next/server";
 import { Auth } from "@/types/auth";
 
-export default async function POST(request: NextRequest) {
+export async function POST(request: NextRequest) {
   try {
     const { nama_lengkap, surel, kata_sandi }: Auth = request.body;
 
@@ -11,7 +11,7 @@ export default async function POST(request: NextRequest) {
 
     return new Response(JSON.stringify({ message: "Akun Anda berhasil dibuat." }), { status: 201 });
   } catch (err: unknown) {
-    console.error(`Terjadi kesalahan saat masuk ke akun Anda: ${err}`);
+    console.error(`Terjadi kesalahan saat mendaftarkan akun Anda: ${err}`);
     throw err;
   }
 }
