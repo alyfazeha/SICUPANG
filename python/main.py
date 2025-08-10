@@ -1,12 +1,13 @@
-
 """
 Ini merupakan endpoint dari aplikasi SICUPANG, dan masih berupa contoh kode
 yang bisa diganti sesuai kebutuhan.
 """
 
 from fastapi import FastAPI
-from app.routes import food_recommendation
+from fastapi.routing import APIRouter
+from routes.food_recommendation import router
 
 app = FastAPI(title="Emolog API")
 
-app.include_router(food_recommendation.router, prefix="/api")
+assert isinstance(router, APIRouter)
+app.include_router(router, prefix="/api")

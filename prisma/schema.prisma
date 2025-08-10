@@ -1,0 +1,65 @@
+generator client {
+  provider = "prisma-client-js"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model pengguna {
+  id_pengguna    Int      @id @default(autoincrement())
+  nama_lengkap   String
+  email          String   @unique
+  kata_sandi     String
+  peran          Peran
+  remember_token String?  @unique
+  created_at     DateTime @default(now())
+  updated_at     DateTime @updatedAt
+
+  admin      admin?
+  masyarakat masyarakat?
+}
+
+model admin {
+  id_admin    Int      @id @default(autoincrement())
+  id_pengguna Int      @unique
+  nip         String   @unique
+  jabatan     String
+  pengguna    pengguna @relation(fields: [id_pengguna], references: [id_pengguna])
+  created_at  DateTime @default(now())
+  updated_at  DateTime @updatedAt
+}
+
+model masyarakat {
+  id_masyarakat Int      @id @default(autoincrement())
+  id_pengguna   Int      @unique
+  id_desa       Int
+  nik           String   @unique
+  alamat        String
+  nomor_telepon String
+  pengguna      pengguna @relation(fields: [id_pengguna], references: [id_pengguna])
+  desa          desa     @relation(fields: [id_desa], references: [id_desa])
+}
+
+model kecamatan {
+  id_kecamatan Int    @id @default(autoincrement())
+  nama         String
+  kode         String @unique
+  desa         desa[]
+}
+
+model desa {
+  id_desa      Int          @id @default(autoincrement())
+  id_kecamatan Int
+  nama         String
+  kode         String       @unique
+  kecamatan    kecamatan    @relation(fields: [id_kecamatan], references: [id_kecamatan])
+  masyarakat   masyarakat[]
+}
+
+enum Peran {
+  ADMIN
+  MASYARAKAT
+}
