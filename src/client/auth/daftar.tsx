@@ -35,7 +35,7 @@ export default function Masuk() {
         cerdas dan dukungan masyarakat.
       </p>
       {info && <h5 className={`mb-6 rounded-lg p-4 text-center`}>{info}</h5>}
-      <form action="/api/masuk" method="POST" className="flex flex-col space-y-6">
+      <form action="/api/auth/register" method="POST" className="flex flex-col space-y-6">
         <Input
           icon={<Mail className="h-4 w-4" />}
           label="Nama Lengkap"

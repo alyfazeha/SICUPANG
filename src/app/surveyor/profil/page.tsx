@@ -1,4 +1,4 @@
-import { Metadata } from "next";
+import type { Metadata } from "next";
 
 export const metadata: Metadata = {
   title: "Profil | SICUPANG",
@@ -13,6 +13,6 @@ export const metadata: Metadata = {
   },
 };
 
-export default function ProfilMasyarakat() {
+export default function ProfilSurveyor() {
   return <main></main>;
 }

@@ -1,9 +1,10 @@
 "use client";
 
+import axios, { type AxiosError } from "axios";
 import { Lock, Mail } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { type ChangeEvent, type FormEvent, useState } from "react";
-import { ADMIN_DASHBOARD, CITIZEN_DASHBOARD } from "@/constants/routes";
+import { ADMIN_DASHBOARD, SURVEYOR_DASHBOARD } from "@/constants/routes";
 import type { Auth } from "@/types/auth";
 import type { ValidationErrors } from "@/types/components";
 import Link from "next/link";
@@ -36,26 +37,24 @@ export default function Masuk() {
     }
 
     try {
-      const res = await fetch("/api/auth/login", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(form),
-      });
-
-      const data = (await res.json()) as { data: Auth };
-
-      if (!res.ok) {
-        setAlert("error");
-        setInfo("Gagal masuk ke akun Anda.");
-        return;
-      }
+      const response = (await axios.post<{ data: Auth }>("/api/auth/login", form)).data;
 
       setAlert("success");
       setInfo("Berhasil masuk ke akun Anda.");
-      setTimeout(() => router.push(data.data.peran === "ADMIN" ? ADMIN_DASHBOARD : CITIZEN_DASHBOARD), 800);
-    } catch {
+      setTimeout(() => {
+        setInfo("");
+        router.push(response.data.peran === "ADMIN" ? ADMIN_DASHBOARD : SURVEYOR_DASHBOARD);
+      }, 1200);
+    } catch (err) {
       setAlert("error");
-      setInfo("Terjadi kesalahan pada server, silakan coba lagi.");
+      
+      if ((err as AxiosError).response?.status === 401) {
+        setInfo("Email atau kata sandi salah.");
+      } else {
+        setInfo("Terjadi kesalahan pada server, silakan coba lagi.");
+      }
+
+      setTimeout(() => setInfo(""), 2000);
     } finally {
       setLoading(false);
     }

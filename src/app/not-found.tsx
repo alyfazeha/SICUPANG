@@ -1,4 +1,4 @@
-import { Metadata } from "next";
+import type { Metadata } from "next";
 import Page from "@/client/errors/not-found";
 
 export const metadata: Metadata = {

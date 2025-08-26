@@ -1,4 +1,4 @@
-import type { ChangeEvent, ReactNode } from "react";
+import type { ChangeEvent, ReactElement, ReactNode } from "react";
 import type { Roles } from "@/types/auth";
 
 type InputType = "text" | "date" | "email" | "file" | "password" | "number";
@@ -28,20 +28,17 @@ type Input = {
   variant: InputVariant;
 };
 
-export type SidebarConfig = {
-  email: string;
-  initial: string;
-  name: string;
-  type: Roles;
-};
-
-type SidebarMenuItem = {
-  action?: () => void;
-  id: string;
-  icon: ReactNode;
+type SidebarMenu = {
+  href?: string;
+  icon: ReactElement;
   label: string;
-  link?: string;
-  subMenu?: SidebarMenuItem[];
+  subMenu?: SidebarMenu[];
 };
 
-export { Input, SidebarConfig, SidebarMenuItem, ValidationErrors };
+type Sidebar = SidebarMenu & {
+  isOpen: boolean;
+  role: Roles;
+  onClose: () => void;
+};
+
+export { Input, Sidebar, SidebarMenu, ValidationErrors };

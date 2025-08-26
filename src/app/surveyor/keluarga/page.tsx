@@ -1,20 +1,18 @@
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Beranda | SICUPANG",
+  title: "Keluarga | SICUPANG",
   description: "",
   openGraph: {
-    title: "Beranda | SICUPANG",
+    title: "Keluarga | SICUPANG",
     description: "",
   },
   twitter: {
-    title: "Beranda | SICUPANG",
+    title: "Keluarga | SICUPANG",
     description: "",
   },
-}
+};
 
-export default function Beranda() {
-  return (
-    <main></main>
-  );
+export default function Keluarga() {
+  return null;
 }

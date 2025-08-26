@@ -11,11 +11,11 @@ Tujuan utama sistem ini adalah:
 
 - Memberikan **rekomendasi pangan** yang tepat berdasarkan **pendapatan** dan **pengeluaran** keluarga.
 - Membantu pemerintah, khususnya program Presiden **Prabowo Subianto**, dalam mewujudkan **swasembada pangan**.
-- Memantau dan menganalisis pola konsumsi pangan masyarakat secara berkelanjutan.
+- Memantau dan menganalisis pola konsumsi pangan surveyor secara berkelanjutan.
 
 Sistem terdiri dari dua komponen utama:
 
-1. **Laravel** → Menangani antarmuka pengguna, manajemen data, dan fitur admin/masyarakat.
+1. **Laravel** → Menangani antarmuka pengguna, manajemen data, dan fitur admin/surveyor.
 2. **FastAPI** → Menyediakan layanan AI untuk rekomendasi pangan berbasis data dan algoritma cerdas.
 
 ## 🛠️ Teknologi yang Digunakan

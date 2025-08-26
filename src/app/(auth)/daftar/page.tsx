@@ -1,5 +1,5 @@
 import { ArrowLeft } from "lucide-react";
-import { Metadata } from "next";
+import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import Form from "@/client/auth/daftar";

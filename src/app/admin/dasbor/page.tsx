@@ -1,4 +1,5 @@
-import { Metadata } from "next";
+import type { Metadata } from "next";
+import Page from "@/client/admin/dasbor";
 
 export const metadata: Metadata = {
   title: "Dasbor | SICUPANG",
@@ -14,5 +15,9 @@ export const metadata: Metadata = {
 };
 
 export default function DasborAdmin() {
-  return <main></main>;
+  return (
+    <>
+      <Page />
+    </>
+  );
 }

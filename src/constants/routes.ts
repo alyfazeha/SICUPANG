@@ -1,29 +1,32 @@
-/**
- * @description Daftar halaman autentikasi.
- * @type string[]
- */
-export const AUTH_PAGES: string[] = ["/masuk", "/daftar", "/lupa-kata-sandi"];
+/* =======================
+   AUTHENTICATION ROUTES
+   ======================= */
+export const AUTH_PAGES: string[] = ["/masuk", "/daftar", "/lupa-kata-sandi", "/reset-kata-sandi", "/admin", "/surveyor"];
 
-/**
- * @description Halaman dasbor admin.
- * @type string
- */
-export const ADMIN_DASHBOARD: string = "/admin/dasbor";
+/* =======================
+   ADMIN ROUTES
+   ======================= */
+export const ADMIN_DASHBOARD = "/admin/dasbor";
+export const ADMIN_PROFILE = "/admin/profil";
+export const ADMIN_SUBDISTRICT_DATA = "/admin/data-kecamatan";
+export const ADMIN_MANAGE_SURVEYORS = "/admin/kelola-surveyor";
+export const ADMIN_ADD_SURVEYORS = "/admin/kelola-surveyor/tambah";
+export const ADMIN_FOOD_RECORD = "/admin/rekap-pangan";
+export const ADMIN_PPH_RECORD = "/admin/rekap-pph";
+export const ADMIN_DATA_VERIFICATION = "/admin/verifikasi-data";
 
-/**
- * @description Halaman profil admin.
- * @type string
- */
-export const ADMIN_PROFILE: string = "/admin/profil";
+/* =======================
+   SURVEYOR ROUTES
+   ======================= */
+export const SURVEYOR_DASHBOARD = "/surveyor/dasbor";
+export const SURVEYOR_PROFILE = "/surveyor/profil";
+export const SURVEYOR_FAMILY = "/surveyor/keluarga";
+export const SURVEYOR_ADD_DATA_FAMILY = "/surveyor/keluarga/tambah-data";
 
-/**
- * @description Halaman dasbor masyarakat.
- * @type string
- */
-export const CITIZEN_DASHBOARD: string = "/masyarakat/dasbor";
-
-/**
- * @description Halaman profil masyarakat.
- * @type string
- */
-export const CITIZEN_PROFILE: string = "/masyarakat/profil";
+/* =======================
+   AUTH ROUTES
+   ======================= */
+export const REGISTER = "/daftar";
+export const FORGOT_PASSWORD = "/lupa-kata-sandi";
+export const RESET_PASSWORD = "/reset-kata-sandi";
+export const LOGIN = "/masuk";
