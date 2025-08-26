@@ -19,7 +19,6 @@ model pengguna {
   updated_at     DateTime @updatedAt
 
   admin      admin?
-  masyarakat masyarakat?
 }
 
 model admin {
@@ -33,34 +32,179 @@ model admin {
   pengguna    pengguna @relation(fields: [id_pengguna], references: [id_pengguna])
 }
 
-model masyarakat {
-  id_masyarakat Int      @id @default(autoincrement())
-  id_pengguna   Int      @unique
-  id_desa       Int
-  nik           String   @unique
-  alamat        String
-  nomor_telepon String
-  pengguna      pengguna @relation(fields: [id_pengguna], references: [id_pengguna])
-  desa          desa     @relation(fields: [id_desa], references: [id_desa])
-}
-
 model kecamatan {
-  id_kecamatan Int    @id @default(autoincrement())
-  nama         String
-  kode         String @unique
-  desa         desa[]
+  id_kecamatan   Int           @id @unique(map: "id_kecamatan_unique") @default(autoincrement())
+  kode_wilayah   String        @db.VarChar(255)
+  nama_kecamatan String        @db.VarChar(255)
+  kader          kader[]
+  stok_pangan    stok_pangan[]
+  desa           desa[]
 }
 
 model desa {
-  id_desa      Int          @id @default(autoincrement())
+  id_desa      Int    @id @unique(map: "id_desa") @default(autoincrement())
+  kode_wilayah String @db.VarChar(255)
+  nama_desa    String @db.VarChar(255)
   id_kecamatan Int
-  nama         String
-  kode         String       @unique
-  kecamatan    kecamatan    @relation(fields: [id_kecamatan], references: [id_kecamatan])
-  masyarakat   masyarakat[]
+
+  kecamatan    kecamatan   @relation(fields: [id_kecamatan], references: [id_kecamatan])
+
+  @@index([id_kecamatan], map: "idx_desa_id_kecamatan")
+}
+
+model kader {
+  id_kader     Int       @id @unique(map: "id_kader_unique") @default(autoincrement())
+  nip          String    @db.VarChar(20)
+  nama         String    @db.VarChar(255)
+  id_kecamatan Int
+  contact_info String?   @db.VarChar(255)
+  kecamatan    kecamatan @relation(fields: [id_kecamatan], references: [id_kecamatan], onDelete: NoAction, onUpdate: NoAction, map: "fk_kader_kecamatan1")
+
+  @@index([id_kecamatan], map: "idx_kader_id_kecamatan")
+}
+
+model keluarga {
+  id_keluarga          Int             @id @unique(map: "id_keluarga_unique") @default(autoincrement())
+  no_kk                Int?
+  nama_kepala_keluarga String          @db.VarChar(255)
+  jumlah_keluarga      Int
+  alamat               String          @db.VarChar(255)
+  kode_pos             String?         @db.VarChar(5)
+  is_hamil             String          @default("Tidak") @db.VarChar(255)
+  is_menyusui          String          @default("Tidak") @db.VarChar(255)
+  is_balita            String          @default("Tidak") @db.VarChar(255)
+  gambar               String          @db.LongText
+  id_kecamatan         Int
+  id_desa              Int
+  id_kader             Int
+  rentang_pendapatan   Int?
+  rentang_pengeluaran  Int?
+  status               keluarga_status @default(MENUNGGU)
+  komentar             String?         @db.VarChar(200)
+  created_date         DateTime        @default(now()) @db.DateTime(0)
+
+  @@index([id_desa], map: "idx_keluarga_id_desa")
+  @@index([id_kader], map: "idx_keluarga_id_kader")
+  @@index([id_kecamatan], map: "idx_keluarga_id_kecamatan")
+  @@index([rentang_pendapatan], map: "idx_keluarga_rentang_pendapatan")
+  @@index([rentang_pengeluaran], map: "idx_keluarga_rentang_pengeluaran")
+}
+
+model takaran {
+  id_takaran   Int      @id @default(autoincrement())
+  nama_takaran String
+  created_at   DateTime @default(now())
+  updated_at   DateTime @updatedAt
+  pangan       pangan[]
+}
+
+model jenis_pangan {
+  id_jenis_pangan Int      @id @default(autoincrement())
+  nama_jenis      String
+  parent          Int?
+  bobot_jenis     Float
+  skor_maks_jenis Float
+  pangan          pangan[]
+}
+
+model pangan {
+  id_pangan            Int            @id @default(autoincrement())
+  nama_pangan          String
+  gram                 Float
+  kalori               Float
+  lemak                Float
+  karbohidrat          Float
+  protein              Float
+  id_jenis_pangan      Int
+  id_takaran           Int
+  referensi_urt        String
+  referensi_gram_berat Float
+  batas_aman_stok      Decimal?       @db.Decimal(14, 3)
+  harga_pangan         harga_pangan[]
+  jenis_pangan         jenis_pangan   @relation(fields: [id_jenis_pangan], references: [id_jenis_pangan])
+  takaran              takaran        @relation(fields: [id_takaran], references: [id_takaran])
+  stok_pangan          stok_pangan[]
+
+  @@index([id_jenis_pangan], map: "idx_pangan_id_jenis_pangan")
+  @@index([id_takaran], map: "idx_pangan_id_takaran")
+}
+
+model rentang_uang {
+  id_rentang_uang Int    @id @default(autoincrement())
+  batas_bawah     String @db.VarChar(16)
+  batas_atas      String @db.VarChar(16)
+}
+
+model harga_pangan {
+  id_harga     Int      @id @default(autoincrement())
+  id_pangan    Int
+  tanggal      DateTime @default(now())
+  harga_satuan Decimal  @db.Decimal(12, 2)
+  pangan       pangan   @relation(fields: [id_pangan], references: [id_pangan])
+
+  @@unique([id_pangan, tanggal], map: "uq_harga_pangan_id_pangan_tanggal")
+  @@index([tanggal], map: "idx_harga_pangan_tanggal")
+}
+
+model stok_pangan {
+  id_stok      Int       @id @default(autoincrement())
+  id_pangan    Int
+  id_kecamatan Int
+  tanggal      DateTime  @db.Date
+  jumlah       Decimal   @db.Decimal(14, 3)
+  kecamatan    kecamatan @relation(fields: [id_kecamatan], references: [id_kecamatan], map: "fk_stok_pangan_kecamatan")
+  pangan       pangan    @relation(fields: [id_pangan], references: [id_pangan], map: "fk_stok_pangan_pangan")
+
+  @@unique([id_pangan, id_kecamatan, tanggal], map: "uq_stok_pangan_id_pangan_id_kecamatan_tanggal")
+  @@index([id_kecamatan], map: "idx_stok_pangan_id_kecamatan")
+  @@index([tanggal], map: "idx_stok_pangan_tanggal")
+}
+
+/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
+model migrations {
+  id        Int    @db.UnsignedInt
+  migration String @db.VarChar(255)
+  batch     Int
+
+  @@ignore
+}
+
+/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
+model pangan_keluarga {
+  id_pangan_keluarga Int
+  id_pangan          Int
+  id_keluarga        Int
+  urt                Decimal @db.Decimal(8, 2)
+
+  @@ignore
+}
+
+/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
+model cache {
+  key        String @db.VarChar(255)
+  value      String @db.MediumText
+  expiration Int
+
+  @@ignore
+}
+
+/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
+model cache_locks {
+  key        String @db.VarChar(255)
+  owner      String @db.VarChar(255)
+  expiration Int
+
+  @@ignore
 }
 
 enum Peran {
   ADMIN
-  MASYARAKAT
+  KADER
+  SURVEYOR
+}
+
+enum keluarga_status {
+  MENUNGGU
+  DITERIMA
+  DITOLAK
 }
