@@ -41,4 +41,10 @@ type Sidebar = SidebarMenu & {
   onClose: () => void;
 };
 
-export { Input, Sidebar, SidebarMenu, ValidationErrors };
+type Table = {
+  headers: string[];
+  rows: (string | number)[][];
+  sortable: string[];
+};
+
+export { Input, Sidebar, SidebarMenu, Table, ValidationErrors };

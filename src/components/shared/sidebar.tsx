@@ -2,7 +2,7 @@
 
 import { ChevronDown, ChevronUp } from "lucide-react";
 import { usePathname } from "next/navigation";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { SidebarMenus } from "@/constants/sidebar";
 import type { Sidebar } from "@/types/components";
 import Link from "next/link";
@@ -10,20 +10,17 @@ import Image from "next/image";
 
 export default function Sidebar({ isOpen, role }: Pick<Sidebar, "isOpen" | "role">) {
   const pathname = usePathname();
-  const [visible, setVisible] = useState(false);
   const [openSubMenuId, setOpenSubMenuId] = useState<string | null>(null);
   const handleSubMenuToggle = (label: string) => setOpenSubMenuId(openSubMenuId === label ? null : label);
 
-  useEffect(() => setVisible(isOpen), [isOpen]);
-
   return (
-    <aside className={`bg-primary border-white/20 fixed top-0 left-0 z-50 h-screen w-72 transform border-r-3 text-white shadow-2xl transition-transform duration-300 ease-in-out ${visible ? "translate-x-0" : "-translate-x-full"} lg:translate-x-0`}>
+    <aside className={`bg-primary fixed top-0 left-0 z-50 h-screen w-64 transform text-white shadow-2xl transition-transform duration-300 ease-in-out ${isOpen ? "translate-x-0" : "-translate-x-full"}`}>
       <section className="mb-5 flex items-center gap-3 px-5 py-6">
         <Image height={1920} width={1080} src="/images/polinema.jpg" alt="Logo" className="w-14" />
         <span>
-          <h4 className="text-sm font-bold lg:text-base">SICUPANG</h4>
+          <h4 className="text-sm font-bold lg:text-base">SIREPANG</h4>
           <h6 className="text-xs text-white/80 italic">
-            Sistem Cerdas Untuk Ketahanan Pangan
+            Sistem Recall Pangan
           </h6>
         </span>
       </section>

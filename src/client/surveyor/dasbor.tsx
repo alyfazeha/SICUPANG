@@ -1,0 +1,71 @@
+"use client";
+
+import { Search } from "lucide-react";
+import { useEffect, useState } from "react";
+import type { Dashboard } from "@/types/dashboard";
+import axios from "axios";
+import Table from "@/components/shared/table";
+
+export default function Page() {
+  const [data, setData] = useState<{ data: Dashboard }>({ data: { family: 0, village: 0 } });
+
+  useEffect(() => {
+    (async () => {
+      try {
+        const response = await axios.get<{ data: Dashboard }>("/api/surveyor/dashboard", { withCredentials: true });
+        setData({ data: response.data.data });
+      } catch (err: unknown) {
+        console.error(`Terjadi kesalahan saat mengambil data surveyor: ${err}`);
+        throw err;
+      }
+    })();
+  }, []);
+
+  return (
+    <>
+      <section className="grid cursor-default grid-cols-1 gap-4 lg:grid-cols-2">
+        <figure className="bg-primary relative overflow-hidden rounded-xl p-4 text-white lg:p-6">
+          <h3 className="mb-2 text-sm opacity-80">Jumlah Desa</h3>
+          <h5 className="relative z-10 text-xl font-bold lg:text-2xl">
+            {data.data.village ?? 0}
+          </h5>
+          <div className="bg-primary-alt absolute -right-4 -bottom-4 h-24 w-24 rounded-full opacity-30"></div>
+        </figure>
+        <figure className="bg-primary relative overflow-hidden rounded-xl p-4 text-white lg:p-6">
+          <h3 className="mb-2 text-sm opacity-80">Jumlah Keluarga</h3>
+          <h5 className="relative z-10 text-xl font-bold lg:text-2xl">
+            {data.data.family ?? 0}
+          </h5>
+          <div className="bg-primary-alt absolute -right-4 -bottom-4 h-24 w-24 rounded-full opacity-30"></div>
+        </figure>
+      </section>
+      <section className="bg-primary mt-8 flex items-center justify-between gap-10 overflow-x-auto rounded-xl px-6 py-4 whitespace-nowrap">
+        <h3 className="inline cursor-default font-bold text-white">
+          Riwayat Data Keluarga
+        </h3>
+        <Search className="text-primary h-8 w-8 cursor-pointer rounded-lg bg-white p-2" />
+        <span className="relative hidden items-center">
+          <label htmlFor="cari-kepala-keluarga" className="hidden"></label>
+          <Search className="absolute left-3 text-sm text-gray-400" />
+          <input
+            type="search"
+            name="cari-kepala-keluarga"
+            className="rounded-lg bg-white py-2 pr-3 pl-10 text-sm text-gray-800 focus:outline-none lg:py-3"
+            placeholder="Cari Nama Kepala Keluarga..."
+          />
+        </span>
+      </section>
+      <section className="mt-8">
+        <Table
+          headers={["Nama", "Nomor Kartu Keluarga", "Desa"]}
+          rows={[
+            ["Savero", "", "Pakis"],
+            ["Rafi", "", "Turen"],
+            ["Alyfa", "", "Sumbermanjing"],
+          ]}
+          sortable={["Nama", "Desa"]}
+        />
+      </section>
+    </>
+  );
+}

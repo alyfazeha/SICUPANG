@@ -6,7 +6,7 @@ import { AUTH_TOKEN } from "@/constants/token";
 import { Prisma } from "@/lib/prisma";
 import { Auth } from "@/types/auth";
 
-export async function POST(request: NextRequest) {
+export async function POST(request: NextRequest): Promise<NextResponse> {
   try {
     const validate = z.object({
       surel: z.email({ message: "Email tidak valid." }),

@@ -1,9 +1,9 @@
 import { NextRequest } from "next/server";
 import { Auth } from "@/types/auth";
 
-export async function POST(request: NextRequest) {
+export async function POST(request: NextRequest): Promise<Response> {
   try {
-    const { nama_lengkap, surel, kata_sandi }: Auth = request.body;
+    const { surel, kata_sandi } = request.body as unknown as Auth;
 
     if (!surel || !kata_sandi) {
       return new Response(JSON.stringify({ message: "Surel dan kata sandi harus diisi." }), { status: 400 });

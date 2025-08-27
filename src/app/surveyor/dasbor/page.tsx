@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Page from "@/client/surveyor/dasbor";
 
 export const metadata: Metadata = {
   title: "Dasbor | SICUPANG",
@@ -14,8 +15,5 @@ export const metadata: Metadata = {
 };
 
 export default function DasborSurveyor() {
-  return (
-    <>
-    </>
-  );
+  return <Page />;
 }

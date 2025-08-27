@@ -1,7 +1,6 @@
-// src/app/api/header/route.ts
 import { Prisma } from "@/lib/prisma";
 
-export async function GET() {
+export async function GET(): Promise<Response> {
   try {
     const pengguna = await Prisma.pengguna.findFirst({
       where: { peran: { in: ["ADMIN", "SURVEYOR"] } },
