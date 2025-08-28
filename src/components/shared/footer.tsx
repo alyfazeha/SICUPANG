@@ -1,6 +1,6 @@
 import { Briefcase, Heart, Info, Mail, MapPin, MessageCircleQuestionMark, Newspaper } from "lucide-react";
 import { FaSignInAlt, FaShieldAlt } from "react-icons/fa";
-import { FaClipboardCheck, FaComments, FaFacebookF, FaInstagram, FaNotesMedical, FaUserPlus, FaXTwitter } from "react-icons/fa6";
+import { FaClipboardCheck, FaComments, FaFacebookF, FaInstagram, FaNotesMedical, FaXTwitter } from "react-icons/fa6";
 import Image from "next/image";
 import Link from "next/link";
 
@@ -130,16 +130,10 @@ export default function Footer() {
           <p className="mb-6 text-sm text-white/90">
             Bergabunglah dengan ribuan pengguna untuk hidup lebih sehat
           </p>
-          <div className="flex flex-col justify-center gap-3 sm:flex-row">
-            <Link href="/daftar" className="text-primary inline-flex items-center justify-center gap-2 rounded-lg bg-white px-6 py-3 text-sm font-semibold shadow-lg transition-all duration-200 hover:-translate-y-0.5 hover:shadow-xl">
-              <FaUserPlus className="h-4 w-4" />
-              <span>Daftar Sekarang</span>
-            </Link>
-            <Link href="/masuk" className="hover:text-primary inline-flex items-center justify-center gap-2 rounded-lg border-2 border-white px-6 py-3 text-sm font-semibold text-white transition-all duration-200 hover:bg-white">
-              <FaSignInAlt />
-              <span>Masuk</span>
-            </Link>
-          </div>
+          <Link href="/masuk" className="hover:text-primary inline-flex items-center justify-center gap-2 rounded-lg border-2 border-white px-6 py-3 text-sm font-semibold text-white transition-all duration-200 hover:bg-white">
+            <FaSignInAlt />
+            <span>Masuk</span>
+          </Link>
         </div>
       </section>
       <section className="border-t border-gray-200 bg-gray-50">

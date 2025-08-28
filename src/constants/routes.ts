@@ -1,7 +1,7 @@
 /* =======================
    AUTHENTICATION ROUTES
    ======================= */
-export const AUTH_PAGES: string[] = ["/masuk", "/daftar", "/lupa-kata-sandi", "/reset-kata-sandi", "/admin", "/surveyor"];
+export const AUTH_PAGES: string[] = ["/masuk", "/admin", "/surveyor"];
 
 /* =======================
    ADMIN ROUTES
@@ -26,7 +26,13 @@ export const SURVEYOR_ADD_DATA_FAMILY = "/surveyor/keluarga/tambah-data";
 /* =======================
    AUTH ROUTES
    ======================= */
-export const REGISTER = "/daftar";
-export const FORGOT_PASSWORD = "/lupa-kata-sandi";
-export const RESET_PASSWORD = "/reset-kata-sandi";
 export const LOGIN = "/masuk";
+
+/* =======================
+   API ROUTES
+   ======================= */
+export const API_ACCOUNT = "/api/auth/account";
+export const API_LOGIN = "/api/auth/login";
+export const API_LOGOUT = "/api/auth/logout";
+
+export const API_SURVEYOR_DASHBOARD = "/api/surveyor/dashboard";

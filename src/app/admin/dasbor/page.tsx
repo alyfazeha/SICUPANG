@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import Page from "@/client/admin/dasbor";
+import Page from "./client";
 
 export const metadata: Metadata = {
   title: "Dasbor | SICUPANG",

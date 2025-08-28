@@ -11,10 +11,9 @@ datasource db {
 model pengguna {
   id_pengguna   Int     @id @default(autoincrement())
   nama_lengkap  String
-  surel         String  @unique
   kata_sandi    String
   peran         Peran
-  nip           String? @unique
+  nip           String  @unique
   jabatan       String?
   id_kecamatan  Int?
   nomor_telepon String?

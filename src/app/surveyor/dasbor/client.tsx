@@ -2,6 +2,7 @@
 
 import { Search } from "lucide-react";
 import { useEffect, useState } from "react";
+import { API_SURVEYOR_DASHBOARD } from "@/constants/routes";
 import type { Dashboard } from "@/types/dashboard";
 import axios from "axios";
 import Table from "@/components/shared/table";
@@ -12,7 +13,7 @@ export default function Page() {
   useEffect(() => {
     (async () => {
       try {
-        const response = await axios.get<{ data: Dashboard }>("/api/surveyor/dashboard", { withCredentials: true });
+        const response = await axios.get<{ data: Dashboard }>(API_SURVEYOR_DASHBOARD, { withCredentials: true });
         setData({ data: response.data.data });
       } catch (err: unknown) {
         console.error(`Terjadi kesalahan saat mengambil data surveyor: ${err}`);
@@ -65,6 +66,18 @@ export default function Page() {
           ]}
           sortable={["Nama", "Desa"]}
         />
+      </section>
+      <span className="bg-primary absolute right-0 -bottom-20 h-40 w-40 rounded-tl-full opacity-10" />
+      <section className="absolute left-72 -bottom-10 z-0 grid grid-cols-3 gap-2">
+        <span className="bg-primary block h-2 w-2 animate-pulse rounded-full opacity-40" />
+        <span className="bg-primary block h-2 w-2 rounded-full opacity-30" />
+        <span className="bg-primary block h-2 w-2 animate-pulse rounded-full opacity-40" />
+        <span className="bg-primary block h-2 w-2 rounded-full opacity-20" />
+        <span className="bg-primary block h-2 w-2 animate-pulse rounded-full opacity-40" />
+        <span className="bg-primary block h-2 w-2 rounded-full opacity-30" />
+        <span className="bg-primary block h-2 w-2 animate-pulse rounded-full opacity-40" />
+        <span className="bg-primary block h-2 w-2 rounded-full opacity-20" />
+        <span className="bg-primary block h-2 w-2 animate-pulse rounded-full opacity-40" />
       </section>
     </>
   );

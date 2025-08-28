@@ -23,7 +23,7 @@ export default function Auth({ children }: { children: ReactNode }) {
     <>
       <Header isOpen={isOpen} setIsOpen={setIsOpen} title={setTitleHeader(pathname, role)} />
       {isOpen && <div className="fixed inset-0 z-40 bg-black/50 lg:hidden" onClick={() => setIsOpen(false)} />}
-      <main className={`h-full min-h-screen bg-cover bg-center bg-no-repeat p-10 transition-all duration-300 ease-in-out ${isAuthPage && (isOpen ? "lg:ml-62" : "ml-0")}`}>
+      <main className={`h-full min-h-screen bg-cover bg-center bg-no-repeat p-10 transition-all duration-300 ease-in-out ${role && (isOpen ? "lg:ml-62" : "ml-0")}`}>
         {children}
       </main>
       {role && <Sidebar role={role} isOpen={isOpen} />}

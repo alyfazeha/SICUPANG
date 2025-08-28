@@ -4,17 +4,16 @@ import axios, { type AxiosError } from "axios";
 import { Lock, Mail } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { type ChangeEvent, type FormEvent, useState } from "react";
-import { ADMIN_DASHBOARD, SURVEYOR_DASHBOARD } from "@/constants/routes";
+import { ADMIN_DASHBOARD, API_LOGIN, SURVEYOR_DASHBOARD } from "@/constants/routes";
 import type { Auth } from "@/types/auth";
 import type { ValidationErrors } from "@/types/components";
-import Link from "next/link";
 import Input from "@/components/ui/input";
 
-export default function Masuk() {
+export default function Form() {
   const router = useRouter();
   const [alert, setAlert] = useState<"error" | "success" | null>(null);
-  const [errors, setErrors] = useState<Record<keyof typeof form, ValidationErrors[keyof ValidationErrors]>>({ surel: undefined, kata_sandi: undefined });
-  const [form, setForm] = useState<Pick<Auth, "surel" | "kata_sandi">>({ surel: "", kata_sandi: "" });
+  const [errors, setErrors] = useState<Record<keyof typeof form, ValidationErrors[keyof ValidationErrors]>>({ nip: undefined, kata_sandi: undefined });
+  const [form, setForm] = useState<Pick<Auth, "nip" | "kata_sandi">>({ nip: "", kata_sandi: "" });
   const [info, setInfo] = useState("");
   const [loading, setLoading] = useState(false);
 
@@ -25,9 +24,9 @@ export default function Masuk() {
     setLoading(true);
     setInfo("");
 
-    const newErrors: typeof errors = { surel: undefined, kata_sandi: undefined };
+    const newErrors: typeof errors = { nip: undefined, kata_sandi: undefined };
 
-    if (!form.surel.trim()) newErrors.surel = { type: "required" };
+    if (!(form.nip as string).trim()) newErrors.nip = { type: "required" };
     if (!form.kata_sandi.trim()) newErrors.kata_sandi = { type: "required" };
     setErrors(newErrors);
 
@@ -37,7 +36,7 @@ export default function Masuk() {
     }
 
     try {
-      const response = (await axios.post<{ data: Auth }>("/api/auth/login", form)).data;
+      const response = (await axios.post<{ data: Auth }>(API_LOGIN, form)).data;
 
       setAlert("success");
       setInfo("Berhasil masuk ke akun Anda.");
@@ -45,7 +44,7 @@ export default function Masuk() {
         setInfo("");
         router.push(response.data.peran === "ADMIN" ? ADMIN_DASHBOARD : SURVEYOR_DASHBOARD);
       }, 1200);
-    } catch (err) {
+    } catch (err: unknown) {
       setAlert("error");
       
       if ((err as AxiosError).response?.status === 401) {
@@ -76,15 +75,15 @@ export default function Masuk() {
       )}
       <form onSubmit={handleSubmit} className="flex flex-col space-y-6">
         <Input
-          errors={errors.surel ? { surel: errors.surel } : {}}
+          errors={errors.nip ? { nip: errors.nip } : {}}
           icon={<Mail className="h-4 w-4" />}
           label="Surel"
-          name="surel"
+          name="nip"
           onChange={handleChange}
-          placeholder="Masukkan surel Anda..."
+          placeholder="Masukkan NIP Anda..."
           required={true}
-          type="email"
-          value={form.surel}
+          type="text"
+          value={form.nip as string}
           variant="auth"
         />
         <Input
@@ -107,11 +106,12 @@ export default function Masuk() {
           {loading ? "Memuat..." : "Masuk"}
         </button>
       </form>
-      <p className="mt-8 text-center text-sm">
-        Belum punya akun?{" "}
-        <Link href="/daftar" className="text-primary font-semibold">
-          Daftar di sini
-        </Link>
+      <p className="mt-8 cursor-default text-center text-sm text-gray-500">
+        © 2025 Tim Gatranova
+        <br />
+        Jurusan Teknologi Informasi
+        <br />
+        Politeknik Negeri Malang
       </p>
     </section>
   );

@@ -2,7 +2,7 @@ import { ArrowLeft } from "lucide-react";
 import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
-import Form from "@/client/auth/masuk";
+import Form from "@/app/(auth)/masuk/form";
 
 export const metadata: Metadata = {
   title: "Masuk | SICUPANG",

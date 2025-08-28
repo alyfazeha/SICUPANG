@@ -4,7 +4,7 @@ import { Menu, User } from "lucide-react";
 import { usePathname } from "next/navigation";
 import { type Dispatch, type SetStateAction, useEffect, useState } from "react";
 import { FaRightFromBracket } from "react-icons/fa6";
-import { ADMIN_PROFILE, AUTH_PAGES, LOGIN, REGISTER, SURVEYOR_PROFILE } from "@/constants/routes";
+import { ADMIN_PROFILE, API_ACCOUNT, API_LOGOUT, AUTH_PAGES, LOGIN, SURVEYOR_PROFILE } from "@/constants/routes";
 import type { Auth } from "@/types/auth";
 import axios from "axios";
 import Image from "next/image";
@@ -18,13 +18,13 @@ export default function Header({ isOpen, setIsOpen, title }: { isOpen: boolean; 
   const isAuthenticatedPage = AUTH_PAGES.some((page) => pathname.startsWith(page));
 
   const handleLogout = () => {
-    axios.post("/api/auth/logout", null, { withCredentials: true }).then(() => window.location.href = LOGIN).catch((err) => console.error(`Terjadi kesalahan saat keluar dari akun Anda: ${err}`));
+    axios.post(API_LOGOUT, null, { withCredentials: true }).then(() => window.location.href = LOGIN).catch((err) => console.error(`Terjadi kesalahan saat keluar dari akun Anda: ${err}`));
   };
 
   useEffect(() => {
     (async () => {
       try {
-        const response = await axios.get<{ data: Auth | null }>("/api/auth/account", { withCredentials: true });
+        const response = await axios.get<{ data: Auth | null }>(API_ACCOUNT, { withCredentials: true });
 
         if (response.data.data) {
           setName(response.data.data.nama_lengkap);
@@ -37,7 +37,7 @@ export default function Header({ isOpen, setIsOpen, title }: { isOpen: boolean; 
     })();
   }, []);
 
-  if (pathname === LOGIN || pathname === REGISTER) return null;
+  if (pathname === LOGIN) return null;
 
   return (
     <>
