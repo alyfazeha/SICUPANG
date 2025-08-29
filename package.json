@@ -3,12 +3,10 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "app": "concurrently -n \"FASTAPI,NEXT\" -c \"blue.bold,white\" \"bun run service\" \"bun run dev\"",
     "build": "next build",
     "dev": "next dev --turbopack",
     "lint": "next lint",
     "seed": "bun prisma/seed.ts",
-    "service": "cd python && venv/Scripts/python.exe -m uvicorn main:app --reload --port 8080",
     "start": "next start"
   },
   "dependencies": {

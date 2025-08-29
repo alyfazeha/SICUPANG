@@ -3,16 +3,7 @@ import type { Roles } from "@/types/auth";
 
 type InputType = "text" | "date" | "email" | "file" | "password" | "number";
 type InputVariant = "auth" | "form";
-
-type ValidationErrorDetail =
-  | { type: "required" }
-  | { type: "min"; min: number; actual: number }
-  | { type: "max"; max: number; actual: number }
-  | { type: "minlength"; requiredLength: number; actualLength: number }
-  | { type: "maxlength"; requiredLength: number; actualLength: number }
-  | { type: "custom"; message: string };
-
-type ValidationErrors = Partial<Record<string, ValidationErrorDetail>>;
+type ValidationErrors = Partial<Record<string, string>>;
 
 type Input = {
   errors?: ValidationErrors;
@@ -28,14 +19,30 @@ type Input = {
   variant: InputVariant;
 };
 
-type SidebarMenu = {
+type Radio = {
+  label: string;
+  name: string;
+  options: { label: string | number; value: number | string }[];
+  required: boolean;
+};
+
+type Select = {
+  label: string;
+  name: string;
+  options: { label: string; value: string }[] | Array<string | { label: string; value: string }>;
+  required: boolean;
+  selected?: string;
+  value?: string;
+};
+
+type SidebarItem = {
   href?: string;
   icon: ReactElement;
   label: string;
-  subMenu?: SidebarMenu[];
+  subMenu?: SidebarItem[];
 };
 
-type Sidebar = SidebarMenu & {
+type Sidebar = SidebarItem & {
   isOpen: boolean;
   role: Roles;
   onClose: () => void;
@@ -47,4 +54,4 @@ type Table = {
   sortable: string[];
 };
 
-export { Input, Sidebar, SidebarMenu, Table, ValidationErrors };
+export { Input, Radio, Select, Sidebar, SidebarItem, Table, ValidationErrors };

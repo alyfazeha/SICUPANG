@@ -9,14 +9,14 @@ const fonts = Plus_Jakarta_Sans({
 });
 
 export const metadata: Metadata = {
-  icons: "/images/polinema.jpg",
+  icons: "/images/favicon.svg",
   metadataBase: new URL("https://sicupang.vercel.app/"),
   openGraph: {
-    images: "/images/polinema.jpg",
+    images: "/images/favicon.svg",
     siteName: "SICUPANG",
   },
   twitter: {
-    images: "/images/polinema.jpg",
+    images: "/images/favicon.svg",
     card: "summary_large_image",
     site: "https://sicupang.vercel.app",
   },

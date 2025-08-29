@@ -1,6 +1,6 @@
 import { SidebarMenus } from "@/constants/sidebar";
 import type { Roles } from "@/types/auth";
-import type { SidebarMenu } from "@/types/components";
+import type { SidebarItem } from "@/types/components";
 
 /**
  * Flatten nested sidebar menus into a single array.
@@ -8,7 +8,7 @@ import type { SidebarMenu } from "@/types/components";
  * @param menus - The nested sidebar menus.
  * @returns A single array of all sidebar menus.
  */
-function flattenMenus(menus: SidebarMenu[]): SidebarMenu[] {
+function flattenMenus(menus: SidebarItem[]): SidebarItem[] {
   return menus.flatMap((menu) => menu.subMenu ? [menu, ...flattenMenus(menu.subMenu)] : [menu]);
 }
 
@@ -21,6 +21,6 @@ function flattenMenus(menus: SidebarMenu[]): SidebarMenu[] {
  */
 export function setTitleHeader(pathname: string, role: Roles | null): string | null {
   if (!role) return null;
-  const activeMenu = flattenMenus(SidebarMenus[role]).find((menu) => menu.href && pathname.startsWith(menu.href));
+  const activeMenu = flattenMenus(SidebarMenus[role]).filter((menu) => menu.href && pathname.startsWith(menu.href)).sort((a, b) => (b.href as string).length - (a.href as string).length)[0];
   return activeMenu ? activeMenu.label : null;
 }

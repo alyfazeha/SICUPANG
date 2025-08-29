@@ -1,13 +1,12 @@
 "use client";
 
-import axios, { type AxiosError } from "axios";
 import { Lock, Mail } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { type ChangeEvent, type FormEvent, useState } from "react";
-import { ADMIN_DASHBOARD, API_LOGIN, SURVEYOR_DASHBOARD } from "@/constants/routes";
+import { useState } from "react";
 import type { Auth } from "@/types/auth";
 import type { ValidationErrors } from "@/types/components";
-import Input from "@/components/ui/input";
+import { Login } from "@/services/login";
+import Input from "@/components/shared/input";
 
 export default function Form() {
   const router = useRouter();
@@ -16,48 +15,6 @@ export default function Form() {
   const [form, setForm] = useState<Pick<Auth, "nip" | "kata_sandi">>({ nip: "", kata_sandi: "" });
   const [info, setInfo] = useState("");
   const [loading, setLoading] = useState(false);
-
-  const handleChange = (e: ChangeEvent<HTMLInputElement>) => setForm({ ...form, [e.target.name]: e.target.value });
-
-  const handleSubmit = async (e: FormEvent) => {
-    e.preventDefault();
-    setLoading(true);
-    setInfo("");
-
-    const newErrors: typeof errors = { nip: undefined, kata_sandi: undefined };
-
-    if (!(form.nip as string).trim()) newErrors.nip = { type: "required" };
-    if (!form.kata_sandi.trim()) newErrors.kata_sandi = { type: "required" };
-    setErrors(newErrors);
-
-    if (Object.values(newErrors).some((err) => err !== undefined)) {
-      setLoading(false);
-      return;
-    }
-
-    try {
-      const response = (await axios.post<{ data: Auth }>(API_LOGIN, form)).data;
-
-      setAlert("success");
-      setInfo("Berhasil masuk ke akun Anda.");
-      setTimeout(() => {
-        setInfo("");
-        router.push(response.data.peran === "ADMIN" ? ADMIN_DASHBOARD : SURVEYOR_DASHBOARD);
-      }, 1200);
-    } catch (err: unknown) {
-      setAlert("error");
-      
-      if ((err as AxiosError).response?.status === 401) {
-        setInfo("Email atau kata sandi salah.");
-      } else {
-        setInfo("Terjadi kesalahan pada server, silakan coba lagi.");
-      }
-
-      setTimeout(() => setInfo(""), 2000);
-    } finally {
-      setLoading(false);
-    }
-  };
 
   return (
     <section className="mx-auto flex w-full max-w-lg flex-col justify-center">
@@ -73,16 +30,16 @@ export default function Form() {
           {info}
         </h5>
       )}
-      <form onSubmit={handleSubmit} className="flex flex-col space-y-6">
+      <form onSubmit={(e) => Login.submit(e, form, setErrors, setAlert, setInfo, setLoading, router)} className="flex flex-col space-y-6">
         <Input
           errors={errors.nip ? { nip: errors.nip } : {}}
           icon={<Mail className="h-4 w-4" />}
           label="Surel"
           name="nip"
-          onChange={handleChange}
+          onChange={(e) => Login.change(e, form, setForm)}
           placeholder="Masukkan NIP Anda..."
           required={true}
-          type="text"
+          type="number"
           value={form.nip as string}
           variant="auth"
         />
@@ -91,7 +48,7 @@ export default function Form() {
           icon={<Lock className="h-4 w-4" />}
           label="Kata Sandi"
           name="kata_sandi"
-          onChange={handleChange}
+          onChange={(e) => Login.change(e, form, setForm)}
           placeholder="Masukkan kata sandi Anda..."
           required={true}
           type="password"

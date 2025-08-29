@@ -23,13 +23,20 @@ export default function Keluarga() {
         <span className="flex cursor-default items-center gap-3">
           <FaCircleInfo className="mt-0.75 text-lg text-blue-500" />
           <h5 className="text-lg font-semibold text-blue-600">
-            Kenapa Perlu Rekap Kesehatan?
+            Kenapa Perlu Rekap Data Keluarga?
           </h5>
         </span>
-        <h5 className="mt-2.5 cursor-default text-sm leading-7 font-normal text-blue-800">
-          Mulai hari ini dengan mencatat kondisi kesehatan Anda untuk hidup
-          lebih sehat. Dengan rekap rutin, Anda bisa memantau perubahan kondisi
-          tubuh dan mengambil langkah lebih tepat ke depannya.
+        <h5 className="mt-2.5 hidden cursor-default text-sm leading-7 font-normal text-blue-800 lg:inline">
+          Sebagai surveyor, Anda berperan penting dalam mencatat informasi
+          setiap keluarga secara rinci dan konsisten. Data yang terkumpul dengan
+          baik tidak hanya memudahkan proses analisis di aplikasi SICUPANG,
+          tetapi juga menjadi dasar penting dalam mendukung ketahanan pangan di
+          Kabupaten Malang secara berkelanjutan.
+        </h5>
+        <h5 className="mt-2.5 inline cursor-default text-sm leading-7 font-normal text-blue-800 lg:hidden">
+          Sebagai surveyor, Anda berperan penting dalam mencatat informasi
+          keluarga. Data yang konsisten akan mendukung ketahanan pangan di
+          Kabupaten Malang.
         </h5>
         <span className="mt-5 ml-auto flex gap-2 text-xs font-medium">
           <Link href={SURVEYOR_ADD_DATA_FAMILY} className="rounded-md bg-blue-500 px-5 py-2.5 text-white transition hover:bg-blue-600">

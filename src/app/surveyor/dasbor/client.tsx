@@ -59,11 +59,7 @@ export default function Page() {
       <section className="mt-8">
         <Table
           headers={["Nama", "Nomor Kartu Keluarga", "Desa"]}
-          rows={[
-            ["Savero", "", "Pakis"],
-            ["Rafi", "", "Turen"],
-            ["Alyfa", "", "Sumbermanjing"],
-          ]}
+          rows={[]}
           sortable={["Nama", "Desa"]}
         />
       </section>

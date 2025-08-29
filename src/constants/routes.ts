@@ -36,3 +36,4 @@ export const API_LOGIN = "/api/auth/login";
 export const API_LOGOUT = "/api/auth/logout";
 
 export const API_SURVEYOR_DASHBOARD = "/api/surveyor/dashboard";
+export const API_SURVEYOR_FAMILY = "/api/surveyor/family";

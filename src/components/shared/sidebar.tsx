@@ -15,8 +15,8 @@ export default function Sidebar({ isOpen, role }: Pick<Sidebar, "isOpen" | "role
 
   return (
     <aside className={`bg-primary fixed top-0 left-0 z-50 h-screen w-64 transform text-white shadow-2xl transition-transform duration-300 ease-in-out ${isOpen ? "translate-x-0" : "-translate-x-full"}`}>
-      <section className="mb-5 flex items-center gap-3 px-5 py-6">
-        <Image height={1920} width={1080} src="/images/polinema.jpg" alt="Logo" className="w-14" />
+      <section className="flex items-center gap-3 px-5 py-6">
+        <Image height={1920} width={1080} src="/images/favicon.svg" alt="Logo" className="w-14" />
         <span>
           <h4 className="text-sm font-bold lg:text-base">SIREPANG</h4>
           <h6 className="text-xs text-white/80 italic">
@@ -24,6 +24,11 @@ export default function Sidebar({ isOpen, role }: Pick<Sidebar, "isOpen" | "role
           </h6>
         </span>
       </section>
+      <div className="mx-auto flex w-9/10 items-center pb-4">
+        <span className="h-px w-3 bg-gray-200/50"></span>
+        <span className="mx-3 h-px flex-1 bg-gray-100/50"></span>
+        <span className="h-px w-3 bg-gray-200/50"></span>
+      </div>
       <nav className="flex h-full flex-col gap-1 overflow-y-auto px-3 pb-20">
         {SidebarMenus[role].map((menu) => {
           if (menu.subMenu) {

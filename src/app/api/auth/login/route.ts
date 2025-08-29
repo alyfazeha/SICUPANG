@@ -17,7 +17,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
     const parsed = validate.safeParse(body);
 
     if (!parsed.success) {
-      return NextResponse.json({ errors: parsed.error.cause }, { status: 400 });
+      return NextResponse.json({ errors: parsed.error.issues }, { status: 400 });
     }
 
     const { nip, kata_sandi } = parsed.data as Auth;
