@@ -3,7 +3,7 @@ import { Prisma } from "@/lib/prisma";
 
 export async function GET(
   req: NextRequest,
-  { params }: { params: { id_kecamatan: string } }
+  { params }: { params: { id_kecamatan: string } },
 ): Promise<Response> {
   try {
     const id = Number(params.id_kecamatan);
@@ -45,15 +45,18 @@ export async function GET(
           data: formattedData,
         },
         null,
-        2 
+        2,
       ),
-      { status: 200, headers: { "Content-Type": "application/json" } }
+      { status: 200, headers: { "Content-Type": "application/json" } },
     );
   } catch (err: unknown) {
-    console.error(`❌ Error GET /api/admin/district/subdistrict/[id_kecamatan]:`, err);
+    console.error(
+      `❌ Error GET /api/admin/district/subdistrict/[id_kecamatan]:`,
+      err,
+    );
     return new Response(
       JSON.stringify({ error: "Gagal mengambil data kecamatan." }),
-      { status: 500 }
+      { status: 500 },
     );
   }
 }
