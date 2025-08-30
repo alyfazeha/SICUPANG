@@ -29,6 +29,7 @@ model kecamatan {
   id_kecamatan   Int           @id @unique(map: "id_kecamatan") @default(autoincrement())
   kode_wilayah   String        @db.VarChar(255)
   nama_kecamatan String        @db.VarChar(255)
+  slug           String?        @unique @db.VarChar(255)
   pengguna       pengguna[]
   stok_pangan    stok_pangan[]
   desa           desa[]

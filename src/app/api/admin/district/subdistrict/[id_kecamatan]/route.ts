@@ -6,7 +6,8 @@ export async function GET(
   { params }: { params: { id_kecamatan: string } },
 ): Promise<Response> {
   try {
-    const id = Number(params.id_kecamatan);
+    const { id_kecamatan } = await params; 
+    const id = Number(id_kecamatan);
 
     const where = id ? { id_kecamatan: id } : {};
 

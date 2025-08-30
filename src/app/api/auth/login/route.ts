@@ -51,6 +51,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
         nip: pengguna.nip,
         peran: pengguna.peran,
       },
+      token: token
     });
 
     response.cookies.set({

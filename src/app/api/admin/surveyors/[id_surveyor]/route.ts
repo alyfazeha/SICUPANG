@@ -8,7 +8,8 @@ export async function GET(
   { params }: { params: { id_surveyor: string } },
 ): Promise<Response> {
   try {
-    const id = Number(params.id_surveyor);
+    const { id_surveyor } = await params; 
+    const id = Number(id_surveyor);
     if (!Number.isFinite(id) || id <= 0) {
       return new Response(
         JSON.stringify({ error: "id_surveyor tidak valid." }, null, 2),
