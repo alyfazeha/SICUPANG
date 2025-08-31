@@ -1,7 +1,6 @@
 import { Prisma } from "@/lib/prisma";
 
 async function seed() {
-  await Prisma.pangan.deleteMany();
   await Prisma.pangan.createMany({
     data: [
       {

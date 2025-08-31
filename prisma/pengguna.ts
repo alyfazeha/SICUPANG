@@ -2,7 +2,6 @@ import { hashSync } from "bcryptjs";
 import { Prisma } from "@/lib/prisma";
 
 async function seed() {
-  await Prisma.pengguna.deleteMany();
   await Prisma.pengguna.createMany({
     data: [
       {
@@ -17,6 +16,7 @@ async function seed() {
       },
       {
         id_pengguna: 2,
+        id_kecamatan: 1,
         nama_lengkap: "Dian Safitri, A.Md.P.",
         kata_sandi: hashSync("01011999", 10),
         peran: "SURVEYOR",
@@ -27,6 +27,7 @@ async function seed() {
       },
       {
         id_pengguna: 3,
+        id_kecamatan: 2,
         nama_lengkap: "Dwi Jayanti Nur Aini, S.E",
         kata_sandi: hashSync("25071994", 10),
         peran: "SURVEYOR",
@@ -37,6 +38,7 @@ async function seed() {
       },
       {
         id_pengguna: 4,
+        id_kecamatan: 3,
         nama_lengkap: "Marvita Akhiri Rimbasari, SP",
         kata_sandi: hashSync("03031984", 10),
         peran: "SURVEYOR",
@@ -47,6 +49,7 @@ async function seed() {
       },
       {
         id_pengguna: 5,
+        id_kecamatan: 4,
         nama_lengkap: "Sriwati",
         kata_sandi: hashSync("29071969", 10),
         peran: "SURVEYOR",
@@ -57,6 +60,7 @@ async function seed() {
       },
       {
         id_pengguna: 6,
+        id_kecamatan: 5,
         nama_lengkap: "Uniek Halimatus Sa'diyah, S.Pt",
         kata_sandi: hashSync("17071975", 10),
         peran: "SURVEYOR",
@@ -67,6 +71,7 @@ async function seed() {
       },
       {
         id_pengguna: 7,
+        id_kecamatan: 6,
         nama_lengkap: "Melia Widya Kartika Sari, S.T.P",
         kata_sandi: hashSync("12051992", 10),
         peran: "SURVEYOR",
@@ -77,6 +82,7 @@ async function seed() {
       },
       {
         id_pengguna: 8,
+        id_kecamatan: 7,
         nama_lengkap: "Rina Dian Retnowati, S.Pt",
         kata_sandi: hashSync("05051972", 10),
         peran: "SURVEYOR",
@@ -87,6 +93,7 @@ async function seed() {
       },
       {
         id_pengguna: 9,
+        id_kecamatan: 8,
         nama_lengkap: "Dewi Oriza, SP",
         kata_sandi: hashSync("13021981", 10),
         peran: "SURVEYOR",
@@ -97,6 +104,7 @@ async function seed() {
       },
       {
         id_pengguna: 10,
+        id_kecamatan: 9,
         nama_lengkap: "Widya Permana Tanti, S. TP, M.MA",
         kata_sandi: hashSync("02081982", 10),
         peran: "SURVEYOR",
@@ -107,6 +115,7 @@ async function seed() {
       },
       {
         id_pengguna: 11,
+        id_kecamatan: 10,
         nama_lengkap: "Nanda Rahmi Fitriani, SP",
         kata_sandi: hashSync("08031996", 10),
         peran: "SURVEYOR",
@@ -117,6 +126,7 @@ async function seed() {
       },
       {
         id_pengguna: 12,
+        id_kecamatan: 11,
         nama_lengkap: "Tullabi Fahmy, S.Pt",
         kata_sandi: hashSync("08081978", 10),
         peran: "SURVEYOR",
@@ -127,6 +137,7 @@ async function seed() {
       },
       {
         id_pengguna: 13,
+        id_kecamatan: 12,
         nama_lengkap: "Marcha Wianita, A.Md.P",
         kata_sandi: hashSync("27031998", 10),
         peran: "SURVEYOR",
@@ -137,6 +148,7 @@ async function seed() {
       },
       {
         id_pengguna: 14,
+        id_kecamatan: 13,
         nama_lengkap: "Zedin Oktavia, SP.",
         kata_sandi: hashSync("25101977", 10),
         peran: "SURVEYOR",
@@ -147,6 +159,7 @@ async function seed() {
       },
       {
         id_pengguna: 15,
+        id_kecamatan: 14,
         nama_lengkap: "Sofia Andriana, S.Pt",
         kata_sandi: hashSync("08051974", 10),
         peran: "SURVEYOR",
@@ -157,6 +170,7 @@ async function seed() {
       },
       {
         id_pengguna: 16,
+        id_kecamatan: 15,
         nama_lengkap: "Hasanudin, SP",
         kata_sandi: hashSync("01071992", 10),
         peran: "SURVEYOR",
@@ -167,6 +181,7 @@ async function seed() {
       },
       {
         id_pengguna: 17,
+        id_kecamatan: 16,
         nama_lengkap: "Yosi Athifa, S.E., M.P.",
         kata_sandi: hashSync("06011972", 10),
         peran: "SURVEYOR",
@@ -177,6 +192,7 @@ async function seed() {
       },
       {
         id_pengguna: 18,
+        id_kecamatan: 17,
         nama_lengkap: "Helda Ira Fanti Kirana, A.Md.",
         kata_sandi: hashSync("04091994", 10),
         peran: "SURVEYOR",
@@ -187,6 +203,7 @@ async function seed() {
       },
       {
         id_pengguna: 19,
+        id_kecamatan: 18,
         nama_lengkap: "Elsa Famaysella, S.TP",
         kata_sandi: hashSync("25071996", 10),
         peran: "SURVEYOR",
@@ -197,6 +214,7 @@ async function seed() {
       },
       {
         id_pengguna: 20,
+        id_kecamatan: 19,
         nama_lengkap: "Vivi Rohma Kurniawati, S.Pt",
         kata_sandi: hashSync("10081993", 10),
         peran: "SURVEYOR",
@@ -207,6 +225,7 @@ async function seed() {
       },
       {
         id_pengguna: 21,
+        id_kecamatan: 20,
         nama_lengkap: "Ana Fauziah",
         kata_sandi: hashSync("21091984", 10),
         peran: "SURVEYOR",
@@ -217,6 +236,7 @@ async function seed() {
       },
       {
         id_pengguna: 22,
+        id_kecamatan: 21,
         nama_lengkap: "Didik Purwanto Hadi, SP",
         kata_sandi: hashSync("21101973", 10),
         peran: "SURVEYOR",
@@ -227,6 +247,7 @@ async function seed() {
       },
       {
         id_pengguna: 23,
+        id_kecamatan: 22,
         nama_lengkap: "Retno Wijayanti",
         kata_sandi: hashSync("07071988", 10),
         peran: "SURVEYOR",
@@ -237,6 +258,7 @@ async function seed() {
       },
       {
         id_pengguna: 24,
+        id_kecamatan: 23,
         nama_lengkap: "Nia Febrianti, STP",
         kata_sandi: hashSync("01021986", 10),
         peran: "SURVEYOR",
@@ -247,6 +269,7 @@ async function seed() {
       },
       {
         id_pengguna: 25,
+        id_kecamatan: 24,
         nama_lengkap: "Sophya Indrayana",
         kata_sandi: hashSync("09061972", 10),
         peran: "SURVEYOR",
@@ -257,6 +280,7 @@ async function seed() {
       },
       {
         id_pengguna: 26,
+        id_kecamatan: 25,
         nama_lengkap: "Kusnan",
         kata_sandi: hashSync("12081971", 10),
         peran: "SURVEYOR",
@@ -267,6 +291,7 @@ async function seed() {
       },
       {
         id_pengguna: 27,
+        id_kecamatan: 26,
         nama_lengkap: "Wiwin Tri Jayanti, S.T.P.",
         kata_sandi: hashSync("05031995", 10),
         peran: "SURVEYOR",
@@ -277,6 +302,7 @@ async function seed() {
       },
       {
         id_pengguna: 28,
+        id_kecamatan: 27,
         nama_lengkap: "Feri Prawinda R.Y, SST",
         kata_sandi: hashSync("10021985", 10),
         peran: "SURVEYOR",
@@ -287,6 +313,7 @@ async function seed() {
       },
       {
         id_pengguna: 29,
+        id_kecamatan: 28,
         nama_lengkap: "Cecep Suryadi, S.Pt",
         kata_sandi: hashSync("28041981", 10),
         peran: "SURVEYOR",
@@ -297,6 +324,7 @@ async function seed() {
       },
       {
         id_pengguna: 30,
+        id_kecamatan: 29,
         nama_lengkap: "Umu Juli Setyowati",
         kata_sandi: hashSync("04071971", 10),
         peran: "SURVEYOR",
@@ -307,6 +335,7 @@ async function seed() {
       },
       {
         id_pengguna: 31,
+        id_kecamatan: 30,
         nama_lengkap: "Wahyu Pitiani",
         kata_sandi: hashSync("26081968", 10),
         peran: "SURVEYOR",
@@ -317,6 +346,7 @@ async function seed() {
       },
       {
         id_pengguna: 32,
+        id_kecamatan: 31,
         nama_lengkap: "Istini",
         kata_sandi: hashSync("10021979", 10),
         peran: "SURVEYOR",
@@ -327,6 +357,7 @@ async function seed() {
       },
       {
         id_pengguna: 33,
+        id_kecamatan: 32,
         nama_lengkap: "Amaliya Jawda Salima, S.Tr.P",
         kata_sandi: hashSync("27081998", 10),
         peran: "SURVEYOR",
@@ -337,6 +368,7 @@ async function seed() {
       },
       {
         id_pengguna: 34,
+        id_kecamatan: 33,
         nama_lengkap: "Ika Kurrota A'yunin, S.T.",
         kata_sandi: hashSync("25121996", 10),
         peran: "SURVEYOR",

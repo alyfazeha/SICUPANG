@@ -1,7 +1,6 @@
 import { Prisma } from "@/lib/prisma";
 
 async function seed() {
-  await Prisma.desa.deleteMany();
   await Prisma.desa.createMany({
     data: [
       {

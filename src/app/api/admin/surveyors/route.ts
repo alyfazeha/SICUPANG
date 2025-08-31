@@ -38,7 +38,7 @@ export async function GET(): Promise<Response> {
     const formattedData = surveyors.map((item) => ({
       id: item.id_pengguna,
       nama: item.nama_lengkap,
-      nip: (item as any).nip ?? null,
+      nip: item.nip ?? null,
       kecamatan: item.kecamatan
         ? {
             id: item.kecamatan.id_kecamatan,
@@ -91,8 +91,8 @@ export async function POST(request: NextRequest): Promise<Response> {
 
     if (!parsed.success) {
       const errors = parsed.error.issues.map((e) => ({
-        field: e.path.join("."), 
-        message: e.message, 
+        field: e.path.join("."),
+        message: e.message,
       }));
 
       return NextResponse.json({ errors }, { status: 400 });

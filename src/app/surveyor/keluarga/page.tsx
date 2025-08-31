@@ -1,7 +1,8 @@
 import type { Metadata } from "next";
+import { FaCircleInfo } from "react-icons/fa6";
 import { SURVEYOR_ADD_DATA_FAMILY } from "@/constants/routes";
 import Link from "next/link";
-import { FaCircleInfo } from "react-icons/fa6";
+import Page from "./client";
 
 export const metadata: Metadata = {
   title: "Keluarga | SICUPANG",
@@ -47,6 +48,7 @@ export default function Keluarga() {
           </Link>
         </span>
       </figure>
+      <Page />
     </>
   );
 }
