@@ -31,7 +31,6 @@ model kecamatan {
   nama_kecamatan String        @db.VarChar(255)
   slug           String?        @unique @db.VarChar(255)
   pengguna       pengguna[]
-  stok_pangan    stok_pangan[]
   desa           desa[]
   keluarga       keluarga[]
 }
@@ -55,15 +54,17 @@ model keluarga {
   jumlah_keluarga      Int
   alamat               String         @db.VarChar(255)
   kode_pos             String?        @db.VarChar(5)
-  hamil                Konfirmasi     @default(TIDAK)
-  menyusui             Konfirmasi     @default(TIDAK)
-  balita               Konfirmasi     @default(TIDAK)
+  is_hamil                Konfirmasi     @default(Tidak)
+  is_menyusui             Konfirmasi     @default(Tidak)
+  is_balita               Konfirmasi     @default(Tidak)
   gambar               String         @db.VarChar(255)
   id_kecamatan         Int
   id_desa              Int
   id_pengguna          Int
+
   rentang_pendapatan   Int
   rentang_pengeluaran  Int
+
   status               StatusKeluarga @default(MENUNGGU)
   komentar             String?        @db.VarChar(200)
   created_at           DateTime       @default(now()) @db.DateTime(0)
@@ -73,12 +74,43 @@ model keluarga {
   kecamatan kecamatan @relation(fields: [id_kecamatan], references: [id_kecamatan])
   desa      desa      @relation(fields: [id_desa], references: [id_desa])
 
+  pendapatan  rentang_uang @relation("KeluargaPendapatan", fields: [rentang_pendapatan],  references: [id_rentang_uang], onDelete: Restrict, onUpdate: Cascade)
+  pengeluaran rentang_uang @relation("KeluargaPengeluaran", fields: [rentang_pengeluaran], references: [id_rentang_uang], onDelete: Restrict, onUpdate: Cascade)
+
+  pangan_keluarga pangan_keluarga[]
+
   @@index([id_desa], map: "id_desa")
   @@index([id_kecamatan], map: "id_kecamatan")
   @@index([id_kecamatan, id_desa], map: "id_kecamatan_desa")
   @@index([rentang_pendapatan], map: "rentang_pendapatan")
   @@index([rentang_pengeluaran], map: "rentang_pengeluaran")
 }
+
+model rentang_uang {
+  id_rentang_uang Int    @id @default(autoincrement())
+  batas_bawah     String @db.VarChar(16)
+  batas_atas      String @db.VarChar(16)
+
+  keluarga_pendapatan  keluarga[] @relation("KeluargaPendapatan")
+  keluarga_pengeluaran keluarga[] @relation("KeluargaPengeluaran")
+}
+model pangan_keluarga {
+  id_pangan_keluarga Int      @id @default(autoincrement())
+  id_pangan          Int
+  id_keluarga        Int
+  urt                Decimal  @db.Decimal(8, 2)
+  tanggal            DateTime @db.Date    
+
+  pangan   pangan   @relation(fields: [id_pangan], references: [id_pangan])
+  keluarga keluarga @relation(fields: [id_keluarga], references: [id_keluarga], onDelete: Cascade)
+
+  @@index([id_pangan])
+  @@index([id_keluarga])
+  @@index([tanggal])                        
+  @@unique([id_pangan, id_keluarga, tanggal]) 
+}
+
+
 
 model takaran {
   id_takaran   Int      @id @default(autoincrement())
@@ -110,22 +142,16 @@ model pangan {
   id_takaran           Int
   referensi_urt        String
   referensi_gram_berat Float
-  batas_aman_stok      Decimal? @db.Decimal(14, 3)
 
   harga_pangan harga_pangan[]
   jenis_pangan jenis_pangan   @relation(fields: [id_jenis_pangan], references: [id_jenis_pangan])
   takaran      takaran        @relation(fields: [id_takaran], references: [id_takaran])
-  stok_pangan  stok_pangan[]
+  pangan_keluarga pangan_keluarga[]
 
   @@index([id_jenis_pangan], map: "id_jenis_pangan")
   @@index([id_takaran], map: "id_takaran")
 }
 
-model rentang_uang {
-  id_rentang_uang Int    @id @default(autoincrement())
-  batas_bawah     String @db.VarChar(16)
-  batas_atas      String @db.VarChar(16)
-}
 
 model harga_pangan {
   id_harga     Int      @id @default(autoincrement())
@@ -139,20 +165,6 @@ model harga_pangan {
   @@index([tanggal], map: "tanggal")
 }
 
-model stok_pangan {
-  id_stok      Int      @id @default(autoincrement())
-  id_pangan    Int
-  id_kecamatan Int
-  tanggal      DateTime @db.Date
-  jumlah       Decimal  @db.Decimal(14, 3)
-
-  kecamatan kecamatan @relation(fields: [id_kecamatan], references: [id_kecamatan], map: "kecamatan")
-  pangan    pangan    @relation(fields: [id_pangan], references: [id_pangan], map: "pangan")
-
-  @@unique([id_pangan, id_kecamatan, tanggal], map: "id_pangan_id_kecamatan_tanggal")
-  @@index([id_kecamatan], map: "id_kecamatan")
-  @@index([tanggal], map: "tanggal")
-}
 
 /// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
 model migrations {
@@ -164,14 +176,6 @@ model migrations {
 }
 
 /// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
-model pangan_keluarga {
-  id_pangan_keluarga Int
-  id_pangan          Int
-  id_keluarga        Int
-  urt                Decimal @db.Decimal(8, 2)
-
-  @@ignore
-}
 
 /// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
 model cache {
@@ -192,8 +196,8 @@ model cache_locks {
 }
 
 enum Konfirmasi {
-  YA
-  TIDAK
+  Ya
+  Tidak
 }
 
 enum Peran {

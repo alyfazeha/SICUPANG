@@ -8,6 +8,7 @@ async function main() {
   await import("./jenis_pangan");
   await import("./takaran");
   await import("./pangan");
+  await import("./rentang-uang");
 }
 
 main()
