@@ -42,12 +42,7 @@ export async function middleware(request: NextRequest) {
       return NextResponse.redirect(new URL(target, request.url));
     }
 
-    return NextResponse.next({
-      request: {
-        headers: requestHeaders,
-      },
-    });
-    
+    return NextResponse.next();
   } catch (err: unknown) {
     const response = NextResponse.redirect(new URL(LOGIN, request.url));
 

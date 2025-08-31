@@ -36,6 +36,7 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
     const formattedData = familiesData.map((item) => ({
       id_keluarga: item.id_keluarga,
       nama_kepala_keluarga: item.nama_kepala_keluarga,
+      nomor_kartu_keluarga: item.nomor_kartu_keluarga,
       desa: item.desa,
     }));
 

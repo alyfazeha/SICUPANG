@@ -3,17 +3,11 @@ import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
 import bcrypt from "bcryptjs";
 
-export async function GET(req: NextRequest): Promise<Response> {
+export async function GET(): Promise<Response> {
   try {
-    const { searchParams } = new URL(req.url);
-
-    const q = searchParams.get("q") ?? undefined;
-
-    const pageRaw = Number(searchParams.get("page"));
-    const limitRaw = Number(searchParams.get("limit"));
-    const page = Number.isFinite(pageRaw) && pageRaw > 0 ? pageRaw : 1;
-    const limit = Number.isFinite(limitRaw) && limitRaw > 0 ? limitRaw : 25;
-
+    const q = undefined;
+    const page = 1;
+    const limit = 25;
     const skip = (page - 1) * limit;
 
     const where = {
@@ -21,24 +15,20 @@ export async function GET(req: NextRequest): Promise<Response> {
       ...(q
         ? {
             OR: [
-              { nama_lengkap: { contains: q} },
-              { nip: { contains: q } },
+              { nama_lengkap: { contains: q, mode: "insensitive" as const } },
+              { nip: { contains: q, mode: "insensitive" as const } },
             ],
           }
         : {}),
     };
 
     const totalSurveyors = await Prisma.pengguna.count({ where });
-
     const surveyors = await Prisma.pengguna.findMany({
       where,
       skip,
       take: limit,
       orderBy: { nama_lengkap: "asc" },
-      select: {
-        id_pengguna: true,
-        nama_lengkap: true,
-        nip: true,
+      include: {
         kecamatan: {
           select: { id_kecamatan: true, nama_kecamatan: true },
         },
