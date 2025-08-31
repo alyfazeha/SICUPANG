@@ -1,67 +1,47 @@
+import { jwtVerify } from "jose";
+import { cookies } from "next/headers";
+import { NextRequest, NextResponse } from "next/server";
+import { AUTH_TOKEN, AUTHORIZATION } from "@/constants/token";
 import { Prisma } from "@/lib/prisma";
-import { NextRequest } from "next/server";
+import type { Auth } from "@/types/auth";
 
-export async function GET(req: NextRequest): Promise<Response> {
+export async function GET(request: NextRequest): Promise<NextResponse> {
   try {
-    const userId = req.headers.get("x-user-id");
-    console.log(userId);
-    const id = Number(userId);
+    const authHeader = request.headers.get(AUTHORIZATION);
+    const token = authHeader?.startsWith("Bearer ") ? authHeader.split(" ")[1] : (await cookies()).get(AUTH_TOKEN)?.value;
 
-    const pengguna = await Prisma.pengguna.findUnique({
-      where: { id_pengguna: id },
-    });
-
-    if (!pengguna) {
-      return new Response(
-        JSON.stringify({ error: "Data pengguna tidak ditemukan." }, null, 2),
-        { status: 404, headers: { "Content-Type": "application/json" } },
-      );
+    if (!token) {
+      return NextResponse.json({ error: "Pengguna tidak terautentikasi" }, { status: 401 });
     }
 
-    const totalVillages = await Prisma.desa.count({
-      where: { id_kecamatan: Number(pengguna.id_kecamatan) },
-    });
+    const secret = new TextEncoder().encode(process.env.JWT_SECRET as string);
+    const { payload } = await jwtVerify(token, secret);
+    const decoded = payload as unknown as Auth;
 
-    const totalFamilies = await Prisma.keluarga.count({
-      where: { id_kecamatan: Number(pengguna.id_kecamatan) },
-    });
-
-    const familiesData = await Prisma.keluarga.findMany({
-      where: { id_kecamatan: Number(pengguna.id_kecamatan) },
-      select: {
-        id_keluarga: true,
-        nama_kepala_keluarga: true,
-        desa: true,
-      },
-      take: 10,
-      orderBy: { nama_kepala_keluarga: "asc" },
-    });
+    const [totalVillages, totalFamilies, familiesData] = await Promise.all([
+      Prisma.keluarga.findMany({
+        where: { id_pengguna: decoded.id_pengguna },
+        select: { id_desa: true },
+        distinct: ["id_desa"],
+      }),
+      Prisma.keluarga.count({ where: { id_pengguna: decoded.id_pengguna } }),
+      Prisma.keluarga.findMany({
+        where: { id_pengguna: decoded.id_pengguna },
+        include: { desa: true },
+        take: 10,
+        orderBy: { created_at: "desc" },
+      }),
+    ]);
 
     const formattedData = familiesData.map((item) => ({
       id_keluarga: item.id_keluarga,
       nama_kepala_keluarga: item.nama_kepala_keluarga,
       desa: item.desa,
     }));
-    
-    return new Response(
-      JSON.stringify(
-        {
-          jumlah_desa: totalVillages,
-          jumlah_keluarga: totalFamilies,
-          data: formattedData,
-        },
-        null,
-        2,
-      ),
-      { status: 200, headers: { "Content-Type": "application/json" } },
-    );
+
+    return NextResponse.json({ jumlah_desa: totalVillages.length, jumlah_keluarga: totalFamilies, data: formattedData }, { status: 200 });
   } catch (err: unknown) {
-    console.error(
-      `Terjadi kesalahan saat mengambil data keluarga pada halaman dasbor surveyor: ${err}`,
-    );
-    return new Response(
-      JSON.stringify({ error: "Gagal mengambil data keluarga." }),
-      { status: 500 },
-    );
+    console.error(`❌ Error GET /api/surveyor/dashboard: ${err}`);
+    return NextResponse.json({ error: "Gagal mengambil data keluarga." }, { status: 500 });
   }
 }

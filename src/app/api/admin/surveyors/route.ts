@@ -101,8 +101,8 @@ export async function POST(request: NextRequest): Promise<Response> {
 
     if (!parsed.success) {
       const errors = parsed.error.issues.map((e) => ({
-        field: e.path.join("."), 
-        message: e.message, 
+        field: e.path.join("."),
+        message: e.message,
       }));
 
       return NextResponse.json({ errors }, { status: 400 });

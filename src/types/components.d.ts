@@ -50,7 +50,7 @@ type Sidebar = SidebarItem & {
 
 type Table = {
   headers: string[];
-  rows: (string | number)[][];
+  rows: ReactNode[][];
   sortable: string[];
 };
 

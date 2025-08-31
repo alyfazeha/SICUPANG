@@ -4,7 +4,7 @@ import { Search } from "lucide-react";
 import { useEffect, useState } from "react";
 import { API_SURVEYOR_DASHBOARD } from "@/constants/routes";
 import type { Dashboard } from "@/types/dashboard";
-import axios from "axios";
+import axios, { type AxiosError } from "axios";
 import Table from "@/components/shared/table";
 
 export default function Page() {
@@ -16,14 +16,14 @@ export default function Page() {
         const response = await axios.get<{ data: Dashboard }>(API_SURVEYOR_DASHBOARD, { withCredentials: true });
         setData({ data: response.data.data });
       } catch (err: unknown) {
-        console.error(`Terjadi kesalahan saat mengambil data surveyor: ${err}`);
+        console.error(`Terjadi kesalahan saat mengambil data keluarga: ${(err as AxiosError).message}`);
         throw err;
       }
     })();
   }, []);
 
   return (
-    <>
+    <main>
       <section className="grid cursor-default grid-cols-1 gap-4 lg:grid-cols-2">
         <figure className="bg-primary relative overflow-hidden rounded-xl p-4 text-white lg:p-6">
           <h3 className="mb-2 text-sm opacity-80">Jumlah Desa</h3>
@@ -63,7 +63,6 @@ export default function Page() {
           sortable={["Nama", "Desa"]}
         />
       </section>
-      <span className="bg-primary absolute right-0 -bottom-20 h-40 w-40 rounded-tl-full opacity-10" />
       <section className="absolute left-72 -bottom-10 z-0 grid grid-cols-3 gap-2">
         <span className="bg-primary block h-2 w-2 animate-pulse rounded-full opacity-40" />
         <span className="bg-primary block h-2 w-2 rounded-full opacity-30" />
@@ -75,6 +74,6 @@ export default function Page() {
         <span className="bg-primary block h-2 w-2 rounded-full opacity-20" />
         <span className="bg-primary block h-2 w-2 animate-pulse rounded-full opacity-40" />
       </section>
-    </>
+    </main>
   );
 }

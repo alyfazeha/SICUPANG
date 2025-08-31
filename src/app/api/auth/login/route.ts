@@ -46,12 +46,12 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
 
     const response = NextResponse.json({
       message: "Berhasil masuk ke akun Anda",
+      token: token,
       data: {
         id_pengguna: pengguna.id_pengguna,
         nip: pengguna.nip,
         peran: pengguna.peran,
       },
-      token: token
     });
 
     response.cookies.set({

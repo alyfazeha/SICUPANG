@@ -21,7 +21,7 @@ export const ADMIN_DATA_VERIFICATION = "/admin/verifikasi-data";
 export const SURVEYOR_DASHBOARD = "/surveyor/dasbor";
 export const SURVEYOR_PROFILE = "/surveyor/profil";
 export const SURVEYOR_FAMILY = "/surveyor/keluarga";
-export const SURVEYOR_ADD_DATA_FAMILY = "/surveyor/keluarga/tambah-data";
+export const SURVEYOR_ADD_DATA_FAMILY = "/surveyor/keluarga/tambah";
 
 /* =======================
    AUTH ROUTES
@@ -37,3 +37,6 @@ export const API_LOGOUT = "/api/auth/logout";
 
 export const API_SURVEYOR_DASHBOARD = "/api/surveyor/dashboard";
 export const API_SURVEYOR_FAMILY = "/api/surveyor/family";
+export const API_SURVEYOR_ADD_DATA_FAMILY = "/api/surveyor/family/add";
+export const API_SURVEYOR_EDIT_DATA_FAMILY = "/api/surveyor/family/edit";
+export const API_SURVEYOR_DELETE_DATA_FAMILY = "/api/surveyor/family/delete";

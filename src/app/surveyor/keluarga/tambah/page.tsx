@@ -1,11 +1,5 @@
 import type { Metadata } from "next";
-import {
-  Breadcrumb,
-  BreadcrumbItem,
-  BreadcrumbLink,
-  BreadcrumbList,
-  BreadcrumbSeparator,
-} from "@/components/ui/breadcrumb";
+import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbSeparator } from "@/components/ui/breadcrumb";
 import { SURVEYOR_DASHBOARD, SURVEYOR_FAMILY } from "@/constants/routes";
 import { Home } from "lucide-react";
 import Page from "./client";
@@ -25,7 +19,7 @@ export const metadata: Metadata = {
 
 export default function TambahDataKeluarga() {
   return (
-    <main className="flex w-auto flex-col rounded-xl bg-white p-6">
+    <figure className="flex w-auto flex-col rounded-xl bg-white p-6">
       <Breadcrumb>
         <BreadcrumbList>
           <BreadcrumbItem>
@@ -49,6 +43,6 @@ export default function TambahDataKeluarga() {
         </BreadcrumbList>
       </Breadcrumb>
       <Page />
-    </main>
+    </figure>
   );
 }
