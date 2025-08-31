@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { Plus_Jakarta_Sans } from "next/font/google";
-import Auth from "./auth";
+import Auth from "@/client/auth";
 import "@/app/globals.css";
 
 const fonts = Plus_Jakarta_Sans({

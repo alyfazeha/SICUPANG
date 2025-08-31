@@ -11,7 +11,7 @@ type Family = {
   pregnant: MultiConfirmation;
   breastfeeding: MultiConfirmation;
   toddler: MultiConfirmation;
-  photo: string;
+  photo: File | undefined;
   foodstuff: Foodstuff[];
   created_at: Date;
   updated_at: Date;

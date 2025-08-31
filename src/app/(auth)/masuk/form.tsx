@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import type { Auth } from "@/types/auth";
 import type { ValidationErrors } from "@/types/components";
-import { Login } from "@/services/login";
+import { Login } from "@/services/auth/login";
 import Input from "@/components/shared/input";
 
 export default function Form() {

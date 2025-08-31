@@ -10,8 +10,8 @@ export class AddFamiliesData {
     setForm: Dispatch<SetStateAction<T>>,
     setFoodsList: Dispatch<SetStateAction<Foodstuff[]>>,
   ) {
-    const processed_foods = (document.querySelector("select[name='nama_olahan_pangan']") as HTMLSelectElement)?.value;
-    const portion = (document.querySelector("input[name='porsi']") as HTMLInputElement)?.value;
+    const processed_foods = (document.querySelector("select[name='id_foods']") as HTMLSelectElement)?.value;
+    const portion = (document.querySelector("input[name='portion']") as HTMLInputElement)?.value;
 
     if (!processed_foods || !portion) return;
 
@@ -69,13 +69,30 @@ export class AddFamiliesData {
     reader.readAsDataURL(file);
   }
 
-  public static async submit(form: Omit<Family, "created_at" | "updated_at">) {
+  public static async submit(form: Omit<Family, "created_at" | "updated_at"> & { photo?: File }) {
     try {
-      const response = (await axios.post(API_SURVEYOR_ADD_DATA_FAMILY, form, { withCredentials: true }));
-      if (response.status !== 200) throw new Error(`Terjadi kesalahan saat menambahkan data keluarga: ${response.statusText}.`);
+      const formData = new FormData();
+
+      Object.entries(form).forEach(([key, value]) => {
+        if (value !== undefined && value !== null && key !== "photo") formData.append(key, value as string | Blob);
+      });
+
+      if (form.photo) {
+        formData.append("photo", form.photo);
+      }
+      
+      const response = await axios.post(API_SURVEYOR_ADD_DATA_FAMILY, formData, {
+        withCredentials: true,
+        headers: { "Content-Type": "multipart/form-data" },
+      });
+
+      if (response.status !== 200) {
+        throw new Error(`Terjadi kesalahan saat menambahkan data keluarga: ${response.statusText}.`);
+      }
+
       return response.data;
     } catch (err: unknown) {
-      console.error(`Server gagal menambahkan data keluarga: ${err}`);
+      console.error(`❌ Error POST ${API_SURVEYOR_ADD_DATA_FAMILY}: ${err}`);
       throw err;
     }
   }

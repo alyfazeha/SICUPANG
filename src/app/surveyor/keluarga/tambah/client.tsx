@@ -1,10 +1,12 @@
 "use client";
 
-import { CookingPot, Home, IdCard, Trash, Upload, User } from "lucide-react";
-import { useEffect, useState } from "react";
+import { CookingPot, Home, IdCard, Send, Trash, Upload, User, X } from "lucide-react";
+import { type FormEvent, useEffect, useState } from "react";
 import { FaUsers } from "react-icons/fa6";
-import { AddFamiliesData } from "@/services/add-families-data";
+import { SURVEYOR_FAMILY } from "@/constants/routes";
+import { AddFamiliesData as D } from "@/services/family/add/surveyor";
 import type { Family } from "@/types/family";
+import Link from "next/link";
 import Image from "next/image";
 import Input from "@/components/shared/input";
 import Radio from "@/components/shared/radio";
@@ -31,13 +33,13 @@ export default function Page() {
     pregnant: "TIDAK",
     breastfeeding: "TIDAK",
     toddler: "TIDAK",
-    photo: "",
+    photo: undefined,
     foodstuff: [],
   });
 
   useEffect(() => {
     (async () => {
-      const data = await AddFamiliesData.get();
+      const data = await D.get();
       setProcessedFoods(data.processed_foods);
       setSalary(data.salary);
       setVillages(data.villages);
@@ -45,13 +47,13 @@ export default function Page() {
   }, []);
 
   return (
-    <form onSubmit={() => AddFamiliesData.submit(form)}>
+    <form onSubmit={async (e: FormEvent<HTMLFormElement>) => { e.preventDefault(); await D.submit({ ...form, photo: form.photo ?? undefined }) }}>
       <section className="mt-10 grid grid-cols-1 gap-6 lg:grid-cols-2">
         <Input
           icon={<User className="h-4 w-4" />}
           label="Nama Kepala Keluarga"
-          name="nama_kepala_keluarga"
-          onChange={(e) => AddFamiliesData.change(e, form, setForm)}
+          name="name"
+          onChange={(e) => D.change(e, form, setForm)}
           placeholder="Cth. Agus Miftah"
           required={true}
           type="text"
@@ -60,8 +62,8 @@ export default function Page() {
         <Input
           icon={<IdCard className="h-4 w-4" />}
           label="Nomor Kartu Keluarga"
-          name="nomor_kartu_keluarga"
-          onChange={(e) => AddFamiliesData.change(e, form, setForm)}
+          name="family_card_number"
+          onChange={(e) => D.change(e, form, setForm)}
           placeholder="Cth. 1234567890123456"
           required={true}
           type="number"
@@ -69,15 +71,15 @@ export default function Page() {
         />
         <Select
           label="Desa"
-          name="desa"
+          name="village"
           options={villages.map((village) => ({ label: village.label, value: village.label }))}
           required={true}
         />
         <Input
           icon={<Home className="h-4 w-4" />}
           label="Alamat"
-          name="alamat"
-          onChange={(e) => AddFamiliesData.change(e, form, setForm)}
+          name="address"
+          onChange={(e) => D.change(e, form, setForm)}
           placeholder="Cth. Perumahan Meikarta"
           required={true}
           type="text"
@@ -89,8 +91,8 @@ export default function Page() {
           icon={<FaUsers className="h-4 w-4" />}
           info="*Termasuk Kepala Keluarga"
           label="Jumlah Anggota"
-          name="jumlah_anggota"
-          onChange={(e) => AddFamiliesData.change(e, form, setForm)}
+          name="members"
+          onChange={(e) => D.change(e, form, setForm)}
           placeholder="Cth. 11"
           required={true}
           type="number"
@@ -98,31 +100,31 @@ export default function Page() {
         />
         <Select
           label="Pendapatan Keluarga"
-          name="pendapatan_keluarga"
+          name="income"
           options={salary.map((salary) => ({ label: salary.label, value: salary.label }))}
           required={true}
         />
         <Select
           label="Pengeluaran Keluarga"
-          name="pengeluaran_keluarga"
+          name="income"
           options={salary.map((salary) => ({ label: salary.label, value: salary.label }))}
           required={true}
         />
         <Radio
           label="Apakah Ada Ibu Hamil?"
-          name="hamil"
+          name="pregnant"
           options={[ { label: "Ya", value: "Ya" }, { label: "Tidak", value: "Tidak" } ]}
           required={true}
         />
         <Radio
           label="Apakah Terdapat Ibu Menyusui?"
-          name="menyusui"
+          name="breastfeeding"
           options={[ { label: "Ya", value: "Ya" }, { label: "Tidak", value: "Tidak" } ]}
           required={true}
         />
         <Radio
           label="Apakah Terdapat Balita 0 - 6 Tahun?"
-          name="balita"
+          name="toddler"
           options={[ { label: "Ya", value: "Ya" }, { label: "Tidak", value: "Tidak" } ]}
           required={true}
         />
@@ -133,7 +135,7 @@ export default function Page() {
         </h3>
         <fieldset>
           {!preview ? (
-            <label htmlFor="gambar" className="focus:border-primary flex h-full w-full cursor-pointer flex-col items-center justify-center rounded-lg border-2 border-[#d1d5db] p-20">
+            <label htmlFor="photo" className="focus:border-primary flex h-full w-full cursor-pointer flex-col items-center justify-center rounded-lg border-2 border-[#d1d5db] p-20">
               <Upload className="h-8 w-8 text-slate-800" />
               <span className="mt-2 text-sm font-medium text-slate-800">
                 Pilih Gambar
@@ -144,7 +146,14 @@ export default function Page() {
               <Image height={1920} width={1080} src={preview} alt="Dokumentasi Kegiatan" className="h-100 w-full rounded-lg object-cover" />
             </section>
           )}
-          <input name="gambar" id="gambar" type="file" accept="image/jpeg, image/jpg, image/png" className="hidden" onChange={(e) => AddFamiliesData.previewImage(e, setFileSize, setPreview)} />
+          <input
+            name="photo"
+            id="photo"
+            type="file"
+            accept="image/jpeg, image/jpg, image/png"
+            className="hidden"
+            onChange={(e) => { D.previewImage(e, setFileSize, setPreview); if (e.target.files && e.target.files[0]) setForm({ ...form, photo: e.target.files[0] });  }}
+          />
         </fieldset>
         <h6 className="mt-2 cursor-default text-sm text-slate-800 italic">
           *Format gambar yang diperbolehkan: .jpg, .jpeg, .png
@@ -156,15 +165,15 @@ export default function Page() {
       <section className="mt-6 flex flex-col gap-6 lg:flex-row">
         <Select
           label="Nama Olahan Pangan"
-          name="nama_olahan_pangan"
+          name="id_foods"
           options={processedFoods.map((foods) => ({ label: foods.label, value: foods.label }))}
           required={true}
         />
         <Input
           icon={<CookingPot className="h-4 w-4" />}
           label="Porsi"
-          name="porsi"
-          onChange={(e) => AddFamiliesData.change(e, form, setForm)}
+          name="portion"
+          onChange={(e) => D.change(e, form, setForm)}
           placeholder="Cth. 11"
           required={true}
           type="number"
@@ -172,7 +181,7 @@ export default function Page() {
         />
         <button
           type="button"
-          onClick={() => AddFamiliesData.addFoodToList(foodsList, form, setForm, setFoodsList)}
+          onClick={() => D.addFoodToList(foodsList, form, setForm, setFoodsList)}
           className="bg-primary duratio-300 hover:bg-primary/80 mt-auto cursor-pointer self-center rounded-lg px-10 py-4 text-sm text-white transition-all ease-in-out"
         >
           Tambah
@@ -196,6 +205,16 @@ export default function Page() {
           sortable={["Nama Olahan Pangan"]}
         />
       </section>
+      <span className="mt-6 flex items-center justify-end gap-2">
+        <Link href={SURVEYOR_FAMILY} className="flex items-center rounded-lg bg-red-500 px-5 py-3 text-sm text-white transition-colors duration-300 hover:bg-red-600">
+          <X className="mr-2 h-4 w-4 text-white" />
+          <h5 className="text-sm font-medium text-white">Batal</h5>
+        </Link>
+        <button onClick={() => D.submit(form)} type="submit" className="bg-primary hover:bg-primary/80 flex cursor-pointer items-center rounded-lg px-5 py-3 text-sm text-white transition-colors duration-300">
+          <Send className="mr-2 h-4 w-4 text-white" />
+          <h5 className="text-sm font-medium text-white">Simpan</h5>
+        </button>
+      </span>
     </form>
   );
 }

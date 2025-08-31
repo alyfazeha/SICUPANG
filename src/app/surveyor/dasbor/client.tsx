@@ -4,7 +4,7 @@ import { Search } from "lucide-react";
 import { useEffect, useState } from "react";
 import { API_SURVEYOR_DASHBOARD } from "@/constants/routes";
 import type { Dashboard } from "@/types/dashboard";
-import axios from "axios";
+import axios, { type AxiosError } from "axios";
 import Table from "@/components/shared/table";
 
 export default function Page() {
@@ -16,7 +16,7 @@ export default function Page() {
         const response = await axios.get<{ data: Dashboard }>(API_SURVEYOR_DASHBOARD, { withCredentials: true });
         setData({ data: response.data.data });
       } catch (err: unknown) {
-        console.error(`Terjadi kesalahan saat mengambil data aaaaa: ${err}`);
+        console.error(`Terjadi kesalahan saat mengambil data keluarga: ${(err as AxiosError).message}`);
         throw err;
       }
     })();

@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import Page from "../errors/not-found";
+import Page from "@/client/not-found";
 
 export const metadata: Metadata = {
   title: "404 | SICUPANG",

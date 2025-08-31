@@ -7,6 +7,7 @@ async function main() {
   await Prisma.desa.deleteMany();
   await Prisma.kecamatan.deleteMany();
   await Prisma.pengguna.deleteMany();
+  await Prisma.rentang_uang.deleteMany();
 
   await import("./kecamatan");
   await import("./desa");
@@ -14,10 +15,10 @@ async function main() {
   await import("./takaran");
   await import("./pangan");
   await import("./pengguna");
+  await import("./rentang-uang");
 }
 
-main()
-  .catch((e) => {
-    console.error("❌ Seed failed:", e);
-    process.exit(1);
-  });
+main().catch((e) => {
+  console.error("❌ Seed failed:", e);
+  process.exit(1);
+});
