@@ -3,11 +3,17 @@ import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
 import bcrypt from "bcryptjs";
 
-export async function GET(): Promise<Response> {
+export async function GET(req: NextRequest): Promise<Response> {
   try {
-    const q = undefined;
-    const page = 1;
-    const limit = 25;
+    const { searchParams } = new URL(req.url);
+
+    const q = searchParams.get("q") ?? undefined;
+
+    const pageRaw = Number(searchParams.get("page"));
+    const limitRaw = Number(searchParams.get("limit"));
+    const page = Number.isFinite(pageRaw) && pageRaw > 0 ? pageRaw : 1;
+    const limit = Number.isFinite(limitRaw) && limitRaw > 0 ? limitRaw : 25;
+
     const skip = (page - 1) * limit;
 
     const where = {
@@ -15,20 +21,24 @@ export async function GET(): Promise<Response> {
       ...(q
         ? {
             OR: [
-              { nama_lengkap: { contains: q, mode: "insensitive" as const } },
-              { nip: { contains: q, mode: "insensitive" as const } },
+              { nama_lengkap: { contains: q} },
+              { nip: { contains: q } },
             ],
           }
         : {}),
     };
 
     const totalSurveyors = await Prisma.pengguna.count({ where });
+
     const surveyors = await Prisma.pengguna.findMany({
       where,
       skip,
       take: limit,
       orderBy: { nama_lengkap: "asc" },
-      include: {
+      select: {
+        id_pengguna: true,
+        nama_lengkap: true,
+        nip: true,
         kecamatan: {
           select: { id_kecamatan: true, nama_kecamatan: true },
         },
@@ -38,7 +48,7 @@ export async function GET(): Promise<Response> {
     const formattedData = surveyors.map((item) => ({
       id: item.id_pengguna,
       nama: item.nama_lengkap,
-      nip: (item as any).nip ?? null,
+      nip: item.nip ?? null,
       kecamatan: item.kecamatan
         ? {
             id: item.kecamatan.id_kecamatan,
