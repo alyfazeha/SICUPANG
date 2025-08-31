@@ -50,6 +50,10 @@ export async function middleware(request: NextRequest) {
     const { payload } = await jwtVerify(token, secret);
     const decoded = payload as unknown as Auth;
 
+    const requestHeaders = new Headers(request.headers);
+    requestHeaders.set("x-user-id", decoded.id_pengguna.toString());
+    requestHeaders.set("x-user-role", decoded.peran);
+
     // Cross-role access 
     if (
       decoded.peran === "ADMIN" &&
@@ -75,7 +79,12 @@ export async function middleware(request: NextRequest) {
       return NextResponse.redirect(new URL(target, request.url));
     }
 
-    return NextResponse.next();
+    return NextResponse.next({
+      request: {
+        headers: requestHeaders,
+      },
+    });
+    
   } catch (err: unknown) {
     console.error(`Token tidak valid: ${err}`);
     if (isAPI)
