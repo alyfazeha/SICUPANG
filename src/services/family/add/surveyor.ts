@@ -1,5 +1,5 @@
 import type { ChangeEvent, Dispatch, SetStateAction } from "react";
-import { API_SURVEYOR_ADD_DATA_FAMILY, API_SURVEYOR_FAMILY } from "@/constants/routes";
+import { API_SURVEYOR_ADD_DATA_FAMILY } from "@/constants/routes";
 import type { Family, Foodstuff, Form } from "@/types/family";
 import axios from "axios";
 
@@ -10,17 +10,18 @@ export class AddFamiliesData {
     setForm: Dispatch<SetStateAction<T>>,
     setFoodsList: Dispatch<SetStateAction<Foodstuff[]>>,
   ) {
-    const processed_foods = (document.querySelector("select[name='id_foods']") as HTMLSelectElement)?.value;
-    const portion = (document.querySelector("input[name='portion']") as HTMLInputElement)?.value;
+    const element = document.querySelector("select[name='id_foods']") as HTMLSelectElement;
+    const portion = Number((document.querySelector("input[name='portion']") as HTMLInputElement)?.value);
 
-    if (!processed_foods || !portion) return;
+    if (!Number(element?.value) || !portion) return;
 
-    if (foodsList.some((food) => food.name === processed_foods)) {
+    if (foodsList.some((food) => food.id === Number(element?.value))) {
       alert("Olahan pangan tersebut sudah ditambahkan!");
       return;
     }
 
-    const foodstuff = { name: processed_foods, portion: Number(portion) };
+    const foodstuff: Foodstuff = { id: Number(element?.value), name: element?.selectedOptions[0]?.text ?? "", portion: portion };
+
     setForm({ ...form, foodstuff: [...form.foodstuff, foodstuff] });
     setFoodsList([...foodsList, foodstuff]);
   }
@@ -31,7 +32,7 @@ export class AddFamiliesData {
 
   public static async get() {
     try {
-      return (await axios.get<Form>(API_SURVEYOR_FAMILY, { withCredentials: true })).data;
+      return (await axios.get<Form>(API_SURVEYOR_ADD_DATA_FAMILY, { withCredentials: true })).data;
     } catch (err: unknown) {
       console.error(`Terjadi kesalahan saat mengambil data yang berkaitan formulir keluarga: ${err}`);
       return { processed_foods: [], salary: [], villages: [] };
@@ -69,18 +70,19 @@ export class AddFamiliesData {
     reader.readAsDataURL(file);
   }
 
-  public static async submit(form: Omit<Family, "created_at" | "updated_at"> & { photo?: File }) {
+  public static async submit(form: Omit<Family, "id_family" | "created_at" | "updated_at"> & { photo?: File }) {
     try {
       const formData = new FormData();
 
       Object.entries(form).forEach(([key, value]) => {
-        if (value !== undefined && value !== null && key !== "photo") formData.append(key, value as string | Blob);
+        if (!(value !== undefined && value !== null)) return;
+        formData.append(key, key === "foodstuff" ? JSON.stringify(value) : (value as string | Blob));
       });
 
       if (form.photo) {
         formData.append("photo", form.photo);
       }
-      
+
       const response = await axios.post(API_SURVEYOR_ADD_DATA_FAMILY, formData, {
         withCredentials: true,
         headers: { "Content-Type": "multipart/form-data" },

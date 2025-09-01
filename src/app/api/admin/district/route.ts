@@ -1,49 +1,28 @@
-import { NextRequest } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { Prisma } from "@/lib/prisma";
 
-
-export async function GET(req: NextRequest): Promise<Response> {
+export async function GET(request: NextRequest): Promise<NextResponse> {
   try {
-    const page = Math.max(1, Number(req.nextUrl.searchParams.get("page") ?? 1));
-    const limit = Math.min(
-      100,
-      Math.max(1, Number(req.nextUrl.searchParams.get("limit") ?? 25)),
-    );
+    const page = Math.max(1, Number(request.nextUrl.searchParams.get("page") ?? 1));
+    const limit = Math.min(100, Math.max(1, Number(request.nextUrl.searchParams.get("limit") ?? 25)));
     const skip = (page - 1) * limit;
 
-    const totalKecamatan = await Prisma.kecamatan.count();
-    const kecamatanData = await Prisma.kecamatan.findMany({
+    const numberOfVillages = await Prisma.kecamatan.count();
+    const districts = await Prisma.kecamatan.findMany({
       orderBy: { nama_kecamatan: "asc" },
       skip,
       take: limit,
     });
 
-    const formattedData = kecamatanData.map((k) => ({
-      id: k.id_kecamatan,
-      kode: k.kode_wilayah,
-      nama: k.nama_kecamatan
+    const formattedData = districts.map((district) => ({
+      id: district.id_kecamatan,
+      kode: district.kode_wilayah,
+      nama: district.nama_kecamatan,
     }));
 
-    return new Response(
-      JSON.stringify(
-        {
-          total: totalKecamatan,
-          total_pages: Math.ceil(totalKecamatan / limit),
-          data: formattedData,
-        },
-        null,
-        2,
-      ),
-      { status: 200, headers: { "Content-Type": "application/json" } },
-    );
+    return NextResponse.json({ data: formattedData, pages: Math.ceil(numberOfVillages / limit), total: numberOfVillages }, { status: 200 });
   } catch (err: unknown) {
-    console.error(
-      `❌ Error GET /api/admin/district/subdistrict/[id_kecamatan]:`,
-      err,
-    );
-    return new Response(
-      JSON.stringify({ error: "Gagal mengambil data kecamatan." }),
-      { status: 500 },
-    );
+    console.error(`❌ Error GET /api/admin/district/subdistrict: ${err}`);
+    return NextResponse.json({ error: "Gagal mengambil data kecamatan." }, { status: 500 });
   }
 }

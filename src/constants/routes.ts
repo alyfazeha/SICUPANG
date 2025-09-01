@@ -39,4 +39,4 @@ export const API_SURVEYOR_DASHBOARD = "/api/surveyor/dashboard";
 export const API_SURVEYOR_FAMILY = "/api/surveyor/family";
 export const API_SURVEYOR_ADD_DATA_FAMILY = "/api/surveyor/family/add";
 export const API_SURVEYOR_EDIT_DATA_FAMILY = "/api/surveyor/family/edit";
-export const API_SURVEYOR_DELETE_DATA_FAMILY = "/api/surveyor/family/delete";
+export const API_SURVEYOR_DELETE_DATA_FAMILY = (id: string | number) => `/api/surveyor/family/${id}`;

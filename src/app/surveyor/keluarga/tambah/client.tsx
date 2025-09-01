@@ -1,6 +1,7 @@
 "use client";
 
 import { CookingPot, Home, IdCard, Send, Trash, Upload, User, X } from "lucide-react";
+import { useRouter } from "next/navigation";
 import { type FormEvent, useEffect, useState } from "react";
 import { FaUsers } from "react-icons/fa6";
 import { SURVEYOR_FAMILY } from "@/constants/routes";
@@ -14,18 +15,20 @@ import Select from "@/components/shared/select";
 import Table from "@/components/shared/table";
 
 export default function Page() {
+  const router = useRouter();
   const [fileSize, setFileSize] = useState<string>("—");
-  const [foodsList, setFoodsList] = useState<{ name: string; portion: number }[]>([]);
+  const [foodsList, setFoodsList] = useState<{ id: number; name: string; portion: number }[]>([]);
   const [preview, setPreview] = useState<string | null>(null);
-  const [processedFoods, setProcessedFoods] = useState<{ label: string }[]>([]);
-  const [salary, setSalary] = useState<{ label: string }[]>([]);
-  const [villages, setVillages] = useState<{ label: string }[]>([]);
-  const [form, setForm] = useState<Omit<Family, "created_at" | "updated_at">>({
+  const [processedFoods, setProcessedFoods] = useState<{ id: number; label: string }[]>([]);
+  const [salary, setSalary] = useState<{ id: number; label: string }[]>([]);
+  const [submitting, setSubmitting] = useState(false);
+  const [villages, setVillages] = useState<{ id: number; label: string }[]>([]);
+  const [form, setForm] = useState<Omit<Family, "id_family" | "created_at" | "updated_at">>({
     id_district: 0,
     id_surveyor: 0,
     name: "",
     family_card_number: "",
-    village: "",
+    village: 0,
     address: "",
     members: 0,
     income: "",
@@ -46,8 +49,20 @@ export default function Page() {
     })();
   }, []);
 
+  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    if (submitting) return;
+    setSubmitting(true);
+    try {
+      await D.submit({ ...form, photo: form.photo ?? undefined });
+      router.push(SURVEYOR_FAMILY);
+    } finally {
+      setSubmitting(false);
+    }
+  };
+
   return (
-    <form onSubmit={async (e: FormEvent<HTMLFormElement>) => { e.preventDefault(); await D.submit({ ...form, photo: form.photo ?? undefined }) }}>
+    <form onSubmit={handleSubmit}>
       <section className="mt-10 grid grid-cols-1 gap-6 lg:grid-cols-2">
         <Input
           icon={<User className="h-4 w-4" />}
@@ -72,8 +87,8 @@ export default function Page() {
         <Select
           label="Desa"
           name="village"
-          onChange={(val) => setForm({ ...form, village: val })}
-          options={villages.map((village) => ({ label: village.label, value: village.label }))}
+          onChange={(value) => setForm({ ...form, village: value })}
+          options={villages.map((village) => ({ label: village.label, value: village.id.toString() }))}
           required={true}
         />
         <Input
@@ -103,14 +118,14 @@ export default function Page() {
           label="Pendapatan Keluarga"
           name="income"
           onChange={(value) => setForm({ ...form, income: value })}
-          options={salary.map((salary) => ({ label: salary.label, value: salary.label }))}
+          options={salary.map((salary) => ({ label: salary.label, value: salary.id.toString() }))}
           required={true}
         />
         <Select
           label="Pengeluaran Keluarga"
           name="spending"
           onChange={(value) => setForm({ ...form, spending: value })}
-          options={salary.map((salary) => ({ label: salary.label, value: salary.label }))}
+          options={salary.map((salary) => ({ label: salary.label, value: salary.id.toString() }))}
           required={true}
         />
         <Radio
@@ -169,7 +184,7 @@ export default function Page() {
         <Select
           label="Nama Olahan Pangan"
           name="id_foods"
-          options={processedFoods.map((foods) => ({ label: foods.label, value: foods.label }))}
+          options={processedFoods.map((foods) => ({ label: foods.label, value: foods.id.toString() }))}
           required={true}
         />
         <Input
@@ -213,7 +228,7 @@ export default function Page() {
           <X className="mr-2 h-4 w-4 text-white" />
           <h5 className="text-sm font-medium text-white">Batal</h5>
         </Link>
-        <button onClick={() => D.submit(form)} type="submit" className="bg-primary hover:bg-primary/80 flex cursor-pointer items-center rounded-lg px-5 py-3 text-sm text-white transition-colors duration-300">
+        <button disabled={submitting} type="submit" className="bg-primary hover:bg-primary/80 flex cursor-pointer items-center rounded-lg px-5 py-3 text-sm text-white transition-colors duration-300">
           <Send className="mr-2 h-4 w-4 text-white" />
           <h5 className="text-sm font-medium text-white">Simpan</h5>
         </button>

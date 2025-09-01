@@ -1,7 +1,31 @@
-import { Search } from "lucide-react";
+"use client";
+
+import { Pencil, Search, Trash } from "lucide-react";
+import { useEffect, useState } from "react";
+import { FaCircleInfo } from "react-icons/fa6";
+import { API_SURVEYOR_FAMILY } from "@/constants/routes";
+import { DeleteFamiliesData as DF } from "@/services/family/delete/surveyor";
+import type { Family, Status } from "@/types/family";
+import { Text } from "@/utils/text";
+import axios from "axios";
+import Link from "next/link";
 import Table from "@/components/shared/table";
 
 export default function Page() {
+  const [data, setData] = useState<Family[]>([]);
+
+  useEffect(() => {
+    (async () => {
+      try {
+        const response = await axios.get<{ family: Family[] }>(API_SURVEYOR_FAMILY);
+        setData(response.data.family);
+      } catch (err: unknown) {
+        console.error(`❌ Error GET ${API_SURVEYOR_FAMILY}: ${err}`);
+        throw err;
+      }
+    })();
+  }, []);
+
   return (
     <>
       <section className="bg-primary mt-8 mb-4 flex items-center justify-between gap-10 overflow-x-auto rounded-xl px-6 py-4 whitespace-nowrap">
@@ -22,7 +46,24 @@ export default function Page() {
       </section>
       <Table
         headers={["Nama Kepala Keluarga", "Nomor Kartu Keluarga", "Desa", "Status", "Komentar", "Aksi"]}
-        rows={[]}
+        rows={data.map((family, index) => [
+          family.name,
+          family.family_card_number,
+          family.village,
+          Text.familyStatusBadge(family.status as Status),
+          family.comment ?? "-",
+          <span key={index} className="flex items-center gap-4">
+            <Link href="" className="cursor-pointer flex items-center justify-center p-3 bg-blue-500 text-white rounded-lg transition-colors duration-150 shadow-sm hover:bg-blue-600 text-xs">
+              <FaCircleInfo className="h-3.5 w-3.5" />
+            </Link>
+            <Link href="" className="cursor-pointer flex items-center justify-center p-3 bg-yellow-500 text-white rounded-lg transition-colors duration-150 shadow-sm hover:bg-yellow-600 text-xs">
+              <Pencil className="h-3.5 w-3.5" />
+            </Link>
+            <button onClick={() => DF.delete(family.id_family as number)} type="button" className="cursor-pointer flex items-center justify-center p-3 bg-red-500 text-white rounded-lg transition-colors duration-150 shadow-sm hover:bg-red-600 text-xs">
+              <Trash className="h-3.5 w-3.5" />
+            </button>
+          </span>,
+        ])}
         sortable={["Nama Kepala Keluarga", "Desa"]}
       />
     </>

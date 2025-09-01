@@ -1,18 +1,24 @@
+type Status = "DITERIMA" | "DITOLAK" | "MENUNGGU";
+type MultiConfirmation = "YA" | "TIDAK";
+
 type Family = {
   id_district: number | string;
+  id_family: number;
   id_surveyor: number | null;
   name: string;
   family_card_number: string;
-  village: string;
+  village: string | number;
   address: string;
   members: number;
-  income: string;
-  spending: string;
+  income: string | number;
+  spending: string | number;
   pregnant: MultiConfirmation;
   breastfeeding: MultiConfirmation;
   toddler: MultiConfirmation;
   photo: File | undefined;
   foodstuff: Foodstuff[];
+  status?: Status;
+  comment?: string;
   created_at: Date;
   updated_at: Date;
 };
@@ -25,6 +31,7 @@ type FamilyFoods = {
 };
 
 type Foodstuff = {
+  id: number;
   name: string;
   portion: number;
 };
@@ -35,6 +42,10 @@ type Form =  {
   villages: { id: number; label: string }[];
 };
 
-type MultiConfirmation = "YA" | "TIDAK";
+type SalaryRange = {
+  id: number;
+  lower_limit: string;
+  upper_limit: string;
+};
 
-export { Family, FamilyFoods, Foodstuff, Form };
+export { Family, FamilyFoods, Foodstuff, Form, SalaryRange, Status };

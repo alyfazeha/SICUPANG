@@ -52,7 +52,7 @@ export default function Select({ label, name, onChange, options, required, selec
         >
           <h5 className="flex w-full items-center justify-between">
             <span className="truncate">
-              {Text.truncate(selectedValue, 20, 40) || `Pilih ${label}`}
+              {Text.truncate(options.find((option) => option.value === selectedValue)?.label, 20, 40) || `Pilih ${label}`}
             </span>
             <ChevronDown className="ml-2 h-4 w-4 flex-shrink-0 text-gray-400" />
           </h5>

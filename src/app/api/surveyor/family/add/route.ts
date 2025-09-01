@@ -4,11 +4,47 @@ import { cookies } from "next/headers";
 import { NextRequest, NextResponse } from "next/server";
 import { join } from "path";
 import { z } from "zod";
-import { SURVEYOR_ADD_DATA_FAMILY, SURVEYOR_FAMILY } from "@/constants/routes";
+import { API_SURVEYOR_ADD_DATA_FAMILY, SURVEYOR_ADD_DATA_FAMILY, SURVEYOR_FAMILY } from "@/constants/routes";
 import { AUTH_TOKEN } from "@/constants/token";
 import { Prisma } from "@/lib/prisma";
 import type { Auth } from "@/types/auth";
 import type { Foodstuff } from "@/types/family";
+
+export async function GET(): Promise<NextResponse> {
+  try {
+    const villages = (await Prisma.desa.findMany({
+      select: { id_desa: true, nama_desa: true, kode_wilayah: true },
+      distinct: ["id_desa"],
+    })).map((village) => ({
+      id: village.id_desa,
+      label: `${village.nama_desa} - ${village.kode_wilayah}`,
+    }));
+
+    const processingFoods = (await Prisma.pangan.findMany({
+      select: { id_pangan: true, nama_pangan: true },
+      distinct: ["id_pangan"],
+    })).map((food) => ({
+      id: food.id_pangan,
+      label: food.nama_pangan,
+    }));
+
+    const salaryRanges = await Prisma.rentang_uang.findMany({
+      select: { id_rentang_uang: true, batas_atas: true, batas_bawah: true },
+      distinct: ["id_rentang_uang"],
+    });
+
+    const formattedSalary = salaryRanges.map((salary) => {
+      if (salary.id_rentang_uang === 1) return { id: salary.id_rentang_uang, label: `< ${salary.batas_atas}` }; 
+      else if (salary.id_rentang_uang === 15) return { id: salary.id_rentang_uang, label: `Lebih dari ${salary.batas_atas}` }; 
+      return { id: salary.id_rentang_uang, label: `${salary.batas_bawah} - ${salary.batas_atas}` };
+    });
+
+    return NextResponse.json({ processed_foods: processingFoods, salary: formattedSalary, villages }, { status: 200 });
+  } catch (err: unknown) {
+    console.error(`❌ Error GET ${API_SURVEYOR_ADD_DATA_FAMILY}: ${err}`);
+    return NextResponse.json({ error: "Gagal mengambil data keluarga." }, { status: 500 });
+  }
+}
 
 export async function POST(request: NextRequest): Promise<NextResponse> {
   try {    
@@ -95,7 +131,11 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
     }
 
     // ✅ Simpan file
-    const filename = `${Date.now()}-${file.name}`;
+    const formattedDate = `${String(new Date().getDate()).padStart(2, "0")}-${String(new Date().getMonth() + 1).padStart(2, "0")}-${new Date().getFullYear()}`;
+    const nameWithoutExtension = file.name.replace(/\.[^/.]+$/, "").toLowerCase().replace(/[\s_]+/g, "-").replace(/[^a-z0-9-]/g, "-");
+    const extension = file.name.split(".").pop()?.toLowerCase();
+    const filename = `${formattedDate}-${nameWithoutExtension}.${extension}`;
+
     await mkdir(join(process.cwd(), "public", "storage", "family"), { recursive: true });
     await writeFile(join(process.cwd(), "public", "storage", "family", filename), Buffer.from(await file.arrayBuffer()));
 
@@ -110,8 +150,8 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
           id_desa: Number(parsed.data.village),
           alamat: parsed.data.address,
           jumlah_keluarga: Number(parsed.data.members),
-          rentang_pendapatan: parsed.data.income,
-          rentang_pengeluaran: parsed.data.spending,
+          rentang_pendapatan: Number(parsed.data.income),
+          rentang_pengeluaran: Number(parsed.data.spending),
           hamil: parsed.data.pregnant,
           menyusui: parsed.data.breastfeeding,
           balita: parsed.data.toddler,
@@ -119,17 +159,20 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
         },
       });
 
-      await table.pangan_keluarga.create({
-        data: {
-          id_keluarga: keluarga.id_keluarga,
-          id_pangan: Number(parsed.data.id_foods),
-          urt: Number(parsed.data.portion),
-          tanggal: new Date(),
-        },
-      });
+      // ✅ Loop semua foodstuff lalu simpan ke pangan_keluarga
+      for (const food of foodstuff) {
+        await table.pangan_keluarga.create({
+          data: {
+            id_keluarga: keluarga.id_keluarga,
+            id_pangan: food.id,
+            urt: food.portion,
+            tanggal: new Date(),
+          },
+        });
+      }
     });
 
-    return NextResponse.redirect(new URL(SURVEYOR_FAMILY, process.env.NEXT_PUBLIC_APP_URL));
+    return NextResponse.redirect(new URL(SURVEYOR_FAMILY, process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000"), 303);
   } catch (err) {
     console.error(`❌ Error POST ${SURVEYOR_ADD_DATA_FAMILY}:`, err);
     return NextResponse.json({ message: "Gagal menambah data keluarga" }, { status: 500 });
