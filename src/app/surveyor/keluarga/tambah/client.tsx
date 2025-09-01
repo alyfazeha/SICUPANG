@@ -72,6 +72,7 @@ export default function Page() {
         <Select
           label="Desa"
           name="village"
+          onChange={(val) => setForm({ ...form, village: val })}
           options={villages.map((village) => ({ label: village.label, value: village.label }))}
           required={true}
         />
@@ -101,12 +102,14 @@ export default function Page() {
         <Select
           label="Pendapatan Keluarga"
           name="income"
+          onChange={(value) => setForm({ ...form, income: value })}
           options={salary.map((salary) => ({ label: salary.label, value: salary.label }))}
           required={true}
         />
         <Select
           label="Pengeluaran Keluarga"
-          name="income"
+          name="spending"
+          onChange={(value) => setForm({ ...form, spending: value })}
           options={salary.map((salary) => ({ label: salary.label, value: salary.label }))}
           required={true}
         />

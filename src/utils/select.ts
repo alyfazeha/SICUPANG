@@ -1,7 +1,7 @@
 import type { Dispatch, RefObject, SetStateAction } from "react";
 
 export class Select {
-  public static filteredOptions(options: Array<string | { label: string; value: string }>, searchText: string) {
+  public static filteredOptions(options: Array<{ label: string; value: string }>, searchText: string) {
     if (!searchText) return options;
     return options.filter((option) => this.label(option).toLowerCase().includes(searchText.toLowerCase()));
   }
@@ -14,9 +14,15 @@ export class Select {
     return typeof option === "string" ? option : option.label;
   }
 
-  public static selectOption(option: string | { label: string; value: string }, setDropdownOpen: Dispatch<SetStateAction<boolean>>, setSelectedValue: Dispatch<SetStateAction<string | undefined>>) {
+  public static selectOption(
+    option: { label: string; value: string },
+    setDropdownOpen: Dispatch<SetStateAction<boolean>>,
+    setSelectedValue: Dispatch<SetStateAction<string | undefined>>,
+    onChange?: (value: string) => void
+  ) {
     setSelectedValue(this.value(option));
     setDropdownOpen(false);
+    onChange?.(this.value(option));
   }
 
   public static value(option: string | { value: string }) {

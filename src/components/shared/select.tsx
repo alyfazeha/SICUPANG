@@ -6,7 +6,7 @@ import { Select as S } from "@/utils/select";
 import { ChevronDown, Search } from "lucide-react";
 import { Text } from "@/utils/text";
 
-export default function Select({ label, name, options, required, selected, value }: Select) {
+export default function Select({ label, name, onChange, options, required, selected, value }: Select) {
   const wrapper = useRef<HTMLFieldSetElement>(null);
   const [dropdownOpen, setDropdownOpen] = useState<boolean>(false);
   const [searchText, setSearchText] = useState<string>("");
@@ -74,7 +74,7 @@ export default function Select({ label, name, options, required, selected, value
                 <li
                   key={index}
                   className={`cursor-pointer p-4 hover:bg-gray-100 ${S.value(option) === selectedValue ? "bg-gray-100" : ""}`}
-                  onClick={() => S.selectOption(option, setDropdownOpen, setSelectedValue)}
+                  onClick={() => S.selectOption(option, setDropdownOpen, setSelectedValue, onChange)}
                 >
                   {S.label(option)}
                 </li>

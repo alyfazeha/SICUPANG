@@ -14,14 +14,11 @@ export default function Input({ icon, label, name, onChange, placeholder, requir
     else if (type === "text") newValue = newValue.replace(/[^a-zA-Z0-9\s.,?!:;'"\-()\/]/g, "");
 
     e.target.value = newValue;
-    onChange(e);
+    onChange?.(e);
   };
 
   const handleWheel = (e: WheelEvent<HTMLInputElement>) => {
-    if (type === "number") {
-      e.preventDefault();
-      e.currentTarget.blur();
-    }
+    if (type === "number") e.currentTarget.blur();
   };
 
   return (

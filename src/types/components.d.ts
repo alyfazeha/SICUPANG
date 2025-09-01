@@ -11,7 +11,7 @@ type Input = {
   info?: string | null;
   label: string;
   name: string;
-  onChange: (value: ChangeEvent<HTMLInputElement>) => void;
+  onChange?: ((value: ChangeEvent<HTMLInputElement>) => void) | null;
   placeholder?: string;
   required: boolean;
   type: InputType;
@@ -29,7 +29,8 @@ type Radio = {
 type Select = {
   label: string;
   name: string;
-  options: { label: string; value: string }[] | Array<string | { label: string; value: string }>;
+  onChange?: (value: string) => void;
+  options: Array<{ label: string; value: string }>;
   required: boolean;
   selected?: string;
   value?: string;
