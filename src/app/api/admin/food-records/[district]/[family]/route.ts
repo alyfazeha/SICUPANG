@@ -1,21 +1,38 @@
-import { NextResponse } from "next/server";
+import { NextRequest } from "next/server";
 import { Prisma } from "@/lib/prisma";
 
-export async function GET(context: { params: { district: string } }): Promise<NextResponse> {
+export async function GET(
+  req: NextRequest,
+  { params }: { params: Promise<{ family: string }> },
+): Promise<Response> {
   try {
-    const foodsFamily = await Prisma.keluarga.findMany({
-      where: { id_keluarga: Number(context.params.district) },
+    const { family } = await params;
+    const id = Number(family);
+    if (!Number.isFinite(id) || id <= 0) {
+      return new Response(
+        JSON.stringify({ error: "id_surveyor invalid" }, null, 2),
+        { status: 400, headers: { "Content-Type": "application/json" } },
+      );
+    }
+
+    const families_food = await Prisma.keluarga.findMany({
+      where: { id_keluarga: id },
       select: {
         id_keluarga: true,
         nama_kepala_keluarga: true,
         jumlah_keluarga: true,
         alamat: true,
-        rentang_pendapatan: true,
-        rentang_pengeluaran: true,
+        pendapatan: true,
+        pengeluaran: true,
         balita: true,
         menyusui: true,
         hamil: true,
-        desa: { select: { id_desa: true, nama_desa: true } },
+        desa: {
+          select: {
+            id_desa: true,
+            nama_desa: true,
+          },
+        },
         pangan_keluarga: {
           select: {
             id_pangan_keluarga: true,
@@ -26,7 +43,11 @@ export async function GET(context: { params: { district: string } }): Promise<Ne
                 id_pangan: true,
                 nama_pangan: true,
                 id_takaran: true,
-                takaran: { select: { nama_takaran: true } },
+                takaran: {
+                  select: {
+                    nama_takaran: true,
+                  },
+                },
               },
             },
           },
@@ -35,26 +56,50 @@ export async function GET(context: { params: { district: string } }): Promise<Ne
       },
     });
 
-    const response = foodsFamily.map((family) => {
-      const byDate = family.pangan_keluarga.reduce((food, row) => {
-        (food[row.tanggal.toISOString().slice(0, 10)] ??= []).push({ id: row.id_pangan_keluarga, urt: row.urt, pangan: row.pangan });
-        return food;
-      }, {} as Record<string, unknown[]>);
+      const response = families_food.map(fam => {
+      const byDate = fam.pangan_keluarga.reduce((acc, row) => {
+        const tgl = row.tanggal.toISOString().slice(0, 10);
+        (acc[tgl] ??= []).push({
+          id_pangan_keluarga: row.id_pangan_keluarga,
+          urt: row.urt,
+          pangan: row.pangan,
+        });
+        return acc;
+      }, {} as Record<string, any[]>);
 
       return {
-        id: family.id_keluarga,
-        nama_kepala_keluarga: family.nama_kepala_keluarga,
-        konsumsi_per_tanggal: Object.entries(byDate).map(([date, items]) => ({ date, items })),
+        id_keluarga: fam.id_keluarga,
+        nama_kepala_keluarga: fam.nama_kepala_keluarga,
+        konsumsi_per_tanggal: Object.entries(byDate).map(([tanggal, items]) => ({
+          tanggal,
+          items,
+        })),
       };
     });
 
     if (response.length === 0) {
-      return NextResponse.json({ message: "Data pangan keluarga tidak ditemukan." }, { status: 404 });
+      return new Response(
+        JSON.stringify(
+          { error: "families food data not found" },
+          null,
+          2,
+        ),
+        { status: 404, headers: { "Content-Type": "application/json" } },
+      );
     }
 
-    return NextResponse.json({ id: foodsFamily }, { status: 200 });
+    return new Response(JSON.stringify({ response }, null, 2), {
+      status: 200,
+      headers: { "Content-Type": "application/json" },
+    });
   } catch (err: unknown) {
-    console.error(`❌ Error GET /api/admin/food-records/[district]/[family]: ${err}`);
-    return NextResponse.json({ message: "Terjadi kesalahan saat mengambil data pangan keluarga berdasarkan kecamatan." }, { status: 500 });
+    console.error(
+      "❌ Error GET /api/admin/rekap-pangan/[id_kecamatan]/[id_keluarga]:",
+      err,
+    );
+    return new Response(
+      JSON.stringify({ error: "Gagal mengambil data rekap pangan." }, null, 2),
+      { status: 500, headers: { "Content-Type": "application/json" } },
+    );
   }
 }
