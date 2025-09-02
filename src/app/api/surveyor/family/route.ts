@@ -1,12 +1,15 @@
 import { NextResponse } from "next/server";
 import { API_SURVEYOR_FAMILY } from "@/constants/routes";
 import { Prisma } from "@/lib/prisma";
-import { Family } from "@/types/family";
+import type { Family as F } from "@/types/family";
+
+type Family = Pick<F, "id_family" | "name" | "family_card_number" | "village" | "status" | "comment">;
 
 export async function GET(): Promise<NextResponse> {
   try {
     const family = await Prisma.keluarga.findMany({
       select: {
+        id_keluarga: true,
         nama_kepala_keluarga: true,
         nomor_kartu_keluarga: true,
         desa: { select: { nama_desa: true } },
@@ -19,13 +22,14 @@ export async function GET(): Promise<NextResponse> {
       return NextResponse.json({ message: "Data keluarga tidak ditemukan." }, { status: 404 });
     }
 
-    const formattedData = family.map((value) => ({
+    const formattedData: Family[]= family.map((value) => ({
+      id_family: value.id_keluarga,
       name: value.nama_kepala_keluarga,
       family_card_number: value.nomor_kartu_keluarga,
       village: value.desa.nama_desa,
       status: value.status,
       comment: value.komentar,
-    }) as unknown as Pick<Family, "name" | "family_card_number" | "village" | "status" | "comment">);
+    }));
 
     return NextResponse.json({ family: formattedData }, { status: 200 });
   } catch (err: unknown) {

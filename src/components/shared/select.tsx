@@ -1,9 +1,9 @@
 "use client";
 
+import { ChevronDown, Search } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import type { Select } from "@/types/components";
 import { Select as S } from "@/utils/select";
-import { ChevronDown, Search } from "lucide-react";
 import { Text } from "@/utils/text";
 
 export default function Select({ label, name, onChange, options, required, selected, value }: Select) {

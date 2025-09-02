@@ -13,6 +13,11 @@ export class AddFamiliesData {
     const element = document.querySelector("select[name='id_foods']") as HTMLSelectElement;
     const portion = Number((document.querySelector("input[name='portion']") as HTMLInputElement)?.value);
 
+    if (element || portion) {
+      (document.querySelector("span[class='truncate']") as HTMLSelectElement).textContent = "";
+      (document.querySelector("input[name='portion']") as HTMLInputElement).value = "";
+    }
+
     if (!Number(element?.value) || !portion) return;
 
     if (foodsList.some((food) => food.id === Number(element?.value))) {
@@ -22,7 +27,7 @@ export class AddFamiliesData {
 
     const foodstuff: Foodstuff = { id: Number(element?.value), name: element?.selectedOptions[0]?.text ?? "", portion: portion };
 
-    setForm({ ...form, foodstuff: [...form.foodstuff, foodstuff] });
+    setForm({ ...form, foodstuff: [...form.foodstuff, foodstuff], id_foods: "", portion: "" });
     setFoodsList([...foodsList, foodstuff]);
   }
 

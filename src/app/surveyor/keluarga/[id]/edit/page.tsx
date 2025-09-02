@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Page from "./client";
 
 export const metadata: Metadata = {
   title: "Edit Data Keluarga | SICUPANG",
@@ -14,5 +15,5 @@ export const metadata: Metadata = {
 };
 
 export default function EditDataKeluarga() {
-  return null;
+  return <Page />;
 }

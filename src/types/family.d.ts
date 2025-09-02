@@ -3,10 +3,10 @@ type MultiConfirmation = "YA" | "TIDAK";
 
 type Family = {
   id_district: number | string;
-  id_family: number;
+  id_family: number | string | null;
   id_surveyor: number | null;
   name: string;
-  family_card_number: string;
+  family_card_number: string | null;
   village: string | number;
   address: string;
   members: number;
@@ -18,7 +18,7 @@ type Family = {
   photo: File | undefined;
   foodstuff: Foodstuff[];
   status?: Status;
-  comment?: string;
+  comment?: string | null;
   created_at: Date;
   updated_at: Date;
 };
