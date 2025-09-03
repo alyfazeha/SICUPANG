@@ -185,6 +185,7 @@ export default function Page() {
           label="Nama Olahan Pangan"
           name="id_foods"
           options={processedFoods.map((foods) => ({ label: foods.label, value: foods.id.toString() }))}
+          required={false}
         />
         <Input
           icon={<CookingPot className="h-4 w-4" />}
@@ -192,6 +193,7 @@ export default function Page() {
           name="portion"
           onChange={(e) => D.change(e, form, setForm)}
           placeholder="Cth. 11"
+          required={false}
           type="number"
           variant="form"
         />

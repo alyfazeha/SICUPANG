@@ -15,7 +15,7 @@ type Family = {
   pregnant: MultiConfirmation;
   breastfeeding: MultiConfirmation;
   toddler: MultiConfirmation;
-  photo: File | undefined;
+  photo: File | string | undefined;
   foodstuff: Foodstuff[];
   status?: Status;
   comment?: string | null;
