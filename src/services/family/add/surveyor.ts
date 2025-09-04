@@ -40,7 +40,7 @@ export class AddFamiliesData {
       return (await axios.get<Form>(API_SURVEYOR_ADD_DATA_FAMILY, { withCredentials: true })).data;
     } catch (err: unknown) {
       console.error(`Terjadi kesalahan saat mengambil data yang berkaitan formulir keluarga: ${err}`);
-      return { processed_foods: [], salary: [], villages: [] };
+      return { processed_foods: [], salary: [], villages: [] } as Form;
     }
   }
 
@@ -75,7 +75,7 @@ export class AddFamiliesData {
     reader.readAsDataURL(file);
   }
 
-  public static async submit(form: Omit<Family, "id_family" | "created_at" | "updated_at"> & { photo?: File }) {
+  public static async submit(form: Omit<Family, "id_family" | "created_at" | "updated_at">) {
     try {
       const formData = new FormData();
 

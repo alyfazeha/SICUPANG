@@ -6,7 +6,7 @@ import { type FormEvent, useEffect, useState } from "react";
 import { FaUsers } from "react-icons/fa6";
 import { SURVEYOR_FAMILY } from "@/constants/routes";
 import { AddFamiliesData as D } from "@/services/family/add/surveyor";
-import type { Family } from "@/types/family";
+import type { Family, MultiConfirmation } from "@/types/family";
 import Link from "next/link";
 import Image from "next/image";
 import Input from "@/components/shared/input";
@@ -33,9 +33,9 @@ export default function Page() {
     members: 0,
     income: "",
     spending: "",
-    pregnant: "TIDAK",
-    breastfeeding: "TIDAK",
-    toddler: "TIDAK",
+    pregnant: null,
+    breastfeeding: null,
+    toddler: null,
     photo: undefined,
     foodstuff: [],
   });
@@ -131,20 +131,26 @@ export default function Page() {
         <Radio
           label="Apakah Ada Ibu Hamil?"
           name="pregnant"
-          options={[ { label: "Ya", value: "Ya" }, { label: "Tidak", value: "Tidak" } ]}
+          onChange={(value) => setForm({ ...form, pregnant: value as typeof form.pregnant })}
+          options={[ { label: "Ya", value: "YA" }, { label: "Tidak", value: "TIDAK" } ]}
           required={true}
+          value={form.pregnant as MultiConfirmation}
         />
         <Radio
           label="Apakah Terdapat Ibu Menyusui?"
           name="breastfeeding"
-          options={[ { label: "Ya", value: "Ya" }, { label: "Tidak", value: "Tidak" } ]}
+          onChange={(value) => setForm({ ...form, breastfeeding: value as typeof form.breastfeeding })}
+          options={[ { label: "Ya", value: "YA" }, { label: "Tidak", value: "TIDAK" } ]}
           required={true}
+          value={form.breastfeeding as MultiConfirmation}
         />
         <Radio
           label="Apakah Terdapat Balita 0 - 6 Tahun?"
           name="toddler"
-          options={[ { label: "Ya", value: "Ya" }, { label: "Tidak", value: "Tidak" } ]}
+          onChange={(value) => setForm({ ...form, toddler: value as typeof form.toddler })}
+          options={[ { label: "Ya", value: "YA" }, { label: "Tidak", value: "TIDAK" } ]}
           required={true}
+          value={form.toddler as MultiConfirmation}
         />
       </section>
       <section className="flex flex-col">

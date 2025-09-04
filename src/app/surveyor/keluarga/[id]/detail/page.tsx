@@ -9,7 +9,7 @@ export async function generateMetadata({ params }: { params: Promise<{ id: strin
   const { id } = await params;
 
   try {
-    const family = await Prisma.keluarga.findUnique({ where: { id_keluarga: parseInt(id, 10) } });
+    const family = await Prisma.keluarga.findUniqueOrThrow({ where: { id_keluarga: parseInt(id, 10) } });
 
     return {
       title: `${family?.nama_kepala_keluarga ?? ""} | SICUPANG`,
@@ -38,7 +38,7 @@ export default async function DetailDataKeluarga({ params }: { params: Promise<{
   const { id } = await params;
 
   try {
-    const families = await Prisma.keluarga.findUnique({
+    const families = await Prisma.keluarga.findUniqueOrThrow({
       where: { id_keluarga: parseInt(id, 10) },
       include: {
         desa: { include: { kecamatan: true } },
@@ -59,12 +59,12 @@ export default async function DetailDataKeluarga({ params }: { params: Promise<{
       );
     }
 
-    const family: Family = {
+    const family: Omit<Family, "created_at" | "updated_at"> = {
       id_district: families.id_kecamatan,
       id_family: families.id_keluarga,
-      id_surveyor: families.id_pengguna ?? null,
+      id_surveyor: families.id_pengguna,
       name: families.nama_kepala_keluarga,
-      family_card_number: families.nomor_kartu_keluarga ?? null,
+      family_card_number: families.nomor_kartu_keluarga,
       village: families.desa.nama_desa,
       address: families.alamat,
       members: families.jumlah_keluarga,
@@ -73,12 +73,8 @@ export default async function DetailDataKeluarga({ params }: { params: Promise<{
       pregnant: families.hamil === "Ya" ? "YA" : "TIDAK",
       breastfeeding: families.menyusui === "Ya" ? "YA" : "TIDAK",
       toddler: families.balita === "Ya" ? "YA" : "TIDAK",
-      photo: families.gambar ?? null,
+      photo: families.gambar,
       foodstuff: (families.pangan_keluarga ?? []).map((food) => ({ id: food.id_pangan, name: food.pangan.nama_pangan, portion: Number(food.urt) })),
-      status: families.status ?? undefined,
-      comment: families.komentar ?? null,
-      created_at: families.created_at,
-      updated_at: families.updated_at,
     };
 
     return <Page family={family} />;

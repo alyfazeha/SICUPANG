@@ -1,7 +1,6 @@
 "use client";
 
 import { Camera, CookingPot, Home, UserCheck2 } from "lucide-react";
-import { useEffect, useState } from "react";
 import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbSeparator } from "@/components/ui/breadcrumb";
 import { FAMILY_ATTRIBUTES, KEYS_TO_EXCLUDE } from "@/constants/family";
 import { SURVEYOR_DASHBOARD, SURVEYOR_FAMILY } from "@/constants/routes";
@@ -10,11 +9,7 @@ import { Text } from "@/utils/text";
 import Table from "@/components/shared/table";
 import Image from "next/image";
 
-export default function Page({ family }: { family: Family }) {
-  const [truncatedText, setTruncatedText] = useState(`${family.name}`);
-
-  useEffect(() => setTruncatedText(Text.truncate(`${family.name}`, 15, 50)), [family.name]);
-
+export default function Page({ family }: { family: Omit<Family, "created_at" | "updated_at"> }) {
   return (
     <figure className="flex w-auto flex-col rounded-xl bg-white p-6">
       <Breadcrumb>
@@ -34,7 +29,7 @@ export default function Page({ family }: { family: Family }) {
           <BreadcrumbSeparator />
           <BreadcrumbItem>
             <h5 className="flex cursor-default items-center font-semibold">
-              {truncatedText}
+              {Text.truncate(`${family.name}`, 15, 50)}
             </h5>
           </BreadcrumbItem>
         </BreadcrumbList>

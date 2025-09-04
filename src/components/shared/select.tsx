@@ -6,16 +6,18 @@ import type { Select } from "@/types/components";
 import { Select as S } from "@/utils/select";
 import { Text } from "@/utils/text";
 
-export default function Select({ label, name, onChange, options, required, selected, value }: Select) {
+export default function Select({ label, name, onChange, options, required, value }: Select) {
   const wrapper = useRef<HTMLFieldSetElement>(null);
   const [dropdownOpen, setDropdownOpen] = useState<boolean>(false);
   const [searchText, setSearchText] = useState<string>("");
-  const [selectedValue, setSelectedValue] = useState<string | undefined>(selected || value);
+  const [selectedValue, setSelectedValue] = useState<string | undefined>(value?.toString());
 
   useEffect(() => {
     document.addEventListener("click", (e: MouseEvent) => S.handleClickOutside(e, wrapper, setDropdownOpen));
     return () => document.removeEventListener("click", (e: MouseEvent) => S.handleClickOutside(e, wrapper, setDropdownOpen));
   }, []);
+
+  useEffect(() => setSelectedValue(value?.toString()), [value]);
 
   return (
     <fieldset className="relative flex w-full flex-col justify-between space-y-4 text-sm" ref={wrapper}>
@@ -30,8 +32,8 @@ export default function Select({ label, name, onChange, options, required, selec
           id={name}
           required={required}
           className="hidden w-full appearance-none rounded-[0.7rem] border-[1.5px] border-[#d1d5db] bg-transparent p-4 focus:ring-0 focus:outline-none"
-          value={selectedValue}
-          onChange={(e) => setSelectedValue(e.target.value)}
+          value={((value ?? selectedValue)?.toString() ?? "")}
+          onChange={(e) => { setSelectedValue(e.target.value); onChange?.(e.target.value) }}
         >
           <option value="" hidden>
             Pilih {label}
@@ -45,14 +47,15 @@ export default function Select({ label, name, onChange, options, required, selec
         <button
           type="button"
           className="flex min-h-[2.5rem] w-full cursor-pointer items-center justify-between rounded-[0.7rem] border-[1.5px] border-[#d1d5db] bg-transparent p-4 text-left focus:border-[#22b6d1] focus:shadow-[0_2px_8px_0_#22b6d122]"
-          onClick={(e) => {
-            e.stopPropagation();
-            setDropdownOpen(!dropdownOpen);
-          }}
+          onClick={(e) => { e.stopPropagation(); setDropdownOpen(!dropdownOpen) }}
         >
           <h5 className="flex w-full items-center justify-between">
             <span className="truncate">
-              {Text.truncate(options.find((option) => option.value === selectedValue)?.label, 20, 40) || `Pilih ${label}`}
+              {(() => {
+                const selectedOption = options.find((option) => S.value(option).toString() === ((value ?? selectedValue)?.toString() ?? ""));
+                if (selectedOption) return Text.truncate(`${S.label(selectedOption)}`, 20, 40);
+                return `Pilih ${label}`;
+              })()}
             </span>
             <ChevronDown className="ml-2 h-4 w-4 flex-shrink-0 text-gray-400" />
           </h5>
@@ -73,8 +76,8 @@ export default function Select({ label, name, onChange, options, required, selec
               return (
                 <li
                   key={index}
-                  className={`cursor-pointer p-4 hover:bg-gray-100 ${S.value(option) === selectedValue ? "bg-gray-100" : ""}`}
-                  onClick={() => S.selectOption(option, setDropdownOpen, setSelectedValue, onChange)}
+                  className={`cursor-pointer p-4 hover:bg-gray-100 ${S.value(option).toString() === ((value ?? selectedValue)?.toString() ?? "") ? "bg-gray-100" : ""}`}
+                  onClick={() => { setDropdownOpen(false); setSelectedValue(S.value(option).toString()); onChange?.(S.value(option).toString()) }}
                 >
                   {S.label(option)}
                 </li>

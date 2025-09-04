@@ -12,9 +12,9 @@ type Family = {
   members: number;
   income: string | number;
   spending: string | number;
-  pregnant: MultiConfirmation;
-  breastfeeding: MultiConfirmation;
-  toddler: MultiConfirmation;
+  pregnant: MultiConfirmation | null;
+  breastfeeding: MultiConfirmation | null;
+  toddler: MultiConfirmation | null;
   photo: File | string | undefined;
   foodstuff: Foodstuff[];
   status?: Status;
@@ -48,4 +48,4 @@ type SalaryRange = {
   upper_limit: string;
 };
 
-export { Family, FamilyFoods, Foodstuff, Form, SalaryRange, Status };
+export { Family, FamilyFoods, Foodstuff, Form, MultiConfirmation, SalaryRange, Status };

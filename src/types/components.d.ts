@@ -22,8 +22,10 @@ type Input = {
 type Radio = {
   label: string;
   name: string;
+  onChange?: (value: string) => void;
   options: { label: string | number; value: number | string }[];
   required: boolean;
+  value?: string;
 };
 
 type Select = {
@@ -32,7 +34,6 @@ type Select = {
   onChange?: (value: string) => void;
   options: Array<{ label: string; value: string }>;
   required: boolean;
-  selected?: string;
   value?: string;
 };
 
