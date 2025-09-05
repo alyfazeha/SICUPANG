@@ -17,6 +17,8 @@ type Family = {
   toddler: MultiConfirmation | null;
   photo: File | string | undefined;
   foodstuff: Foodstuff[];
+  id_foods?: string;
+  portion?: number;
   status?: Status;
   comment?: string | null;
   created_at: Date;

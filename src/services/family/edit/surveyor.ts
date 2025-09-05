@@ -44,7 +44,11 @@ export class EditFamiliesData {
     }
   }
 
-  public static mappingFoods() {}
+  public static mappingFoods<T>(family: Omit<Family, "created_at" | "updated_at">, setForm: Dispatch<SetStateAction<T>>, setFoodsList: Dispatch<SetStateAction<Foodstuff[]>>) {
+    if (!family.foodstuff || family.foodstuff.length === 0) return setFoodsList([] as Foodstuff[]);
+    setForm((prev) => ({ ...prev, foodstuff: family.foodstuff }));
+    setFoodsList(family.foodstuff);
+  }
 
   public static previewImage(e: ChangeEvent<HTMLInputElement>, setFileSize: Dispatch<SetStateAction<string>>, setPreview: Dispatch<SetStateAction<string | null>>) {
     const file = e.target.files?.[0];
@@ -90,7 +94,7 @@ export class EditFamiliesData {
         formData.append("photo", form.photo);
       }
 
-      const response = await axios.post(API_SURVEYOR_EDIT_DATA_FAMILY(id), formData, {
+      const response = await axios.patch(API_SURVEYOR_EDIT_DATA_FAMILY(id), formData, {
         withCredentials: true,
         headers: { "Content-Type": "multipart/form-data" },
       });

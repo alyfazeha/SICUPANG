@@ -8,7 +8,7 @@ import { API_SURVEYOR_ADD_DATA_FAMILY, SURVEYOR_ADD_DATA_FAMILY, SURVEYOR_FAMILY
 import { AUTH_TOKEN } from "@/constants/token";
 import { Prisma } from "@/lib/prisma";
 import type { Auth } from "@/types/auth";
-import type { Foodstuff } from "@/types/family";
+import type { Family, Foodstuff } from "@/types/family";
 
 export async function GET(): Promise<NextResponse> {
   try {
@@ -94,7 +94,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
     }
 
     // ✅ Adaptasi field biar sesuai validasi
-    const normalized: Record<string, unknown> = {
+    const normalized: Record<keyof Pick<Family, "id_district" | "id_foods" | "id_surveyor" | "members" | "breastfeeding" | "pregnant" | "toddler" | "portion" | "village">, unknown> = {
       ...values,
       id_district: Number(values.id_district) || 0,
       id_foods: foodstuff[0]?.id ?? 0,

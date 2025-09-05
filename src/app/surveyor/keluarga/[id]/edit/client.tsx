@@ -49,7 +49,10 @@ export default function Page({ family }: { family: Omit<Family, "created_at" | "
     })();
   }, []);
 
-  useEffect(() => setForm((prev) => ({ ...prev, ...family, village: String(family.village), income: String(family.income), spending: String(family.spending) })), [family]);
+  useEffect(() => {
+    setForm((prev) => ({ ...prev, ...family, village: String(family.village), income: String(family.income), spending: String(family.spending) }));
+    E.mappingFoods(family, setForm, setFoodsList);
+  }, [family]);
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -57,7 +60,7 @@ export default function Page({ family }: { family: Omit<Family, "created_at" | "
     setSubmitting(true);
 
     try {
-      await E.submit({ ...form, photo: form.photo ?? undefined }, "");
+      await E.submit({ ...form, photo: form.photo ?? undefined }, family.id_family as string | number);
       router.push(SURVEYOR_FAMILY);
     } finally {
       setSubmitting(false);
@@ -75,7 +78,7 @@ export default function Page({ family }: { family: Omit<Family, "created_at" | "
           placeholder="Cth. Agus Miftah"
           required={true}
           type="text"
-          value={family.name}
+          value={form.name}
           variant="form"
         />
         <Input
@@ -86,7 +89,7 @@ export default function Page({ family }: { family: Omit<Family, "created_at" | "
           placeholder="Cth. 1234567890123456"
           required={true}
           type="number"
-          value={family.family_card_number as string}
+          value={form.family_card_number as string}
           variant="form"
         />
         <Select
@@ -105,7 +108,7 @@ export default function Page({ family }: { family: Omit<Family, "created_at" | "
           placeholder="Cth. Perumahan Meikarta"
           required={true}
           type="text"
-          value={family.address}
+          value={form.address}
           variant="form"
         />
       </section>
@@ -119,7 +122,7 @@ export default function Page({ family }: { family: Omit<Family, "created_at" | "
           placeholder="Cth. 11"
           required={true}
           type="number"
-          value={family.members}
+          value={form.members}
           variant="form"
         />
         <Select
@@ -142,7 +145,7 @@ export default function Page({ family }: { family: Omit<Family, "created_at" | "
           label="Apakah Ada Ibu Hamil?"
           name="pregnant"
           onChange={(value) => setForm({ ...form, pregnant: value as typeof family.pregnant })}
-          options={[ { label: "Ya", value: "YA" }, { label: "Tidak", value: "TIDAK" } ]}
+          options={[ { label: "Ya", value: "Ya" }, { label: "Tidak", value: "Tidak" } ]}
           required={true}
           value={form.pregnant as MultiConfirmation}
         />
@@ -150,7 +153,7 @@ export default function Page({ family }: { family: Omit<Family, "created_at" | "
           label="Apakah Terdapat Ibu Menyusui?"
           name="breastfeeding"
           onChange={(value) => setForm({ ...form, breastfeeding: value as typeof family.breastfeeding })}
-          options={[ { label: "Ya", value: "YA" }, { label: "Tidak", value: "TIDAK" } ]}
+          options={[ { label: "Ya", value: "Ya" }, { label: "Tidak", value: "Tidak" } ]}
           required={true}
           value={form.breastfeeding as MultiConfirmation}
         />
@@ -158,7 +161,7 @@ export default function Page({ family }: { family: Omit<Family, "created_at" | "
           label="Apakah Terdapat Balita 0 - 6 Tahun?"
           name="toddler"
           onChange={(value) => setForm({ ...form, toddler: value as typeof family.toddler })}
-          options={[ { label: "Ya", value: "YA" }, { label: "Tidak", value: "TIDAK" } ]}
+          options={[ { label: "Ya", value: "Ya" }, { label: "Tidak", value: "Tidak" } ]}
           required={true}
           value={form.toddler as MultiConfirmation}
         />

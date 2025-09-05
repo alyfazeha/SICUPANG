@@ -4,17 +4,18 @@ import { Search } from "lucide-react";
 import { useEffect, useState } from "react";
 import { API_SURVEYOR_DASHBOARD } from "@/constants/routes";
 import type { Dashboard } from "@/types/dashboard";
+import type { Family } from "@/types/family";
 import axios, { type AxiosError } from "axios";
 import Table from "@/components/shared/table";
 
-export default function Page() {
-  const [data, setData] = useState<{ data: Dashboard }>({ data: { family: 0, village: 0 } });
+export default function Page({ family }: { family: Pick<Family, "name" | "family_card_number" | "village">[] }) {
+  const [data, setData] = useState<Dashboard>({ family: 0, village: 0 });
 
   useEffect(() => {
     (async () => {
       try {
-        const response = await axios.get<{ data: Dashboard }>(API_SURVEYOR_DASHBOARD, { withCredentials: true });
-        setData({ data: response.data.data });
+        const response = await axios.get<Dashboard>(API_SURVEYOR_DASHBOARD, { withCredentials: true });
+        setData(response.data);
       } catch (err: unknown) {
         console.error(`Terjadi kesalahan saat mengambil data keluarga: ${(err as AxiosError).message}`);
         throw err;
@@ -28,14 +29,14 @@ export default function Page() {
         <figure className="bg-primary relative overflow-hidden rounded-xl p-4 text-white lg:p-6">
           <h3 className="mb-2 text-sm opacity-80">Jumlah Desa</h3>
           <h5 className="relative z-10 text-xl font-bold lg:text-2xl">
-            {data.data.village ?? 0}
+            {data.village ?? 0}
           </h5>
           <div className="bg-primary-alt absolute -right-4 -bottom-4 h-24 w-24 rounded-full opacity-30"></div>
         </figure>
         <figure className="bg-primary relative overflow-hidden rounded-xl p-4 text-white lg:p-6">
           <h3 className="mb-2 text-sm opacity-80">Jumlah Keluarga</h3>
           <h5 className="relative z-10 text-xl font-bold lg:text-2xl">
-            {data.data.family ?? 0}
+            {data.family ?? 0}
           </h5>
           <div className="bg-primary-alt absolute -right-4 -bottom-4 h-24 w-24 rounded-full opacity-30"></div>
         </figure>
@@ -59,7 +60,7 @@ export default function Page() {
       <section className="mt-8">
         <Table
           headers={["Nama", "Nomor Kartu Keluarga", "Desa"]}
-          rows={[]}
+          rows={family.map((family) => [family.name, family.family_card_number, family.village])}
           sortable={["Nama", "Desa"]}
         />
       </section>

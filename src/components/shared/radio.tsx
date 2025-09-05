@@ -16,7 +16,7 @@ export default function Radio({ label, name, options, required, value, onChange 
               className="h-4 w-4 text-indigo-600 transition duration-150 ease-in-out"
               required={required}
               value={option.value}
-              checked={value === option.value}
+              checked={value?.toLowerCase() === option.value?.toLocaleString().toLowerCase()}
               onChange={() => onChange?.(option.value as string)}
             />
             <label htmlFor={`${name}_${option.value}`} className="ml-2 cursor-pointer">

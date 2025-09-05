@@ -70,7 +70,7 @@ async function seed() {
       },
       {
         id_pangan: 6,
-        nama_pangan: "Padi-padian lainnya :",
+        nama_pangan: "Padi-padian lainnya",
         gram: 1000.0,
         kalori: 3570.0,
         lemak: 9.0,
@@ -161,7 +161,7 @@ async function seed() {
       },
       {
         id_pangan: 13,
-        nama_pangan: "Umbi-umbian lainnya :",
+        nama_pangan: "Umbi-umbian lainnya",
         gram: 1000.0,
         kalori: 3014.83,
         lemak: 1.75,
@@ -733,7 +733,7 @@ async function seed() {
       },
       {
         id_pangan: 57,
-        nama_pangan: "Daging segar lainnya :",
+        nama_pangan: "Daging segar lainnya",
         gram: 1000.0,
         kalori: 2050.0,
         lemak: 148.0,
@@ -1890,19 +1890,6 @@ async function seed() {
       },
       {
         id_pangan: 146,
-        nama_pangan: "Lainnya :",
-        gram: 100.0,
-        kalori: 396.08,
-        lemak: 2.2,
-        karbohidrat: 78.0,
-        protein: 8.5,
-        id_jenis_pangan: 13,
-        id_takaran: 5,
-        referensi_urt: "Gram",
-        referensi_gram_berat: 100,
-      },
-      {
-        id_pangan: 147,
         nama_pangan: "Roti tawar",
         gram: 150.0,
         kalori: 248.5,
@@ -1915,7 +1902,7 @@ async function seed() {
         referensi_gram_berat: 150,
       },
       {
-        id_pangan: 148,
+        id_pangan: 147,
         nama_pangan: "Roti manis, roti lainnya",
         gram: 30.0,
         kalori: 161.5,
@@ -1928,7 +1915,7 @@ async function seed() {
         referensi_gram_berat: 30,
       },
       {
-        id_pangan: 149,
+        id_pangan: 148,
         nama_pangan: "Kue kering, biskuit, semprong",
         gram: 100.0,
         kalori: 426.3,
@@ -1941,7 +1928,7 @@ async function seed() {
         referensi_gram_berat: 100,
       },
       {
-        id_pangan: 150,
+        id_pangan: 149,
         nama_pangan: "Kue basah (kue lapis, bika ambon, lemper, dsb)",
         gram: 30.0,
         kalori: 137.5,
@@ -1954,7 +1941,7 @@ async function seed() {
         referensi_gram_berat: 30,
       },
       {
-        id_pangan: 151,
+        id_pangan: 150,
         nama_pangan: "Makanan gorengan (tahu, tempe, bakwan, pisang)",
         gram: 40.0,
         kalori: 94.3,
@@ -1967,7 +1954,7 @@ async function seed() {
         referensi_gram_berat: 40,
       },
       {
-        id_pangan: 152,
+        id_pangan: 151,
         nama_pangan: "Makanan gorengan lainnya",
         gram: 40.0,
         kalori: 181.0,
@@ -1980,7 +1967,7 @@ async function seed() {
         referensi_gram_berat: 40,
       },
       {
-        id_pangan: 153,
+        id_pangan: 152,
         nama_pangan: "Bubur kacang hijau",
         gram: 200.0,
         kalori: 109.0,
@@ -1993,7 +1980,7 @@ async function seed() {
         referensi_gram_berat: 200,
       },
       {
-        id_pangan: 154,
+        id_pangan: 153,
         nama_pangan: "Gado-gado, ketoprak, pecel",
         gram: 250.0,
         kalori: 290.0,
@@ -2006,7 +1993,7 @@ async function seed() {
         referensi_gram_berat: 250,
       },
       {
-        id_pangan: 155,
+        id_pangan: 154,
         nama_pangan: "Nasi campur/rames",
         gram: 500.0,
         kalori: 583.6,
@@ -2019,7 +2006,7 @@ async function seed() {
         referensi_gram_berat: 500,
       },
       {
-        id_pangan: 156,
+        id_pangan: 155,
         nama_pangan: "Nasi goreng",
         gram: 250.0,
         kalori: 552.0,
@@ -2032,7 +2019,7 @@ async function seed() {
         referensi_gram_berat: 250,
       },
       {
-        id_pangan: 157,
+        id_pangan: 156,
         nama_pangan: "Nasi putih",
         gram: 200.0,
         kalori: 391.6,
@@ -2045,7 +2032,7 @@ async function seed() {
         referensi_gram_berat: 200,
       },
       {
-        id_pangan: 158,
+        id_pangan: 157,
         nama_pangan: "Lontong/ketupat sayur",
         gram: 350.0,
         kalori: 263.8,
@@ -2058,7 +2045,7 @@ async function seed() {
         referensi_gram_berat: 350,
       },
       {
-        id_pangan: 159,
+        id_pangan: 158,
         nama_pangan: "Soto, gule, sop, rawon, cincang",
         gram: 250.0,
         kalori: 143.7,
@@ -2071,7 +2058,7 @@ async function seed() {
         referensi_gram_berat: 250,
       },
       {
-        id_pangan: 160,
+        id_pangan: 159,
         nama_pangan: "Sayur matang (ditumis, disantan, dsb)",
         gram: 250.0,
         kalori: 232.5,
@@ -2084,7 +2071,7 @@ async function seed() {
         referensi_gram_berat: 250,
       },
       {
-        id_pangan: 161,
+        id_pangan: 160,
         nama_pangan: "Sate, tongseng",
         gram: 25.0,
         kalori: 89.5,
@@ -2097,7 +2084,7 @@ async function seed() {
         referensi_gram_berat: 25,
       },
       {
-        id_pangan: 162,
+        id_pangan: 161,
         nama_pangan: "Mie bakso, mie rebus, mie goreng",
         gram: 250.0,
         kalori: 529.0,
@@ -2110,7 +2097,7 @@ async function seed() {
         referensi_gram_berat: 250,
       },
       {
-        id_pangan: 163,
+        id_pangan: 162,
         nama_pangan: "Mie instan",
         gram: 250.0,
         kalori: 356.0,
@@ -2123,7 +2110,7 @@ async function seed() {
         referensi_gram_berat: 250,
       },
       {
-        id_pangan: 164,
+        id_pangan: 163,
         nama_pangan: "Makanan ringan anak-anak, krupuk/kripik",
         gram: 100.0,
         kalori: 509.1,
@@ -2136,7 +2123,7 @@ async function seed() {
         referensi_gram_berat: 100,
       },
       {
-        id_pangan: 165,
+        id_pangan: 164,
         nama_pangan: "Ikan matang",
         gram: 75.0,
         kalori: 624.0,
@@ -2149,7 +2136,7 @@ async function seed() {
         referensi_gram_berat: 75,
       },
       {
-        id_pangan: 166,
+        id_pangan: 165,
         nama_pangan: "Ayam/bebek/daging matang (ayam goreng, rendang, dsb)",
         gram: 150.0,
         kalori: 490.0,
@@ -2162,7 +2149,7 @@ async function seed() {
         referensi_gram_berat: 150,
       },
       {
-        id_pangan: 167,
+        id_pangan: 166,
         nama_pangan: "Daging olahan (sosis, nugget, daging asap, dsb) matang",
         gram: 100.0,
         kalori: 340.0,
@@ -2175,7 +2162,7 @@ async function seed() {
         referensi_gram_berat: 100,
       },
       {
-        id_pangan: 168,
+        id_pangan: 167,
         nama_pangan: "Bubur ayam",
         gram: 125.0,
         kalori: 203.75,
@@ -2188,7 +2175,7 @@ async function seed() {
         referensi_gram_berat: 125,
       },
       {
-        id_pangan: 169,
+        id_pangan: 168,
         nama_pangan: "Siomay, batagor",
         gram: 125.0,
         kalori: 203.75,
@@ -2201,7 +2188,7 @@ async function seed() {
         referensi_gram_berat: 125,
       },
       {
-        id_pangan: 170,
+        id_pangan: 169,
         nama_pangan: "Makanan jadi lainnya",
         gram: 30.0,
         kalori: 246.3,
@@ -2214,7 +2201,7 @@ async function seed() {
         referensi_gram_berat: 30,
       },
       {
-        id_pangan: 171,
+        id_pangan: 170,
         nama_pangan: "Air kemasan",
         gram: 520.0,
         kalori: 0.0,
@@ -2227,7 +2214,7 @@ async function seed() {
         referensi_gram_berat: 520,
       },
       {
-        id_pangan: 172,
+        id_pangan: 171,
         nama_pangan: "Air kemasan galon",
         gram: 1000.0,
         kalori: 0.0,
@@ -2240,7 +2227,7 @@ async function seed() {
         referensi_gram_berat: 1000,
       },
       {
-        id_pangan: 173,
+        id_pangan: 172,
         nama_pangan: "Air teh kemasan, minuman bersoda/mengandung CO2",
         gram: 200.0,
         kalori: 68.13,
@@ -2253,7 +2240,7 @@ async function seed() {
         referensi_gram_berat: 200,
       },
       {
-        id_pangan: 174,
+        id_pangan: 173,
         nama_pangan: "Sari buah kemasan, minuman kesehatan, minuman berenergi",
         gram: 160.0,
         kalori: 72.53,
@@ -2266,7 +2253,7 @@ async function seed() {
         referensi_gram_berat: 160,
       },
       {
-        id_pangan: 175,
+        id_pangan: 174,
         nama_pangan: "Minuman jadi(kopi, kopi susu, teh, susu coklat, dsb)",
         gram: 208.0,
         kalori: 61.0,
@@ -2279,7 +2266,7 @@ async function seed() {
         referensi_gram_berat: 208,
       },
       {
-        id_pangan: 176,
+        id_pangan: 175,
         nama_pangan: "Es krim",
         gram: 50.0,
         kalori: 207.0,
@@ -2292,7 +2279,7 @@ async function seed() {
         referensi_gram_berat: 50,
       },
       {
-        id_pangan: 177,
+        id_pangan: 176,
         nama_pangan: "Es lainnya",
         gram: 200.0,
         kalori: 56.0,
@@ -2305,7 +2292,7 @@ async function seed() {
         referensi_gram_berat: 200,
       },
       {
-        id_pangan: 178,
+        id_pangan: 177,
         nama_pangan: "Minuman keras",
         gram: 800.0,
         kalori: 384.0,

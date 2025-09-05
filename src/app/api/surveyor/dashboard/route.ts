@@ -19,29 +19,18 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
     const { payload } = await jwtVerify(token, secret);
     const decoded = payload as unknown as Auth;
 
-    const [totalVillages, totalFamilies, familiesData] = await Promise.all([
+    const [totalVillages, totalFamilies] = await Promise.all([
       Prisma.keluarga.findMany({
         where: { id_pengguna: decoded.id_pengguna },
         select: { id_desa: true },
         distinct: ["id_desa"],
       }),
-      Prisma.keluarga.count({ where: { id_pengguna: decoded.id_pengguna } }),
-      Prisma.keluarga.findMany({
-        where: { id_pengguna: decoded.id_pengguna },
-        include: { desa: true },
-        take: 10,
-        orderBy: { created_at: "desc" },
+      Prisma.keluarga.count({
+        where: { id_pengguna: decoded.id_pengguna }
       }),
     ]);
 
-    const formattedData = familiesData.map((item) => ({
-      id_keluarga: item.id_keluarga,
-      nama_kepala_keluarga: item.nama_kepala_keluarga,
-      nomor_kartu_keluarga: item.nomor_kartu_keluarga,
-      desa: item.desa,
-    }));
-
-    return NextResponse.json({ jumlah_desa: totalVillages.length, jumlah_keluarga: totalFamilies, data: formattedData }, { status: 200 });
+    return NextResponse.json({ family: totalFamilies, village: totalVillages.length }, { status: 200 });
   } catch (err: unknown) {
     console.error(`❌ Error GET ${API_SURVEYOR_DASHBOARD}: ${err}`);
     return NextResponse.json({ error: "Gagal mengambil data keluarga." }, { status: 500 });
