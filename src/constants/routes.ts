@@ -13,7 +13,6 @@ export const ADMIN_MANAGE_SURVEYORS = "/admin/kelola-surveyor";
 export const ADMIN_ADD_SURVEYORS = "/admin/kelola-surveyor/tambah";
 export const ADMIN_FOOD_RECORD = "/admin/rekap-pangan";
 export const ADMIN_PPH_RECORD = "/admin/rekap-pph";
-export const ADMIN_DATA_VERIFICATION = "/admin/verifikasi-data";
 
 /* =======================
    SURVEYOR ROUTES
@@ -36,6 +35,11 @@ export const LOGIN = "/masuk";
 export const API_ACCOUNT = "/api/auth/account";
 export const API_LOGIN = "/api/auth/login";
 export const API_LOGOUT = "/api/auth/logout";
+
+export const API_ADMIN_DASHBOARD = "/api/admin/dashboard";
+export const API_ADMIN_DISTRICT_DATA = "/api/admin/district";
+export const API_ADMIN_READ_DISTRICT_DATA = (id: string | number) => `/api/admin/district/${id}/get`;
+export const API_ADMIN_READ_SURVEYOR_DATA = (id: string | number) => `/api/admin/surveyor/${id}/get`;
 
 export const API_SURVEYOR_DASHBOARD = "/api/surveyor/dashboard";
 export const API_SURVEYOR_FAMILY = "/api/surveyor/family";

@@ -123,14 +123,13 @@
 
 @theme {
   --color-primary: #2c9ab7;
-  --color-secondary: #b74660;
+  --color-secondary: #43a36d;
+  --color-tertiary: #b74660;
   --color-accent: #f3d07b;
   --color-background: #f3f7fa;
   --color-text-primary: #1e2a32;
   --color-heading: #2c9ab7;
   --color-text-secondary: #4c5b67;
-  --color-primary-alt: #43a36d;
-  --color-hov-blue: #26798f;
 }
 
 @font-face {

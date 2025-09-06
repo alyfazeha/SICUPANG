@@ -4,9 +4,9 @@ import { CookingPot, Home, IdCard, Send, Trash, Upload, User, X } from "lucide-r
 import { useRouter } from "next/navigation";
 import { type FormEvent, useEffect, useState } from "react";
 import { FaUsers } from "react-icons/fa6";
-import { SURVEYOR_FAMILY } from "@/constants/routes";
-import { AddFamiliesData as D } from "@/services/family/add/surveyor";
-import type { Family, MultiConfirmation } from "@/types/family";
+import { API_SURVEYOR_ADD_DATA_FAMILY, SURVEYOR_FAMILY } from "@/constants/routes";
+import { AddFamiliesData, AddFamiliesData as D } from "@/services/family/add/surveyor";
+import type { Family, Form as FoodsList, MultiConfirmation } from "@/types/family";
 import Link from "next/link";
 import Image from "next/image";
 import Input from "@/components/shared/input";
@@ -42,7 +42,7 @@ export default function Page() {
 
   useEffect(() => {
     (async () => {
-      const data = await D.get();
+      const data = await AddFamiliesData.get<FoodsList>(API_SURVEYOR_ADD_DATA_FAMILY, { processed_foods: [], salary: [], villages: [] });
       setProcessedFoods(data.processed_foods);
       setSalary(data.salary);
       setVillages(data.villages);
@@ -132,7 +132,7 @@ export default function Page() {
           label="Apakah Ada Ibu Hamil?"
           name="pregnant"
           onChange={(value) => setForm({ ...form, pregnant: value as typeof form.pregnant })}
-          options={[ { label: "Ya", value: "YA" }, { label: "Tidak", value: "TIDAK" } ]}
+          options={[ { label: "Ya", value: "Ya" }, { label: "Tidak", value: "Tidak" } ]}
           required={true}
           value={form.pregnant as MultiConfirmation}
         />
@@ -140,7 +140,7 @@ export default function Page() {
           label="Apakah Terdapat Ibu Menyusui?"
           name="breastfeeding"
           onChange={(value) => setForm({ ...form, breastfeeding: value as typeof form.breastfeeding })}
-          options={[ { label: "Ya", value: "YA" }, { label: "Tidak", value: "TIDAK" } ]}
+          options={[ { label: "Ya", value: "Ya" }, { label: "Tidak", value: "Tidak" } ]}
           required={true}
           value={form.breastfeeding as MultiConfirmation}
         />
@@ -148,7 +148,7 @@ export default function Page() {
           label="Apakah Terdapat Balita 0 - 6 Tahun?"
           name="toddler"
           onChange={(value) => setForm({ ...form, toddler: value as typeof form.toddler })}
-          options={[ { label: "Ya", value: "YA" }, { label: "Tidak", value: "TIDAK" } ]}
+          options={[ { label: "Ya", value: "Ya" }, { label: "Tidak", value: "Tidak" } ]}
           required={true}
           value={form.toddler as MultiConfirmation}
         />

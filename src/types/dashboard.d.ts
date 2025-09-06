@@ -1,6 +1,14 @@
 type Dashboard = {
+  district: number;
   family: number;
-  village: number;
-}
+  villages: number;
+  graphic: { x: string; y: number }[];
+  years: number[];
+};
 
-export { Dashboard };
+type TopCards = {
+  title: string;
+  value: number;
+};
+
+export { Dashboard, TopCards };

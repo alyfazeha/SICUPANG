@@ -18,9 +18,9 @@ export default function Sidebar({ isOpen, role }: Pick<Sidebar, "isOpen" | "role
       <section className="flex items-center gap-3 px-5 py-6">
         <Image height={1920} width={1080} src="/images/favicon.svg" alt="Logo" className="w-14" />
         <span>
-          <h4 className="text-sm font-bold lg:text-base">SIREPANG</h4>
+          <h4 className="text-sm font-bold lg:text-base">SICUPANG</h4>
           <h6 className="text-xs text-white/80 italic">
-            Sistem Recall Pangan
+            Sistem Cerdas untuk Kebutuhan Pangan
           </h6>
         </span>
       </section>

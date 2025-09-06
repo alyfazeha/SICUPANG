@@ -1,13 +1,14 @@
-import type { ChangeEvent, Dispatch, FormEvent, SetStateAction } from "react";
+import type { Dispatch, FormEvent, SetStateAction } from "react";
 import type { AppRouterInstance } from "next/dist/shared/lib/app-router-context.shared-runtime";
 import { ADMIN_DASHBOARD, API_LOGIN, SURVEYOR_DASHBOARD } from "@/constants/routes";
+import { Form } from "@/services/superclass/form";
 import type { Auth } from "@/types/auth";
 import type { ValidationErrors } from "@/types/components";
 import axios, { AxiosError } from "axios";
 
-export class Login {
-  public static change<T>(e: ChangeEvent<HTMLInputElement>, form: T, setForm: Dispatch<SetStateAction<T>>) {
-    setForm({ ...form, [e.target.name]: e.target.value });
+export class Login extends Form {
+  constructor() {
+    super();
   }
 
   public static validate(form: Pick<Auth, "nip" | "kata_sandi">) {

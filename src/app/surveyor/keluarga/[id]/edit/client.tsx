@@ -4,9 +4,9 @@ import { CookingPot, Home, IdCard, Send, Trash, Upload, User, X } from "lucide-r
 import { useRouter } from "next/navigation";
 import { type FormEvent, useEffect, useState } from "react";
 import { FaUsers } from "react-icons/fa6";
-import { SURVEYOR_FAMILY } from "@/constants/routes";
+import { API_SURVEYOR_ADD_DATA_FAMILY, SURVEYOR_FAMILY } from "@/constants/routes";
 import { EditFamiliesData as E } from "@/services/family/edit/surveyor";
-import type { Family, MultiConfirmation } from "@/types/family";
+import type { Family, Form, MultiConfirmation } from "@/types/family";
 import Link from "next/link";
 import Image from "next/image";
 import Input from "@/components/shared/input";
@@ -42,7 +42,7 @@ export default function Page({ family }: { family: Omit<Family, "created_at" | "
 
   useEffect(() => {
     (async () => {
-      const data = await E.get();
+      const data = await E.get<Form>(API_SURVEYOR_ADD_DATA_FAMILY, { processed_foods: [], salary: [], villages: [] });
       setProcessedFoods(data.processed_foods);
       setSalary(data.salary);
       setVillages(data.villages);

@@ -1,9 +1,9 @@
-import { ChartBar, ChartLine, FolderKanban, IceCreamBowl, LayoutDashboard, Map, PlusCircle, Users } from "lucide-react";
+import { ChartBar, FolderKanban, IceCreamBowl, LayoutDashboard, Map, PlusCircle, Users } from "lucide-react";
 import { FaUserGroup } from "react-icons/fa6";
 import { FaUserShield } from "react-icons/fa";
 import type { SidebarItem } from "@/types/components";
 import type { Roles } from "@/types/auth";
-import { ADMIN_ADD_SURVEYORS, ADMIN_DASHBOARD, ADMIN_DATA_VERIFICATION, ADMIN_FOOD_RECORD, ADMIN_MANAGE_SURVEYORS, ADMIN_PPH_RECORD, ADMIN_SUBDISTRICT_DATA, SURVEYOR_ADD_DATA_FAMILY, SURVEYOR_DASHBOARD, SURVEYOR_FAMILY } from "@/constants/routes";
+import { ADMIN_ADD_SURVEYORS, ADMIN_DASHBOARD, ADMIN_FOOD_RECORD, ADMIN_MANAGE_SURVEYORS, ADMIN_PPH_RECORD, ADMIN_SUBDISTRICT_DATA, SURVEYOR_ADD_DATA_FAMILY, SURVEYOR_DASHBOARD, SURVEYOR_FAMILY } from "@/constants/routes";
 
 const SidebarMenus: Record<Roles, SidebarItem[]> = {
   ADMIN: [
@@ -38,11 +38,6 @@ const SidebarMenus: Record<Roles, SidebarItem[]> = {
       href: ADMIN_PPH_RECORD,
       icon: <ChartBar className="h-4 w-4" />,
       label: "Rekap PPH",
-    },
-    {
-      href: ADMIN_DATA_VERIFICATION,
-      icon: <ChartLine className="h-4 w-4" />,
-      label: "Verifikasi Data",
     },
   ],
   SURVEYOR: [

@@ -9,7 +9,7 @@ import axios, { type AxiosError } from "axios";
 import Table from "@/components/shared/table";
 
 export default function Page({ family }: { family: Pick<Family, "name" | "family_card_number" | "village">[] }) {
-  const [data, setData] = useState<Dashboard>({ family: 0, village: 0 });
+  const [data, setData] = useState<Pick<Dashboard, "family" | "villages">>({ family: 0, villages: 0 });
 
   useEffect(() => {
     (async () => {
@@ -29,16 +29,16 @@ export default function Page({ family }: { family: Pick<Family, "name" | "family
         <figure className="bg-primary relative overflow-hidden rounded-xl p-4 text-white lg:p-6">
           <h3 className="mb-2 text-sm opacity-80">Jumlah Desa</h3>
           <h5 className="relative z-10 text-xl font-bold lg:text-2xl">
-            {data.village ?? 0}
+            {data.villages ?? 0}
           </h5>
-          <div className="bg-primary-alt absolute -right-4 -bottom-4 h-24 w-24 rounded-full opacity-30"></div>
+          <div className="bg-secondary absolute -right-4 -bottom-4 h-24 w-24 rounded-full opacity-30"></div>
         </figure>
         <figure className="bg-primary relative overflow-hidden rounded-xl p-4 text-white lg:p-6">
           <h3 className="mb-2 text-sm opacity-80">Jumlah Keluarga</h3>
           <h5 className="relative z-10 text-xl font-bold lg:text-2xl">
             {data.family ?? 0}
           </h5>
-          <div className="bg-primary-alt absolute -right-4 -bottom-4 h-24 w-24 rounded-full opacity-30"></div>
+          <div className="bg-secondary absolute -right-4 -bottom-4 h-24 w-24 rounded-full opacity-30"></div>
         </figure>
       </section>
       <section className="bg-primary mt-8 flex items-center justify-between gap-10 overflow-x-auto rounded-xl px-6 py-4 whitespace-nowrap">

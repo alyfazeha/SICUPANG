@@ -1,7 +1,7 @@
 import type { Family } from "@/types/family";
 
 type Except = (keyof Family)[];
-type Include = Record<keyof Omit<Family, "comment" | "created_at" | "id_district" | "id_family" | "id_surveyor" | "foodstuff" | "photo" | "status" | "updated_at">, string>;
+type Include = Record<keyof Omit<Family, "comment" | "created_at" | "id_district" | "id_family" | "id_foods" | "id_surveyor" | "foodstuff" | "photo" | "portion" | "status" | "updated_at">, string>;
 
 export const FAMILY_ATTRIBUTES: Include = {
   name: "Nama Kepala Keluarga",

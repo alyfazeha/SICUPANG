@@ -1,9 +1,14 @@
 import type { ChangeEvent, Dispatch, SetStateAction } from "react";
-import { API_SURVEYOR_ADD_DATA_FAMILY, API_SURVEYOR_EDIT_DATA_FAMILY } from "@/constants/routes";
-import type { Family, Foodstuff, Form } from "@/types/family";
+import { API_SURVEYOR_EDIT_DATA_FAMILY } from "@/constants/routes";
+import type { Family, Foodstuff } from "@/types/family";
+import { Form as BaseForm } from "@/services/superclass/form";
 import axios from "axios";
 
-export class EditFamiliesData {
+export class EditFamiliesData extends BaseForm {
+  constructor() {
+    super();
+  }
+
   public static addFoodToList<T extends { foodstuff: Foodstuff[] }>(
     foodsList: Foodstuff[],
     form: T,
@@ -29,19 +34,6 @@ export class EditFamiliesData {
 
     setForm({ ...form, foodstuff: [...form.foodstuff, foodstuff], id_foods: "", portion: "" });
     setFoodsList([...foodsList, foodstuff]);
-  }
-
-  public static change<T>(e: ChangeEvent<HTMLInputElement>, form: T, setForm: Dispatch<SetStateAction<T>>) {
-    setForm({ ...form, [e.target.name]: e.target.value });
-  }
-
-  public static async get() {
-    try {
-      return (await axios.get<Form>(API_SURVEYOR_ADD_DATA_FAMILY, { withCredentials: true })).data;
-    } catch (err: unknown) {
-      console.error(`Terjadi kesalahan saat mengambil data yang berkaitan formulir keluarga: ${err}`);
-      return { processed_foods: [], salary: [], villages: [] } as Form;
-    }
   }
 
   public static mappingFoods<T>(family: Omit<Family, "created_at" | "updated_at">, setForm: Dispatch<SetStateAction<T>>, setFoodsList: Dispatch<SetStateAction<Foodstuff[]>>) {

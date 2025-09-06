@@ -9,15 +9,15 @@ export default function NotFound() {
       <section className="decoration-wrapper pointer-events-none absolute inset-0 z-0">
         <div className="bg-primary/10 absolute -top-24 -left-24 h-[300px] w-[300px] rounded-full blur-3xl"></div>
         <div className="bg-accent/20 absolute -right-36 -bottom-36 h-[400px] w-[400px] rounded-full blur-3xl"></div>
-        <div className="bg-secondary/10 absolute top-12 left-1/2 h-[200px] w-[200px] -translate-x-1/2 rounded-full blur-2xl"></div>
+        <div className="bg-tertiary/10 absolute top-12 left-1/2 h-[200px] w-[200px] -translate-x-1/2 rounded-full blur-2xl"></div>
         <span className="bg-primary absolute top-20 left-20 block h-3 w-3 animate-pulse rounded-full opacity-40"></span>
         <span className="bg-accent absolute top-40 right-32 block h-2 w-2 animate-bounce rounded-full opacity-60"></span>
-        <span className="bg-secondary absolute bottom-32 left-1/4 block h-4 w-4 animate-ping rounded-full opacity-30"></span>
+        <span className="bg-tertiary absolute bottom-32 left-1/4 block h-4 w-4 animate-ping rounded-full opacity-30"></span>
         <span className="bg-primary absolute top-1/2 right-20 block h-2 w-2 animate-pulse rounded-full opacity-50"></span>
         <div className="absolute bottom-5 left-1/2 flex -translate-x-1/2 gap-2">
           <span className="bg-primary block h-2 w-2 animate-pulse rounded-full opacity-40"></span>
           <span className="bg-accent block h-2 w-2 rounded-full opacity-30"></span>
-          <span className="bg-secondary block h-2 w-2 animate-pulse rounded-full opacity-40"></span>
+          <span className="bg-tertiary block h-2 w-2 animate-pulse rounded-full opacity-40"></span>
           <span className="bg-primary block h-2 w-2 rounded-full opacity-20"></span>
           <span className="bg-accent block h-2 w-2 animate-pulse rounded-full opacity-40"></span>
         </div>

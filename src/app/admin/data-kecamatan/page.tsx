@@ -2,18 +2,18 @@ import type { Metadata } from "next";
 import Page from "./client";
 
 export const metadata: Metadata = {
-  title: "Dasbor | SICUPANG",
+  title: "Data Kecamatan | SICUPANG",
   description: "",
   openGraph: {
-    title: "Dasbor | SICUPANG",
+    title: "Data Kecamatan | SICUPANG",
     description: "",
   },
   twitter: {
-    title: "Dasbor | SICUPANG",
+    title: "Data Kecamatan | SICUPANG",
     description: "",
   },
 };
 
-export default function DasborAdmin() {
+export default function DataKecamatanAdmin() {
   return <Page />;
 }
