@@ -5,7 +5,6 @@ import { useEffect, useRef, useState } from "react";
 import { FaChartSimple, FaCheckDouble } from "react-icons/fa6";
 import { API_ADMIN_DASHBOARD } from "@/constants/routes";
 import type { Dashboard, TopCards } from "@/types/dashboard";
-import ApexCharts from "apexcharts";
 import axios from "axios";
 
 export default function DasborAdmin() {
@@ -28,41 +27,43 @@ export default function DasborAdmin() {
   }, []);
 
   useEffect(() => {
-    if (!charts.current || !countData.graphic.length) return;
-
-    const chart = new ApexCharts(charts.current, {
-      chart: {
-        type: "bar",
-        height: 350,
-        toolbar: { show: false },
-      },
-      plotOptions: {
-        bar: {
-          borderRadius: 6,
-          horizontal: false,
-          columnWidth: "55%",
+    (async () => {
+      if (!charts.current || !countData.graphic.length) return;
+      const ApexCharts = (await import("apexcharts")).default;
+      const chart = new ApexCharts(charts.current, {
+        chart: {
+          type: "bar",
+          height: 350,
+          toolbar: { show: false },
         },
-      },
-      dataLabels: { enabled: false },
-      xaxis: {
-        categories: countData.graphic.map((item) => item.x),
-        labels: { style: { colors: "#fff" } },
-      },
-      yaxis: {
-        labels: { style: { colors: "#fff" } },
-      },
-      series: [
-        {
-          name: "Jumlah Keluarga",
-          data: countData.graphic.map((item) => item.y),
+        plotOptions: {
+          bar: {
+            borderRadius: 6,
+            horizontal: false,
+            columnWidth: "55%",
+          },
         },
-      ],
-      colors: ["#38bdf8"],
-      grid: { borderColor: "rgba(255,255,255,0.2)" },
-    });
+        dataLabels: { enabled: false },
+        xaxis: {
+          categories: countData.graphic.map((item) => item.x),
+          labels: { style: { colors: "#fff" } },
+        },
+        yaxis: {
+          labels: { style: { colors: "#fff" } },
+        },
+        series: [
+          {
+            name: "Jumlah Keluarga",
+            data: countData.graphic.map((item) => item.y),
+          },
+        ],
+        colors: ["#38bdf8"],
+        grid: { borderColor: "rgba(255,255,255,0.2)" },
+      });
 
-    chart.render();
-    return () => chart.destroy();
+      chart.render();
+      return () => chart.destroy();
+    })();
   }, [countData.graphic]);
 
   const cards: TopCards[] = [

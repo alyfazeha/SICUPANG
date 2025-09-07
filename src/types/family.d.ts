@@ -32,6 +32,22 @@ type FamilyFoods = {
   portion: number;
 };
 
+type FoodData = {
+  id: number;
+  amount: number;
+  calories: number;
+  carbohydrate: number;
+  category: string;
+  conversion: string;
+  energy: number;
+  fat: number;
+  name: string;
+  protein: number;
+  total_family: number;
+  unit: string | number;
+  weight: number;
+}
+
 type Foodstuff = {
   id: number;
   name: string;
@@ -50,4 +66,4 @@ type SalaryRange = {
   upper_limit: string;
 };
 
-export { Family, FamilyFoods, Foodstuff, Form, MultiConfirmation, SalaryRange, Status };
+export { Family, FamilyFoods, FoodData, Foodstuff, Form, MultiConfirmation, SalaryRange, Status };

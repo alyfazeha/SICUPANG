@@ -3,14 +3,14 @@ import Page from "@/client/not-found";
 
 export const metadata: Metadata = {
   title: "404 | SICUPANG",
-  description: "",
+  description: "Oops, halaman yang kamu cari tidak ditemukan.",
   openGraph: {
     title: "404 | SICUPANG",
-    description: "",
+    description: "Oops, halaman yang kamu cari tidak ditemukan",
   },
   twitter: {
     title: "404 | SICUPANG",
-    description: "",
+    description: "Oops, halaman yang kamu cari tidak ditemukan",
   },
 };
 

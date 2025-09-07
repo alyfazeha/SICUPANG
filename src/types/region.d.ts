@@ -5,10 +5,16 @@ type District = {
   village: Village[];
 };
 
+type FamilyWithRegion = {
+  name: string;
+  district: { name: string; code: string };
+  village: { name: string; code: string };
+};
+
 type Village = {
   id: number;
   code: string;
   name: string;
 };
 
-export { District, Village };
+export { District, FamilyWithRegion, Village };

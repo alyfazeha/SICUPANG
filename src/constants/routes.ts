@@ -8,9 +8,9 @@ export const AUTH_PAGES: string[] = ["/masuk", "/admin", "/surveyor"];
    ======================= */
 export const ADMIN_DASHBOARD = "/admin/dasbor";
 export const ADMIN_PROFILE = "/admin/profil";
-export const ADMIN_SUBDISTRICT_DATA = "/admin/data-kecamatan";
-export const ADMIN_MANAGE_SURVEYORS = "/admin/kelola-surveyor";
-export const ADMIN_ADD_SURVEYORS = "/admin/kelola-surveyor/tambah";
+export const ADMIN_MANAGE_SURVEYORS = "/admin/surveyor/kelola";
+export const ADMIN_ADD_SURVEYORS = "/admin/surveyor/tambah";
+export const ADMIN_SUBDISTRICT_RECORD = "/admin/rekap-kecamatan";
 export const ADMIN_FOOD_RECORD = "/admin/rekap-pangan";
 export const ADMIN_PPH_RECORD = "/admin/rekap-pph";
 

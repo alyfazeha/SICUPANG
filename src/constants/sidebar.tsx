@@ -3,7 +3,7 @@ import { FaUserGroup } from "react-icons/fa6";
 import { FaUserShield } from "react-icons/fa";
 import type { SidebarItem } from "@/types/components";
 import type { Roles } from "@/types/auth";
-import { ADMIN_ADD_SURVEYORS, ADMIN_DASHBOARD, ADMIN_FOOD_RECORD, ADMIN_MANAGE_SURVEYORS, ADMIN_PPH_RECORD, ADMIN_SUBDISTRICT_DATA, SURVEYOR_ADD_DATA_FAMILY, SURVEYOR_DASHBOARD, SURVEYOR_FAMILY } from "@/constants/routes";
+import { ADMIN_ADD_SURVEYORS, ADMIN_DASHBOARD, ADMIN_FOOD_RECORD, ADMIN_MANAGE_SURVEYORS, ADMIN_PPH_RECORD, ADMIN_SUBDISTRICT_RECORD, SURVEYOR_ADD_DATA_FAMILY, SURVEYOR_DASHBOARD, SURVEYOR_FAMILY } from "@/constants/routes";
 
 const SidebarMenus: Record<Roles, SidebarItem[]> = {
   ADMIN: [
@@ -13,21 +13,9 @@ const SidebarMenus: Record<Roles, SidebarItem[]> = {
       label: "Dasbor",
     },
     {
-      href: ADMIN_SUBDISTRICT_DATA,
+      href: ADMIN_SUBDISTRICT_RECORD,
       icon: <Map className="h-4 w-4" />,
-      label: "Data Kecamatan",
-    },
-    {
-      href: ADMIN_MANAGE_SURVEYORS,
-      icon: <FaUserGroup className="h-4 w-4" />,
-      label: "Kelola Surveyor",
-      subMenu: [
-        {
-          href: ADMIN_ADD_SURVEYORS,
-          icon: <PlusCircle className="h-4 w-4" />,
-          label: "Tambah Surveyor",
-        },
-      ],
+      label: "Rekap Kecamatan",
     },
     {
       href: ADMIN_FOOD_RECORD,
@@ -38,6 +26,22 @@ const SidebarMenus: Record<Roles, SidebarItem[]> = {
       href: ADMIN_PPH_RECORD,
       icon: <ChartBar className="h-4 w-4" />,
       label: "Rekap PPH",
+    },
+    {
+      icon: <FaUserGroup className="h-4 w-4" />,
+      label: "Surveyor",
+      subMenu: [
+        {
+          href: ADMIN_MANAGE_SURVEYORS,
+          icon: <FolderKanban className="h-4 w-4" />,
+          label: "Kelola",
+        },
+        {
+          href: ADMIN_ADD_SURVEYORS,
+          icon: <PlusCircle className="h-4 w-4" />,
+          label: "Tambah",
+        },
+      ],
     },
   ],
   SURVEYOR: [
