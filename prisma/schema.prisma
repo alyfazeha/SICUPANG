@@ -161,6 +161,18 @@ model harga_pangan {
   @@index([tanggal], map: "tanggal")
 }
 
+model resep_cache {
+  id_resep_cache Int @id @default(autoincrement())
+  nama_olahan String @unique
+  resep_id_vdb String @db.VarChar(50) 
+  bahan_parsed Json
+  standar_porsi Float
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+
+  @@index([resep_id_vdb])
+}
+
 /// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
 model migrations {
   id        Int    @db.UnsignedInt
