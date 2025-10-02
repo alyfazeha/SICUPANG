@@ -5,7 +5,7 @@ import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbS
 import { FAMILY_ATTRIBUTES, KEYS_TO_EXCLUDE } from "@/constants/family";
 import { SURVEYOR_DASHBOARD, SURVEYOR_FAMILY } from "@/constants/routes";
 import type { Family } from "@/types/family";
-import { Text } from "@/utils/text";
+import { Truncate } from "@/utils/text";
 import Table from "@/components/shared/table";
 import Image from "next/image";
 
@@ -29,7 +29,7 @@ export default function Page({ family }: { family: Omit<Family, "created_at" | "
           <BreadcrumbSeparator />
           <BreadcrumbItem>
             <h5 className="flex cursor-default items-center font-semibold">
-              {Text.truncate(`${family.name}`, 15, 50)}
+              {Truncate(`${family.name}`, 15, 50)}
             </h5>
           </BreadcrumbItem>
         </BreadcrumbList>

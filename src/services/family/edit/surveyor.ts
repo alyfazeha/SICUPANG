@@ -1,7 +1,7 @@
 import type { ChangeEvent, Dispatch, SetStateAction } from "react";
 import { API_SURVEYOR_EDIT_DATA_FAMILY } from "@/constants/routes";
 import type { Family, Foodstuff } from "@/types/family";
-import { Form as BaseForm } from "@/services/superclass/form";
+import { Form as BaseForm } from "@/utils/form";
 import axios from "axios";
 
 export class EditFamiliesData extends BaseForm {

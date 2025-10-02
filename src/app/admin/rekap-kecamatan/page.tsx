@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { FaCircleInfo } from "react-icons/fa6";
 import { Pagination, PaginationContent, PaginationEllipsis, PaginationItem, PaginationLink, PaginationNext, PaginationPrevious } from "@/components/ui/pagination";
-import { ADMIN_SUBDISTRICT_DATA } from "@/constants/routes";
+import { ADMIN_SUBDISTRICT_RECORD } from "@/constants/routes";
 import { Prisma } from "@/lib/prisma";
 import type { FoodData } from "@/types/family";
 import type { District } from "@/types/region";
@@ -85,7 +85,7 @@ export default async function DataKecamatanAdmin({ searchParams }: { searchParam
         <PaginationContent>
           <PaginationItem>
             {page > 1 ? (
-              <PaginationPrevious href={page - 1 === 1 ? ADMIN_SUBDISTRICT_DATA : `?data=${page - 1}`} />
+              <PaginationPrevious href={page - 1 === 1 ? ADMIN_SUBDISTRICT_RECORD : `?data=${page - 1}`} />
             ) : (
               <PaginationPrevious aria-disabled="true" className="pointer-events-none opacity-50" />
             )}
@@ -98,7 +98,7 @@ export default async function DataKecamatanAdmin({ searchParams }: { searchParam
             .map((p) => (
               <PaginationItem key={p}>
                 <PaginationLink asChild isActive={p === page}>
-                  <Link href={p === 1 ? ADMIN_SUBDISTRICT_DATA : `?data=${p}`}>
+                  <Link href={p === 1 ? ADMIN_SUBDISTRICT_RECORD : `?data=${p}`}>
                     {p}
                   </Link>
                 </PaginationLink>
@@ -111,7 +111,7 @@ export default async function DataKecamatanAdmin({ searchParams }: { searchParam
           )}
           <PaginationItem>
             {page < totalPages ? (
-              <PaginationNext href={page + 1 === 1 ? ADMIN_SUBDISTRICT_DATA : `?data=${page + 1}`} />
+              <PaginationNext href={page + 1 === 1 ? ADMIN_SUBDISTRICT_RECORD : `?data=${page + 1}`} />
             ) : (
               <PaginationNext aria-disabled="true" className="pointer-events-none opacity-50" />
             )}

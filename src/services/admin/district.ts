@@ -2,7 +2,7 @@ import { utils, writeFile } from "xlsx";
 import type { FoodData } from "@/types/family";
 import type { District as IDistrict } from "@/types/region";
 
-export class District {
+class District {
   public static downloadExcel(district: IDistrict, foodList: FoodData[]) {
     try {
       const workbook = utils.book_new();
@@ -60,3 +60,6 @@ export class District {
     ];
   }
 }
+
+export const DownloadExcel = District.downloadExcel;
+export { District };

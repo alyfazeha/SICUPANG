@@ -1,11 +1,11 @@
 import { ChartBar, FolderKanban, IceCreamBowl, LayoutDashboard, Map, PlusCircle, Users } from "lucide-react";
 import { FaUserGroup } from "react-icons/fa6";
 import { FaUserShield } from "react-icons/fa";
-import type { SidebarItem } from "@/types/components";
+import type { Sidebar } from "@/types/components";
 import type { Roles } from "@/types/auth";
 import { ADMIN_ADD_SURVEYORS, ADMIN_DASHBOARD, ADMIN_FOOD_RECORD, ADMIN_MANAGE_SURVEYORS, ADMIN_PPH_RECORD, ADMIN_SUBDISTRICT_RECORD, SURVEYOR_ADD_DATA_FAMILY, SURVEYOR_DASHBOARD, SURVEYOR_FAMILY } from "@/constants/routes";
 
-const SidebarMenus: Record<Roles, SidebarItem[]> = {
+const SidebarMenus: Record<Roles, Sidebar[]> = {
   ADMIN: [
     {
       href: ADMIN_DASHBOARD,

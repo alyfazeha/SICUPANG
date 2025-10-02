@@ -1,6 +1,6 @@
 import type { Dispatch, RefObject, SetStateAction } from "react";
 
-export class Select {
+class Select {
   public static filteredOptions(options: Array<{ label: string; value: string }>, searchText: string) {
     if (!searchText) return options;
     return options.filter((option) => this.label(option).toLowerCase().includes(searchText.toLowerCase()));
@@ -29,3 +29,10 @@ export class Select {
     return typeof option === "string" ? option : option.value;
   }
 }
+
+export const FilteredOptions = Select.filteredOptions;
+export const HandleClickOutside = Select.handleClickOutside;
+export const Label = Select.label;
+export const Value = Select.value;
+export const SelectOption = Select.selectOption;
+export { Select };

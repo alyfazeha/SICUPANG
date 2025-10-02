@@ -21,10 +21,7 @@ export const metadata: Metadata = {
 export default async function RekapPangan() {
   const [allFamilyFoodRecords, countDistricts, countFamily, countVillages, dataFamilies] = await Promise.all([
     Prisma.keluarga.findMany({ include: { pangan_keluarga: true } }),
-    Prisma.keluarga.groupBy({
-      by: ["id_kecamatan"],
-      _count: { id_keluarga: true },
-    }),
+    Prisma.keluarga.groupBy({ by: ["id_kecamatan"], _count: { id_keluarga: true } }),
     Prisma.keluarga.count(),
     Prisma.keluarga.groupBy({ by: ["id_desa"], _count: { id_keluarga: true } }),
     Prisma.keluarga.findMany({

@@ -1,9 +1,7 @@
-"use client";
-
 import { Badge } from "@/components/ui/badge";
 import type { Status } from "@/types/family";
 
-export class Text {
+class Text {
   public static truncate(text?: string, mobileLength?: number, maxLength: number = 30) {
     if (!text) return "";
 
@@ -29,3 +27,7 @@ export class Text {
     }
   }
 }
+
+export const Truncate = Text.truncate;
+export const FamilyStatusBadge = Text.familyStatusBadge;
+export { Text };

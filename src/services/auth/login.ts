@@ -1,9 +1,8 @@
 import type { Dispatch, FormEvent, SetStateAction } from "react";
 import type { AppRouterInstance } from "next/dist/shared/lib/app-router-context.shared-runtime";
 import { ADMIN_DASHBOARD, API_LOGIN, SURVEYOR_DASHBOARD } from "@/constants/routes";
-import { Form } from "@/services/superclass/form";
+import { Form } from "@/utils/form";
 import type { Auth } from "@/types/auth";
-import type { ValidationErrors } from "@/types/components";
 import axios, { AxiosError } from "axios";
 
 export class Login extends Form {
@@ -21,7 +20,7 @@ export class Login extends Form {
   public static async submit(
     e: FormEvent,
     form: Pick<Auth, "nip" | "kata_sandi">,
-    setErrors: Dispatch<SetStateAction<Record<keyof typeof form, ValidationErrors[keyof ValidationErrors]>>>,
+    setErrors: Dispatch<SetStateAction<Record<keyof typeof form, Partial<Record<string, string>>[keyof Partial<Record<string, string>>]>>>,
     setAlert: Dispatch<SetStateAction<"success" | "error" | null>>,
     setInfo: Dispatch<SetStateAction<string>>,
     setLoading: Dispatch<SetStateAction<boolean>>,

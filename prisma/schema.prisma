@@ -14,7 +14,6 @@ model pengguna {
   kata_sandi    String
   peran         Peran
   nip           String  @unique
-  jabatan       String?
   id_kecamatan  Int?
   nomor_telepon String?
 
@@ -140,37 +139,25 @@ model pangan {
   referensi_urt        String
   referensi_gram_berat Float
 
-  harga_pangan    harga_pangan[]
-  jenis_pangan    jenis_pangan      @relation(fields: [id_jenis_pangan], references: [id_jenis_pangan])
-  takaran         takaran           @relation(fields: [id_takaran], references: [id_takaran])
+  jenis_pangan jenis_pangan @relation(fields: [id_jenis_pangan], references: [id_jenis_pangan])
+  takaran      takaran      @relation(fields: [id_takaran], references: [id_takaran])
+
   pangan_keluarga pangan_keluarga[]
+  olahan_pangan   olahan_pangan[]
 
   @@index([id_jenis_pangan], map: "id_jenis_pangan")
   @@index([id_takaran], map: "id_takaran")
 }
 
-model harga_pangan {
-  id_harga     Int      @id @default(autoincrement())
-  id_pangan    Int
-  tanggal      DateTime @default(now())
-  harga_satuan Decimal  @db.Decimal(12, 2)
+model olahan_pangan {
+  id_olahan_pangan Int      @id @default(autoincrement())
+  nama_olahan      String
+  deskripsi        String   @db.Text
+  id_pangan        Int
 
-  pangan pangan @relation(fields: [id_pangan], references: [id_pangan])
-
-  @@unique([id_pangan, tanggal], map: "id_tanggal_pangan")
-  @@index([tanggal], map: "tanggal")
-}
-
-model resep_cache {
-  id_resep_cache Int @id @default(autoincrement())
-  nama_olahan String @unique
-  resep_id_vdb String @db.VarChar(50) 
-  bahan_parsed Json
-  standar_porsi Float
-  created_at DateTime @default(now())
-  updated_at DateTime @updatedAt
-
-  @@index([resep_id_vdb])
+  pangan           pangan   @relation(fields: [id_pangan], references: [id_pangan])
+  created_at       DateTime @default(now())
+  updated_at       DateTime @updatedAt
 }
 
 /// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.

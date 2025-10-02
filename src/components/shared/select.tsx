@@ -2,11 +2,11 @@
 
 import { ChevronDown, Search } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
-import type { Select } from "@/types/components";
+import { Select as ISelect } from "@/types/components";
 import { Select as S } from "@/utils/select";
 import { Text } from "@/utils/text";
 
-export default function Select({ label, name, onChange, options, required, value }: Select) {
+export default function Select({ label, name, onChange, options, required, value }: ISelect) {
   const wrapper = useRef<HTMLFieldSetElement>(null);
   const [dropdownOpen, setDropdownOpen] = useState<boolean>(false);
   const [searchText, setSearchText] = useState<string>("");

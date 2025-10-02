@@ -1,14 +1,11 @@
 "use client";
 
 import { FaFileExcel } from "react-icons/fa6";
+import { DownloadExcel as downloadExcel } from "@/services/admin/food-record";
 import { FamilyWithRegion } from "@/types/region";
 import Table from "@/components/shared/table";
 
-export default function DownloadExcel({
-  dataFamilies,
-}: {
-  dataFamilies: FamilyWithRegion[];
-}) {
+export default function DownloadExcel({ dataFamilies }: { dataFamilies: FamilyWithRegion[] }) {
   return (
     <Table
       headers={["Kecamatan", "Desa", "Kode Wilayah", "Nama Keluarga", "Aksi"]}

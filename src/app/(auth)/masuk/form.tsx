@@ -4,14 +4,13 @@ import { Lock, Mail } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import type { Auth } from "@/types/auth";
-import type { ValidationErrors } from "@/types/components";
 import { Login } from "@/services/auth/login";
 import Input from "@/components/shared/input";
 
 export default function Form() {
   const router = useRouter();
   const [alert, setAlert] = useState<"error" | "success" | null>(null);
-  const [errors, setErrors] = useState<Record<keyof typeof form, ValidationErrors[keyof ValidationErrors]>>({ nip: undefined, kata_sandi: undefined });
+  const [errors, setErrors] = useState<Record<keyof typeof form, Partial<Record<string, string>>[keyof Partial<Record<string, string>>]>>({ nip: undefined, kata_sandi: undefined });
   const [form, setForm] = useState<Pick<Auth, "nip" | "kata_sandi">>({ nip: "", kata_sandi: "" });
   const [info, setInfo] = useState("");
   const [loading, setLoading] = useState(false);

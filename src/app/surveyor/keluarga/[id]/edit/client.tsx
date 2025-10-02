@@ -43,9 +43,9 @@ export default function Page({ family }: { family: Omit<Family, "created_at" | "
   useEffect(() => {
     (async () => {
       const data = await E.get<Form>(API_SURVEYOR_ADD_DATA_FAMILY, { processed_foods: [], salary: [], villages: [] });
-      setProcessedFoods(data.processed_foods);
-      setSalary(data.salary);
-      setVillages(data.villages);
+      setProcessedFoods(data.processed_foods as { id: number; label: string }[] || []);
+      setSalary(data.salary as { id: number; label: string }[] || []);
+      setVillages(data.villages as { id: number; label: string }[] || []);
     })();
   }, []);
 

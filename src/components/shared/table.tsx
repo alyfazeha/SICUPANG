@@ -2,9 +2,9 @@
 
 import { ArrowDown, ArrowUp, ArrowUpDown, TriangleAlert } from "lucide-react";
 import { type ReactNode, useState } from "react";
-import type { Table } from "@/types/components";
+import { Table as T } from "@/types/components";
 
-export default function Table({ headers, rows, sortable }: Table) {
+export default function Table({ headers, rows, sortable }: T) {
   const [sortingItems, setSortingItems] = useState<{ index: number; ascending: boolean }>({ index: -1, ascending: true });
   const [sortedRows, setSortedRows] = useState<ReactNode[][]>(rows);
 
@@ -61,7 +61,7 @@ export default function Table({ headers, rows, sortable }: Table) {
               <tr key={rowIndex} className="border-primary border-t text-sm transition-all duration-200">
                 {rows.map((cells, cellIndex) => (
                   <td key={cellIndex} className="px-6 py-3 whitespace-nowrap">
-                    <span className="flex cursor-default items-center justify-center space-x-3 text-sm">
+                    <span className="flex cursor-default items-center justify-center space-x-3 text-xs lg:text-sm">
                       {cells}
                     </span>
                   </td>

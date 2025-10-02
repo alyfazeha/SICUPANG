@@ -17,22 +17,16 @@ export default function Header({ isOpen, setIsOpen, title }: { isOpen: boolean; 
   const pathname = usePathname();
   const isAuthenticatedPage = AUTH_PAGES.some((page) => pathname.startsWith(page));
 
-  const handleLogout = () => {
-    axios.post(API_LOGOUT, null, { withCredentials: true }).then(() => window.location.href = LOGIN).catch((err) => console.error(`Terjadi kesalahan saat keluar dari akun Anda: ${err}`));
-  };
-
   useEffect(() => {
     (async () => {
       try {
         const response = await axios.get<{ data: Auth | null }>(API_ACCOUNT, { withCredentials: true });
-
         if (response.data.data) {
           setName(response.data.data.nama_lengkap);
           setNip(response.data.data.nip);
         }
       } catch (err: unknown) {
-        console.error("Terjadi kesalahan saat mengambil data NIP:", err);
-        throw err;
+        console.warn(`⚠️ Tidak ada data akun (mungkin belum terautentikasi) karena ${err}`);
       }
     })();
   }, []);
@@ -63,7 +57,11 @@ export default function Header({ isOpen, setIsOpen, title }: { isOpen: boolean; 
                   <h6>Profil</h6>
                 </Link>
                 <hr className="border border-[#cecece50]" />
-                <button type="submit" onClick={handleLogout} className="flex cursor-pointer items-center gap-4 transition-all duration-300 ease-in-out hover:text-red-500">
+                <button
+                  type="submit"
+                  onClick={() => axios.post(API_LOGOUT, null, { withCredentials: true }).then(() => (window.location.href = LOGIN)).catch((err) => console.error(`Terjadi kesalahan saat keluar dari akun Anda: ${err}`))}
+                  className="flex cursor-pointer items-center gap-4 transition-all duration-300 ease-in-out hover:text-red-500"
+                >
                   <FaRightFromBracket className="h-3 w-3" />
                   <h6>Keluar</h6>
                 </button>
@@ -73,7 +71,20 @@ export default function Header({ isOpen, setIsOpen, title }: { isOpen: boolean; 
         </header>
       ) : (
         <header className="fixed top-0 right-0 left-0 z-50 container mx-auto pt-8">
-          <section className="border-primary/20 mx-auto flex w-[92%] items-center justify-between rounded-lg border bg-white/95 px-8 py-4 backdrop-blur-lg transition-all duration-300"></section>
+          <section className="border-primary/20 mx-auto flex w-[92%] items-center justify-between rounded-lg border bg-white/95 px-8 py-4 backdrop-blur-lg transition-all duration-300">
+            <div className="flex cursor-pointer items-center gap-2">
+              <Image src="/images/favicon.svg" alt="Logo SICUPANG" width={36} height={36} className="object-contain" />
+              <h1 className="text-lg font-bold text-gray-800">SICUPANG</h1>
+            </div>
+            <nav className="hidden items-center gap-8 font-medium text-gray-700 md:flex">
+              <Link href={LOGIN} className="bg-primary hover:bg-primary/90 rounded-md px-5 py-2 text-sm text-white shadow transition">
+                Masuk
+              </Link>
+            </nav>
+            <div className="md:hidden">
+              <Menu className="h-6 w-6 cursor-pointer text-gray-700" />
+            </div>
+          </section>
         </header>
       )}
     </>

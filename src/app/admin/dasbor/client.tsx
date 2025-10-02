@@ -3,60 +3,29 @@
 import { ChevronDown } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { FaChartSimple, FaCheckDouble } from "react-icons/fa6";
-import { API_ADMIN_DASHBOARD } from "@/constants/routes";
 import type { Dashboard, TopCards } from "@/types/dashboard";
-import axios from "axios";
 
-export default function DasborAdmin() {
+export default function DasborAdmin({ district, family, graphic, villages, years }: Dashboard) {
   const charts = useRef<HTMLDivElement>(null);
-  const [countData, setCountData] = useState<Dashboard>({ district: 0, family: 0, graphic: [], villages: 0, years: [] });
   const [selectedYear, setSelectedYear] = useState<number>(0);
   const [showOptions, setShowOptions] = useState<boolean>(false);
 
   useEffect(() => {
+    if (!charts.current || !graphic.length) return;
     (async () => {
-      try {
-        const response = await axios.get(API_ADMIN_DASHBOARD, { withCredentials: true });
-        if (!response || response.status !== 200) throw new Error(`❌ Error GET ${API_ADMIN_DASHBOARD}: Terjadi kesalahan saat mengambil data.`);
-        setCountData(response.data);
-      } catch (err: unknown) {
-        console.error(`❌ Error GET ${API_ADMIN_DASHBOARD}: ${err}`);
-        throw err;
-      }
-    })();
-  }, []);
-
-  useEffect(() => {
-    (async () => {
-      if (!charts.current || !countData.graphic.length) return;
       const ApexCharts = (await import("apexcharts")).default;
       const chart = new ApexCharts(charts.current, {
-        chart: {
-          type: "bar",
-          height: 350,
-          toolbar: { show: false },
-        },
+        chart: { type: "bar", height: 350, toolbar: { show: false } },
         plotOptions: {
-          bar: {
-            borderRadius: 6,
-            horizontal: false,
-            columnWidth: "55%",
-          },
+          bar: { borderRadius: 6, horizontal: false, columnWidth: "55%" },
         },
         dataLabels: { enabled: false },
         xaxis: {
-          categories: countData.graphic.map((item) => item.x),
+          categories: graphic.map((item) => item.x),
           labels: { style: { colors: "#fff" } },
         },
-        yaxis: {
-          labels: { style: { colors: "#fff" } },
-        },
-        series: [
-          {
-            name: "Jumlah Keluarga",
-            data: countData.graphic.map((item) => item.y),
-          },
-        ],
+        yaxis: { labels: { style: { colors: "#fff" } } },
+        series: [{ name: "Jumlah Keluarga", data: graphic.map((item) => item.y) }],
         colors: ["#38bdf8"],
         grid: { borderColor: "rgba(255,255,255,0.2)" },
       });
@@ -64,12 +33,12 @@ export default function DasborAdmin() {
       chart.render();
       return () => chart.destroy();
     })();
-  }, [countData.graphic]);
+  }, [graphic]);
 
   const cards: TopCards[] = [
-    { title: "Jumlah Kecamatan", value: countData.district },
-    { title: "Jumlah Keluarga", value: countData.family },
-    { title: "Jumlah Desa", value: countData.villages },
+    { title: "Jumlah Kecamatan", value: district },
+    { title: "Jumlah Keluarga", value: family },
+    { title: "Jumlah Desa", value: villages },
   ];
 
   return (
@@ -100,7 +69,7 @@ export default function DasborAdmin() {
             </button>
             {showOptions && (
               <ul className="absolute z-10 mt-2 w-40 rounded-lg bg-white shadow-lg">
-                {countData.years.map((year, index) => (
+                {years.map((year, index) => (
                   <li
                     key={index}
                     onClick={() => { setSelectedYear(year); setShowOptions(false) }}
@@ -114,7 +83,7 @@ export default function DasborAdmin() {
           </fieldset>
         </div>
         <hr className="mb-6 border-white/30" />
-        {countData.graphic.length ? (
+        {graphic.length ? (
           <div ref={charts} className="w-full" />
         ) : (
           <span className="flex flex-col items-center justify-center p-6 text-center text-white">
