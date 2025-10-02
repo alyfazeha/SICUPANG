@@ -1,26 +1,36 @@
-import { NextResponse } from "next/server";
+import { hash } from "bcryptjs";
+import { NextRequest, NextResponse } from "next/server";
 import { Prisma } from "@/lib/prisma";
+import { Surveyor } from "@/types/surveyor";
 
-export async function GET(): Promise<NextResponse> {
+export async function PATCH(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   try {
-    const surveyor = await Prisma.pengguna.findMany({
-      where: { peran: "SURVEYOR" },
-      select: {
-        id_pengguna: true,
-        nama_lengkap: true,
-        nip: true,
-        nomor_telepon: true,
-        kecamatan: { select: { id_kecamatan: true, nama_kecamatan: true } },
+    const body: Surveyor = await request.json();
+
+    await Prisma.pengguna.update({
+      where: { id_pengguna: parseInt((await params).id, 10) },
+      data: {
+        nama_lengkap: body.full_name,
+        nip: body.nip,
+        nomor_telepon: body.phone_number,
+        id_kecamatan: body.district ? parseInt(body.district.id.toString(), 10) : null,
+        ...(body.password ? { kata_sandi: await hash(body.password, 10) } : {}),
       },
     });
 
-    if (!surveyor || surveyor.length === 0) {
-      return NextResponse.json({ message: "Surveyor tidak ditemukan." }, { status: 404 });
-    }
+    return NextResponse.json({ message: "Data surveyor berhasil diperbarui." }, { status: 200 });
+  } catch (err) {
+    console.error("❌ [route] Error PATCH /api/admin/surveyors/[id]: ", err);
+    return NextResponse.json({ message: "Terjadi kesalahan saat memperbarui data surveyor." }, { status: 500 });
+  }
+}
 
-    return NextResponse.json({ surveyor }, { status: 200 });
-  } catch (err: unknown) {
-    console.error(`❌ Error GET /api/admin/surveyors/[id]: ${err}`);
-    return NextResponse.json({ message: "Terjadi kesalahan saat mengambil data." }, { status: 500 });
+export async function DELETE(_req: Request, { params }: { params: { id: string } }) {
+  try {
+    await Prisma.pengguna.delete({ where: { id_pengguna: parseInt(params.id, 10) }});
+    return NextResponse.json({ message: "Data surveyor berhasil dihapus." }, { status: 200 });
+  } catch (err) {
+    console.error("❌ [route] Error DELETE /api/admin/surveyors/[id]: ", err);
+    return NextResponse.json({ message: "Terjadi kesalahan saat menghapus data surveyor." }, { status: 500 });
   }
 }

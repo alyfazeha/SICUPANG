@@ -30,7 +30,7 @@ export default function Beranda() {
     {
       icon: <Users className="text-primary h-7 w-7" />,
       title: "Kolaborasi Masyarakat",
-      description: "Mendorong keterlibatan aktif keluarga dan surveior dalam pencatatan serta pelaporan data pangan.",
+      description: "Mendorong keterlibatan aktif keluarga dan surveyor dalam pencatatan serta pelaporan data pangan.",
     },
   ];
 
@@ -70,8 +70,7 @@ export default function Beranda() {
           Manfaat SICUPANG
         </h2>
         <p className="mx-auto mt-3 max-w-2xl cursor-default text-center text-gray-600">
-          Tiga manfaat utama yang membantu pemerintah, tenaga surveior, dan
-          masyarakat.
+          Tiga manfaat utama yang membantu pemerintah, surveyor, dan masyarakat.
         </p>
         <div className="mt-12 grid grid-cols-1 gap-8 md:grid-cols-3">
           {benefits.map((item, index) => {

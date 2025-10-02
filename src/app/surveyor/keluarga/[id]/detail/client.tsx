@@ -36,7 +36,7 @@ export default function Page({ family }: { family: Omit<Family, "created_at" | "
       </Breadcrumb>
       <ul className="pt-4">
         <h5 className="text-primary my-6 flex cursor-default items-center text-lg font-semibold">
-          <UserCheck2 className="mr-4 h-5 w-5" /> Daftar Keluarga
+          <UserCheck2 className="mr-4 h-5 w-5" /> Data Keluarga
         </h5>
         {Object.entries(family).filter(([key]) => !KEYS_TO_EXCLUDE.includes(key as keyof Family) && FAMILY_ATTRIBUTES[key as keyof typeof FAMILY_ATTRIBUTES]).map(([key, value]) => (
           <li key={key} className="grid grid-cols-1 border-b border-gray-100 text-sm transition-all duration-200 last:border-b-0 hover:bg-emerald-50/50 md:grid-cols-2">

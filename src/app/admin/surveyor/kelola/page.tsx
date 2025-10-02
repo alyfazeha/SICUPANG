@@ -1,11 +1,13 @@
-import { Pencil, Trash, TriangleAlert } from "lucide-react";
+import { Search, TriangleAlert } from "lucide-react";
 import type { Metadata } from "next";
 import { FaCircleInfo } from "react-icons/fa6";
 import { Pagination, PaginationContent, PaginationEllipsis, PaginationItem, PaginationLink, PaginationNext, PaginationPrevious } from "@/components/ui/pagination";
-import { ADMIN_DELETE_SURVEYORS, ADMIN_DETAIL_SURVEYORS, ADMIN_EDIT_SURVEYORS, ADMIN_MANAGE_SURVEYORS } from "@/constants/routes";
+import { ADMIN_MANAGE_SURVEYORS } from "@/constants/routes";
 import { Prisma } from "@/lib/prisma";
+import { Surveyor } from "@/types/surveyor";
 import Link from "next/link";
-import Table from "@/components/shared/table";
+import Input from "@/components/shared/input";
+import Client from "@/app/admin/surveyor/kelola/client";
 
 export const metadata: Metadata = {
   title: "Kelola Surveyor | SICUPANG",
@@ -20,21 +22,31 @@ export const metadata: Metadata = {
   },
 };
 
-export default async function KelolaSurveyor({ searchParams }: { searchParams: Promise<{ id?: string }> }) {
-  const { id } = await searchParams;
-  const page = Number(id) || 1;
+export default async function KelolaSurveyor({ searchParams }: { searchParams: Promise<{ data?: string }> }) {
+  const { data } = await searchParams;
+  const page = Number(data) || 1;
 
-  const surveyors = await Prisma.pengguna.findMany({
+  const rawSurveyors = await Prisma.pengguna.findMany({
     skip: (page - 1) * 10,
     take: 10,
     where: { peran: "SURVEYOR" },
     select: {
       id_pengguna: true,
-      nip: true,
       nama_lengkap: true,
-      kecamatan: { select: { nama_kecamatan: true } },
+      nip: true,
+      kecamatan: { select: { id_kecamatan: true, nama_kecamatan: true } },
     },
   });
+
+  const surveyors: Surveyor[] = rawSurveyors.map((surveyor) => ({
+    id: surveyor.id_pengguna,
+    full_name: surveyor.nama_lengkap,
+    nip: surveyor.nip,
+    district: { 
+      id: surveyor.kecamatan?.id_kecamatan ?? 0, 
+      name: surveyor.kecamatan?.nama_kecamatan ?? "" 
+    },
+  }));
 
   const totalPages = Math.ceil(Number(await Prisma.pengguna.count({ where: { peran: "SURVEYOR" } })) / 10);
 
@@ -61,26 +73,21 @@ export default async function KelolaSurveyor({ searchParams }: { searchParams: P
             halaman ini.
           </h5>
         </figure>
-        <Table
-          headers={["NIP", "Nama Surveyor", "Kecamatan", "Aksi"]}
-          rows={surveyors.map((surveyor) => [
-            surveyor.nip,
-            surveyor.nama_lengkap,
-            surveyor.kecamatan?.nama_kecamatan || "-",
-            <span key={surveyor.id_pengguna} className="flex gap-2.5">
-              <a href={ADMIN_DETAIL_SURVEYORS(surveyor.id_pengguna)} className="rounded-md bg-blue-600 p-2.5 text-white transition hover:bg-blue-700">
-                <FaCircleInfo className="h-3.5 w-3.5" />
-              </a>
-              <a href={ADMIN_EDIT_SURVEYORS(surveyor.id_pengguna)} className="rounded-md bg-yellow-600 p-2.5 text-white transition hover:bg-yellow-700">
-                <Pencil className="h-3.5 w-3.5" />
-              </a>
-              <a href={ADMIN_DELETE_SURVEYORS(surveyor.id_pengguna)} className="rounded-md bg-red-600 p-2.5 text-white transition hover:bg-red-700">
-                <Trash className="h-3.5 w-3.5" />
-              </a>
-            </span>,
-          ])}
-          sortable={["Nama Surveyor", "Kecamatan"]}
-        />
+        <form action="" method="GET" className="mb-6 flex w-full items-end gap-3">
+          <Input
+            type="text"
+            icon={<Search className="h-4 w-4 text-gray-400" />}
+            label={""}
+            name="nama"
+            placeholder="Cari nama surveyor..."
+            required={false}
+            variant="form"
+          />
+          <button type="submit" className="hover:bg-primary/80 focus:ring-primary bg-primary inline-flex cursor-pointer items-center gap-2 rounded-lg px-12 py-4 text-sm font-medium text-white shadow transition focus:ring-2 focus:ring-offset-2 focus:outline-none">
+            Cari
+          </button>
+        </form>
+        <Client surveyors={surveyors} />
         <Pagination>
           <PaginationContent>
             <PaginationItem>

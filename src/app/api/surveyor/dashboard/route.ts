@@ -1,7 +1,6 @@
 import { jwtVerify } from "jose";
 import { cookies } from "next/headers";
 import { NextRequest, NextResponse } from "next/server";
-import { API_SURVEYOR_DASHBOARD } from "@/constants/routes";
 import { AUTH_TOKEN, AUTHORIZATION } from "@/constants/token";
 import { Prisma } from "@/lib/prisma";
 import type { Auth } from "@/types/auth";
@@ -32,7 +31,7 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
 
     return NextResponse.json({ family: totalFamilies, village: totalVillages.length }, { status: 200 });
   } catch (err: unknown) {
-    console.error(`❌ Error GET ${API_SURVEYOR_DASHBOARD}: ${err}`);
+    console.error(`❌ Error GET /api/surveyor/dashboard: ${err}`);
     return NextResponse.json({ error: "Gagal mengambil data keluarga." }, { status: 500 });
   }
 }

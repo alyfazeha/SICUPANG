@@ -39,10 +39,7 @@ export const API_ACCOUNT = "/api/auth/account";
 export const API_LOGIN = "/api/auth/login";
 export const API_LOGOUT = "/api/auth/logout";
 
-export const API_ADMIN_DASHBOARD = "/api/admin/dashboard";
-export const API_ADMIN_DISTRICT_DATA = "/api/admin/district";
-export const API_ADMIN_READ_DISTRICT_DATA = (id: string | number) => `/api/admin/district/${id}/get`;
-export const API_ADMIN_READ_SURVEYOR_DATA = (id: string | number) => `/api/admin/surveyor/${id}/get`;
+export const API_ADMIN_MANAGE_SURVEYOR = (id: string | number) => `/api/admin/surveyors/${id}`;
 
 export const API_SURVEYOR_DASHBOARD = "/api/surveyor/dashboard";
 export const API_SURVEYOR_FAMILY = "/api/surveyor/family";
