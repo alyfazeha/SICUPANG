@@ -1,12 +1,14 @@
 import { Prisma } from "@/lib/prisma";
 
 async function main() {
+  await Prisma.pangan_keluarga.deleteMany();
   await Prisma.pangan.deleteMany();
   await Prisma.takaran.deleteMany();
   await Prisma.jenis_pangan.deleteMany();
+  await Prisma.keluarga.deleteMany();
   await Prisma.desa.deleteMany();
-  await Prisma.kecamatan.deleteMany();
   await Prisma.pengguna.deleteMany();
+  await Prisma.kecamatan.deleteMany();
   await Prisma.rentang_uang.deleteMany();
 
   await import("./kecamatan");

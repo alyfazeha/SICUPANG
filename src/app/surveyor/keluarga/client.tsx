@@ -20,8 +20,7 @@ export default function Page() {
         const response = await axios.get<{ family: Family[] }>(API_SURVEYOR_FAMILY);
         setData(response.data.family);
       } catch (err: unknown) {
-        console.error(`❌ Error GET ${API_SURVEYOR_FAMILY}: ${err}`);
-        throw err;
+        console.warn(`❌ Error GET ${API_SURVEYOR_FAMILY}: ${err}`);
       }
     })();
   }, []);

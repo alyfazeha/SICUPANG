@@ -57,12 +57,12 @@ const SidebarMenus: Record<Roles, Sidebar[]> = {
         {
           href: SURVEYOR_FAMILY,
           icon: <FolderKanban className="h-4 w-4" />,
-          label: "Kelola Data",
+          label: "Kelola",
         },
         {
           href: SURVEYOR_ADD_DATA_FAMILY,
           icon: <PlusCircle className="h-4 w-4" />,
-          label: "Tambah Data",
+          label: "Tambah",
         },
       ],
     },
