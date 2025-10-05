@@ -1,4 +1,4 @@
-import { Search, TriangleAlert } from "lucide-react";
+import { TriangleAlert } from "lucide-react";
 import type { Metadata } from "next";
 import { FaCircleInfo } from "react-icons/fa6";
 import { Pagination, PaginationContent, PaginationEllipsis, PaginationItem, PaginationLink, PaginationNext, PaginationPrevious } from "@/components/ui/pagination";
@@ -6,7 +6,6 @@ import { ADMIN_MANAGE_SURVEYORS } from "@/constants/routes";
 import { Prisma } from "@/lib/prisma";
 import { Surveyor } from "@/types/surveyor";
 import Link from "next/link";
-import Input from "@/components/shared/input";
 import Client from "@/app/admin/surveyor/kelola/client";
 
 export const metadata: Metadata = {
@@ -42,9 +41,9 @@ export default async function KelolaSurveyor({ searchParams }: { searchParams: P
     id: surveyor.id_pengguna,
     full_name: surveyor.nama_lengkap,
     nip: surveyor.nip,
-    district: { 
-      id: surveyor.kecamatan?.id_kecamatan ?? 0, 
-      name: surveyor.kecamatan?.nama_kecamatan ?? "" 
+    district: {
+      id: surveyor.kecamatan?.id_kecamatan ?? 0,
+      name: surveyor.kecamatan?.nama_kecamatan ?? "",
     },
   }));
 
@@ -61,32 +60,15 @@ export default async function KelolaSurveyor({ searchParams }: { searchParams: P
             </h5>
           </span>
           <h5 className="mt-2.5 hidden cursor-default text-sm leading-7 font-normal text-blue-800 lg:inline">
-            Halaman ini menampilkan daftar surveyor yang bertugas di
-            Kabupaten Malang, lengkap dengan NIP, nama lengkap, dan kecamatan
-            tempat mereka bertugas. Anda dapat mengelola data surveyor melalui
-            halaman ini. Data surveyor dapat membantu Anda dalam mengelola
-            keluarga dan anggota keluarga di wilayah Kabupaten Malang.
+            Halaman ini menampilkan daftar surveyor yang bertugas di Kabupaten
+            Malang, lengkap dengan NIP, nama lengkap, dan kecamatan tempat
+            mereka bertugas.
           </h5>
           <h5 className="mt-2.5 inline cursor-default text-sm leading-7 font-normal text-blue-800 lg:hidden">
-            Halaman ini menyajikan daftar surveyor yang bertugas di
-            Kabupaten Malang. Anda dapat mengelola data surveyor melalui
-            halaman ini.
+            Halaman ini menyajikan daftar surveyor yang bertugas di Kabupaten
+            Malang.
           </h5>
         </figure>
-        <form action="" method="GET" className="mb-6 flex w-full items-end gap-3">
-          <Input
-            type="text"
-            icon={<Search className="h-4 w-4 text-gray-400" />}
-            label={""}
-            name="nama"
-            placeholder="Cari nama surveyor..."
-            required={false}
-            variant="form"
-          />
-          <button type="submit" className="hover:bg-primary/80 focus:ring-primary bg-primary inline-flex cursor-pointer items-center gap-2 rounded-lg px-12 py-4 text-sm font-medium text-white shadow transition focus:ring-2 focus:ring-offset-2 focus:outline-none">
-            Cari
-          </button>
-        </form>
         <Client surveyors={surveyors} />
         <Pagination>
           <PaginationContent>
@@ -97,20 +79,15 @@ export default async function KelolaSurveyor({ searchParams }: { searchParams: P
                 <PaginationPrevious aria-disabled="true" className="pointer-events-none opacity-50" />
               )}
             </PaginationItem>
-            {Array.from({ length: totalPages }, (_, i) => i + 1)
-              .slice(
-                Math.max(0, page - 2), // mulai 2 halaman sebelum current
-                Math.min(totalPages, page + 1 + 2), // sampai 2 halaman setelah current
-              )
-              .map((p) => (
-                <PaginationItem key={p}>
-                  <PaginationLink asChild isActive={p === page}>
-                    <Link href={p === 1 ? ADMIN_MANAGE_SURVEYORS : `?data=${p}`}>
-                      {p}
-                    </Link>
-                  </PaginationLink>
-                </PaginationItem>
-              ))}
+            {Array.from({ length: totalPages }, (_, i) => i + 1).slice(Math.max(0, page - 2), Math.min(totalPages, page + 3)).map((p) => (
+              <PaginationItem key={p}>
+                <PaginationLink asChild isActive={p === page}>
+                  <Link href={p === 1 ? ADMIN_MANAGE_SURVEYORS : `?data=${p}`}>
+                    {p}
+                  </Link>
+                </PaginationLink>
+              </PaginationItem>
+            ))}
             {page + 2 < totalPages && (
               <PaginationItem>
                 <PaginationEllipsis />
@@ -128,7 +105,7 @@ export default async function KelolaSurveyor({ searchParams }: { searchParams: P
       </>
     );
   } catch (err: unknown) {
-    console.error(`Terjadi kesalahan pada halaman kelola surveyor:`, err);
+    console.error(`Terjadi kesalahan pada halaman kelola surveyor: ${err}`);
     return (
       <section className="flex h-screen cursor-default flex-col items-center justify-center p-4">
         <TriangleAlert className="h-8 w-8 text-red-500 lg:h-12 lg:w-12" />

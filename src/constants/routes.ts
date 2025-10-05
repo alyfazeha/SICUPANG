@@ -15,6 +15,7 @@ export const ADMIN_DELETE_SURVEYORS = (id: string | number) => `/admin/surveyor/
 export const ADMIN_ADD_SURVEYORS = "/admin/surveyor/tambah";
 export const ADMIN_SUBDISTRICT_RECORD = "/admin/rekap-kecamatan";
 export const ADMIN_FOOD_RECORD = "/admin/rekap-pangan";
+export const ADMIN_FOOD_RECORD_DETAIL = (id: string | number) => `/admin/rekap-pangan/${id}`;
 export const ADMIN_PPH_RECORD = "/admin/rekap-pph";
 
 /* =======================
@@ -40,6 +41,7 @@ export const API_LOGIN = "/api/auth/login";
 export const API_LOGOUT = "/api/auth/logout";
 
 export const API_ADMIN_MANAGE_SURVEYOR = (id: string | number) => `/api/admin/surveyors/${id}`;
+export const API_ADMIN_PPH_EXPORT = (id: number, year: number) => `/api/admin/pph?kecamatan=${id}&tahun=${year}`;
 
 export const API_SURVEYOR_DASHBOARD = "/api/surveyor/dashboard";
 export const API_SURVEYOR_FAMILY = "/api/surveyor/family";

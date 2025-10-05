@@ -1,7 +1,8 @@
 import { Home } from "lucide-react";
 import type { Metadata } from "next";
 import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbSeparator } from "@/components/ui/breadcrumb";
-import { SURVEYOR_ATTRIBUTES } from "@/constants/surveyor";
+import { ADMIN_DASHBOARD, ADMIN_MANAGE_SURVEYORS } from "@/constants/routes";
+import { SURVEYOR_ATTRIBUTES } from "@/constants/admin";
 import { Prisma } from "@/lib/prisma";
 import { Truncate } from "@/utils/text";
 
@@ -53,14 +54,14 @@ export default async function DetailSurveyor({ params }: { params: Promise<{ id:
       <Breadcrumb>
         <BreadcrumbList>
           <BreadcrumbItem>
-            <BreadcrumbLink href="" className="lg:hover:text-foreground/72 flex items-center font-semibold">
+            <BreadcrumbLink href={ADMIN_DASHBOARD} className="lg:hover:text-foreground/72 flex items-center font-semibold">
               <Home className="mr-2 h-4 w-4" />
               Dasbor
             </BreadcrumbLink>
           </BreadcrumbItem>
           <BreadcrumbSeparator />
           <BreadcrumbItem>
-            <BreadcrumbLink href="" className="lg:hover:text-foreground/72 flex items-center font-semibold">
+            <BreadcrumbLink href={ADMIN_MANAGE_SURVEYORS} className="lg:hover:text-foreground/72 flex items-center font-semibold">
               Surveyor
             </BreadcrumbLink>
           </BreadcrumbItem>

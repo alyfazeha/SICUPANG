@@ -1,9 +1,12 @@
+import { Info } from "lucide-react";
 import { FaCircleInfo } from "react-icons/fa6";
 import type { Metadata } from "next";
+import { ADMIN_FOOD_RECORD_DETAIL } from "@/constants/routes";
 import { Prisma } from "@/lib/prisma";
 import type { TopCards } from "@/types/dashboard";
 import type { FamilyWithRegion } from "@/types/region";
-import DownloadExcel from "./download-excel";
+import Table from "@/components/shared/table";
+import Link from "next/link";
 
 export const metadata: Metadata = {
   title: "Rekap Pangan | SICUPANG",
@@ -19,13 +22,13 @@ export const metadata: Metadata = {
 };
 
 export default async function RekapPangan() {
-  const [allFamilyFoodRecords, countDistricts, countFamily, countVillages, dataFamilies] = await Promise.all([
-    Prisma.keluarga.findMany({ include: { pangan_keluarga: true } }),
+  const [countDistricts, countFamily, countVillages, dataFamilies] = await Promise.all([
     Prisma.keluarga.groupBy({ by: ["id_kecamatan"], _count: { id_keluarga: true } }),
     Prisma.keluarga.count(),
     Prisma.keluarga.groupBy({ by: ["id_desa"], _count: { id_keluarga: true } }),
     Prisma.keluarga.findMany({
       select: {
+        id_keluarga: true,
         nama_kepala_keluarga: true,
         desa: { select: { nama_desa: true, kode_wilayah: true } },
         kecamatan: { select: { nama_kecamatan: true, kode_wilayah: true } },
@@ -40,6 +43,7 @@ export default async function RekapPangan() {
   ];
 
   const formattedDataFamilies: FamilyWithRegion[] = dataFamilies.map((family) => ({
+    id: family.id_keluarga,
     name: family.nama_kepala_keluarga,
     district: family.kecamatan && { name: family.kecamatan.nama_kecamatan, code: family.kecamatan.kode_wilayah },
     village: family.desa && { name: family.desa.nama_desa, code: family.desa.kode_wilayah },
@@ -79,7 +83,19 @@ export default async function RekapPangan() {
           berbagai wilayah Kabupaten Malang.
         </h5>
       </figure>
-      <DownloadExcel dataFamilies={formattedDataFamilies} />
+      <Table
+        headers={["Kecamatan", "Desa", "Kode Wilayah", "Nama Keluarga", "Aksi"]}
+        rows={formattedDataFamilies.map((family, index) => [
+          family.district?.name ?? "-",
+          family.village?.name ?? "-",
+          family.district && family.village && `${family.district.code} - ${family.village.code}`,
+          family.name ?? "-",
+          <Link key={index} href={ADMIN_FOOD_RECORD_DETAIL(family.id)} className="rounded-lg bg-blue-500 p-2.5 text-white transition-all duration-300 ease-in-out hover:bg-blue-600">
+            <Info className="h-4 w-4 text-white" />
+          </Link>,
+        ])}
+        sortable={["Desa", "Nama Keluarga"]}
+      />
     </>
   );
 }

@@ -1,8 +1,12 @@
 "use client";
 
 import { CalendarDays, FileDown, MapPin } from "lucide-react";
+import { useRouter } from "next/navigation";
+import { API_ADMIN_PPH_EXPORT } from "@/constants/routes";
 
 export default function Card({ district, year }: { district: { id_kecamatan: number; nama_kecamatan: string }; year: number }) {
+  const router = useRouter();
+
   return (
     <figure className="from-primary to-primary/75 relative overflow-hidden rounded-lg bg-gradient-to-br text-white shadow-xl transition-all duration-300 hover:shadow-2xl">
       <div className="bg-opacity-10 absolute top-0 right-0 h-32 w-32 translate-x-16 -translate-y-16 rounded-full bg-white" />
@@ -27,7 +31,7 @@ export default function Card({ district, year }: { district: { id_kecamatan: num
         </span>
       </div>
       <div className="relative z-10 p-6 pt-4 text-sm">
-        <button onClick={() => {}} type="button" className="text-primary flex w-full cursor-pointer items-center justify-center space-x-2 rounded-lg bg-white px-4 py-3 font-semibold transition-all duration-300 ease-in-out hover:bg-slate-100">
+        <button onClick={() => router.push(API_ADMIN_PPH_EXPORT(district.id_kecamatan, year))} type="button" className="text-primary flex w-full cursor-pointer items-center justify-center space-x-2 rounded-lg bg-white px-4 py-3 font-semibold transition-all duration-300 ease-in-out hover:bg-slate-100">
           <FileDown className="h-4 w-4" />
           <h5>Unduh PPH</h5>
         </button>
