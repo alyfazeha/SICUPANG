@@ -143,21 +143,21 @@ model pangan {
   takaran      takaran      @relation(fields: [id_takaran], references: [id_takaran])
 
   pangan_keluarga pangan_keluarga[]
-  olahan_pangan   olahan_pangan[]
 
   @@index([id_jenis_pangan], map: "id_jenis_pangan")
   @@index([id_takaran], map: "id_takaran")
 }
 
-model olahan_pangan {
-  id_olahan_pangan Int      @id @default(autoincrement())
-  nama_olahan      String
-  deskripsi        String   @db.Text
-  id_pangan        Int
+model resep_makanan {
+  id_resep_makanan   Int      @id @default(autoincrement())
+  nama_olahan        String   @unique
+  id_resep_vektor_db String   @db.VarChar(50)
+  uraian_bahan       Json
+  standar_porsi      Float
+  created_at         DateTime @default(now())
+  updated_at         DateTime @updatedAt
 
-  pangan           pangan   @relation(fields: [id_pangan], references: [id_pangan])
-  created_at       DateTime @default(now())
-  updated_at       DateTime @updatedAt
+  @@index([id_resep_vektor_db])
 }
 
 /// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
