@@ -5,8 +5,9 @@ import { useRouter } from "next/navigation";
 import { type FormEvent, useEffect, useState } from "react";
 import { FaUsers } from "react-icons/fa6";
 import { API_SURVEYOR_ADD_DATA_FAMILY, SURVEYOR_FAMILY } from "@/constants/routes";
-import { AddFamiliesData, AddFamiliesData as D } from "@/services/family/add/surveyor";
+import { AddFoodToList, PreviewImage, Submit } from "@/services/family/add/surveyor";
 import type { Family, Form as FoodsList, MultiConfirmation } from "@/types/family";
+import { Change, Get } from "@/utils/form";
 import Link from "next/link";
 import Image from "next/image";
 import Input from "@/components/shared/input";
@@ -19,7 +20,6 @@ export default function Page() {
   const [fileSize, setFileSize] = useState<string>("—");
   const [foodsList, setFoodsList] = useState<{ id: number; name: string; portion: number }[]>([]);
   const [preview, setPreview] = useState<string | null>(null);
-  const [processedFoods, setProcessedFoods] = useState<{ id: number; label: string }[]>([]);
   const [salary, setSalary] = useState<{ id: number; label: string }[]>([]);
   const [submitting, setSubmitting] = useState(false);
   const [villages, setVillages] = useState<{ id: number; label: string }[]>([]);
@@ -42,8 +42,7 @@ export default function Page() {
 
   useEffect(() => {
     (async () => {
-      const data = await AddFamiliesData.get<FoodsList>(API_SURVEYOR_ADD_DATA_FAMILY, { processed_foods: [], salary: [], villages: [] });
-      setProcessedFoods(data.processed_foods);
+      const data = await Get<FoodsList>(API_SURVEYOR_ADD_DATA_FAMILY, { processed_foods: [], salary: [], villages: [] });
       setSalary(data.salary);
       setVillages(data.villages);
     })();
@@ -54,7 +53,7 @@ export default function Page() {
     if (submitting) return;
     setSubmitting(true);
     try {
-      await D.submit({ ...form, photo: form.photo ?? undefined });
+      await Submit({ ...form, photo: form.photo ?? undefined });
       router.push(SURVEYOR_FAMILY);
     } finally {
       setSubmitting(false);
@@ -68,7 +67,7 @@ export default function Page() {
           icon={<User className="h-4 w-4" />}
           label="Nama Kepala Keluarga"
           name="name"
-          onChange={(e) => D.change(e, form, setForm)}
+          onChange={(e) => Change(e, form, setForm)}
           placeholder="Cth. Agus Miftah"
           required={true}
           type="text"
@@ -78,7 +77,7 @@ export default function Page() {
           icon={<IdCard className="h-4 w-4" />}
           label="Nomor Kartu Keluarga"
           name="family_card_number"
-          onChange={(e) => D.change(e, form, setForm)}
+          onChange={(e) => Change(e, form, setForm)}
           placeholder="Cth. 1234567890123456"
           required={true}
           type="number"
@@ -95,7 +94,7 @@ export default function Page() {
           icon={<Home className="h-4 w-4" />}
           label="Alamat"
           name="address"
-          onChange={(e) => D.change(e, form, setForm)}
+          onChange={(e) => Change(e, form, setForm)}
           placeholder="Cth. Perumahan Meikarta"
           required={true}
           type="text"
@@ -108,7 +107,7 @@ export default function Page() {
           info="*Termasuk Kepala Keluarga"
           label="Jumlah Anggota"
           name="members"
-          onChange={(e) => D.change(e, form, setForm)}
+          onChange={(e) => Change(e, form, setForm)}
           placeholder="Cth. 11"
           required={true}
           type="number"
@@ -176,7 +175,7 @@ export default function Page() {
             type="file"
             accept="image/jpeg, image/jpg, image/png"
             className="hidden"
-            onChange={(e) => { D.previewImage(e, setFileSize, setPreview); if (e.target.files && e.target.files[0]) setForm({ ...form, photo: e.target.files[0] });  }}
+            onChange={(e) => { PreviewImage(e, setFileSize, setPreview); if (e.target.files && e.target.files[0]) setForm({ ...form, photo: e.target.files[0] });  }}
           />
         </fieldset>
         <h6 className="mt-2 cursor-default text-sm text-slate-800 italic">
@@ -187,25 +186,31 @@ export default function Page() {
         </h6>
       </section>
       <section className="mt-6 flex flex-col gap-6 lg:flex-row">
-        <Select
+        <Input
+          icon={<CookingPot className="h-4 w-4" />}
           label="Nama Olahan Pangan"
           name="id_foods"
-          options={processedFoods.map((foods) => ({ label: foods.label, value: foods.id.toString() }))}
+          onChange={(e) => Change(e, form, setForm)}
+          placeholder="Cth. Nasi Goreng"
           required={false}
+          type="text"
+          variant="form"
+          value={form.id_foods ?? ""}
         />
         <Input
           icon={<CookingPot className="h-4 w-4" />}
           label="Porsi"
           name="portion"
-          onChange={(e) => D.change(e, form, setForm)}
+          onChange={(e) => Change(e, form, setForm)}
           placeholder="Cth. 11"
           required={false}
           type="number"
           variant="form"
+          value={form.portion?.toString() ?? ""}
         />
         <button
           type="button"
-          onClick={() => D.addFoodToList(foodsList, form, setForm, setFoodsList)}
+          onClick={() => AddFoodToList(foodsList, form, setForm, setFoodsList)}
           className="bg-primary duratio-300 hover:bg-primary/80 mt-auto cursor-pointer self-center rounded-lg px-10 py-4 text-sm text-white transition-all ease-in-out"
         >
           Tambah

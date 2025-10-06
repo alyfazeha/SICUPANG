@@ -1,6 +1,5 @@
 import { TriangleAlert } from "lucide-react";
 import type { Metadata } from "next";
-import { API_SURVEYOR_READ_DATA_FAMILY } from "@/constants/routes";
 import { Prisma } from "@/lib/prisma";
 import type { Family } from "@/types/family";
 import Page from "./client";
@@ -24,7 +23,7 @@ export async function generateMetadata({ params }: { params: Promise<{ id: strin
       },
     };
   } catch (err: unknown) {
-    console.error(`❌ [metadata] Error GET ${API_SURVEYOR_READ_DATA_FAMILY(id)}: ${err}`);
+    console.error(`❌ [metadata] Error GET ${`/api/surveyor/family/${id}/get`}: ${err}`);
     return {
       title: "Detail Keluarga | SICUPANG",
       description: "",
@@ -74,12 +73,12 @@ export default async function DetailDataKeluarga({ params }: { params: Promise<{
       breastfeeding: families.menyusui === "Ya" ? "YA" : "TIDAK",
       toddler: families.balita === "Ya" ? "YA" : "TIDAK",
       photo: families.gambar,
-      foodstuff: (families.pangan_keluarga ?? []).map((food) => ({ id: food.id_pangan, name: food.pangan.nama_pangan, portion: Number(food.urt) })),
+      foodstuff: (families.pangan_keluarga ?? []).map((food) => ({ id: food.id_pangan_keluarga, name: food.nama_pangan, portion: Number(food.urt) })),
     };
 
     return <Page family={family} />;
   } catch (err: unknown) {
-    console.error(`❌ [pages] Error GET ${API_SURVEYOR_READ_DATA_FAMILY(id)}: ${err}`);
+    console.error(`❌ [pages] Error GET ${`/api/surveyor/family/${id}/get`}: ${err}`);
     return (
       <section className="flex h-screen flex-col items-center justify-center">
         <TriangleAlert className="text-yellow-500" size={40} />

@@ -1,9 +1,9 @@
-import { mkdir, unlink, writeFile } from "fs/promises";
+import { mkdir, unlink, writeFile, access } from "fs/promises";
+import { constants } from "fs";
 import { jwtVerify } from "jose";
 import { cookies } from "next/headers";
 import { NextRequest, NextResponse } from "next/server";
 import { join } from "path";
-import { cwd } from "process";
 import { z } from "zod";
 import { API_SURVEYOR_EDIT_DATA_FAMILY, SURVEYOR_FAMILY } from "@/constants/routes";
 import { AUTH_TOKEN } from "@/constants/token";
@@ -20,28 +20,22 @@ export async function PATCH(request: NextRequest, context: { params: Promise<{ i
     const { payload } = await jwtVerify(token, secret);
     const decoded = payload as unknown as Auth;
 
-    if (!decoded.id_pengguna) {
-      return NextResponse.json({ message: "Token surveyor tidak valid" }, { status: 401 });
-    }
+    if (!decoded.id_pengguna) return NextResponse.json({ message: "Token surveyor tidak valid" }, { status: 401 });
 
     const user = await Prisma.pengguna.findUnique({ where: { id_pengguna: decoded.id_pengguna } });
     if (!user) return NextResponse.json({ message: "Pengguna tidak ditemukan" }, { status: 404 });
 
     const formData = await request.formData();
-
-    // ✅ Ambil id keluarga
     const { params } = context;
     const { id } = await params;
     const id_keluarga = Number(id);
     if (!id_keluarga) return NextResponse.json({ message: "ID keluarga tidak valid" }, { status: 400 });
 
-    // ✅ Convert FormData ke object JS
     const values: Record<string, string> = {};
     formData.forEach((value, key) => {
       if (key !== "photo") values[key] = String(value);
     });
 
-    // ✅ Parse foodstuff
     let foodstuff: Foodstuff[] = [];
     if (values.foodstuff) {
       try {
@@ -51,7 +45,7 @@ export async function PATCH(request: NextRequest, context: { params: Promise<{ i
       }
     }
 
-    // ✅ Validasi
+    // Validasi data text
     const validate = z.object({
       id_district: z.string(),
       id_surveyor: z.string().nullable(),
@@ -73,11 +67,13 @@ export async function PATCH(request: NextRequest, context: { params: Promise<{ i
       return NextResponse.json({ errors: parsed.error.issues }, { status: 400 });
     }
 
-    // ✅ Ambil file (tidak wajib)
     const file = formData.get("photo") as File | null;
     let filename: string | undefined;
+    if (file && file.size > 0) {
+      if (!["image/jpeg", "image/jpg", "image/png"].includes(file.type) || file.size > 5 * 1024 * 1024) {
+        return NextResponse.json({ message: "File bukan gambar atau terlalu besar." }, { status: 400 });
+      }
 
-    if (file && file.size > 0 && ["image/jpeg", "image/jpg", "image/png"].includes(file.type) && file.size <= 5 * 1024 * 1024) {
       const formattedDate = `${String(new Date().getDate()).padStart(2, "0")}-${String(new Date().getMonth() + 1).padStart(2, "0")}-${new Date().getFullYear()}`;
       const nameWithoutExtension = file.name.replace(/\.[^/.]+$/, "").toLowerCase().replace(/[\s_]+/g, "-").replace(/[^a-z0-9-]/g, "-");
       const extension = file.name.split(".").pop()?.toLowerCase();
@@ -87,19 +83,12 @@ export async function PATCH(request: NextRequest, context: { params: Promise<{ i
       await writeFile(join(process.cwd(), "public", "storage", "family", filename), Buffer.from(await file.arrayBuffer()));
     }
 
-    // ✅ Update ke database
-    await Prisma.$transaction(async (table) => {
-      const documentation = await table.keluarga.findUnique({
+    await Prisma.$transaction(async (tx) => {
+      const old = await tx.keluarga.findUnique({
         where: { id_keluarga },
         select: { gambar: true },
       });
-      
-      if (documentation?.gambar && filename) {
-        const path = join(cwd(), "public", documentation.gambar);
-        await unlink(path);
-      }
-
-      await table.keluarga.update({
+      await tx.keluarga.update({
         where: { id_keluarga },
         data: {
           id_kecamatan: Number(user.id_kecamatan),
@@ -117,20 +106,26 @@ export async function PATCH(request: NextRequest, context: { params: Promise<{ i
           ...(filename && { gambar: `/storage/family/${filename}` }),
         },
       });
-
-      // Hapus data pangan lama
-      await table.pangan_keluarga.deleteMany({ where: { id_keluarga } });
-
-      // Simpan data pangan baru
+      await tx.pangan_keluarga.deleteMany({ where: { id_keluarga } });
       for (const food of foodstuff) {
-        await table.pangan_keluarga.create({
+        await tx.pangan_keluarga.create({
           data: {
             id_keluarga,
-            id_pangan: food.id,
+            nama_pangan: food.name,
             urt: food.portion,
             tanggal: new Date(),
           },
         });
+      }
+
+      if (old?.gambar && filename) {
+        const oldPath = join(process.cwd(), "public", old.gambar.replace(/^\/+/, ""));
+        try {
+          await access(oldPath, constants.F_OK);
+          await unlink(oldPath);
+        } catch {
+          console.warn(`File lama tidak ditemukan: ${oldPath}`);
+        }
       }
     });
 

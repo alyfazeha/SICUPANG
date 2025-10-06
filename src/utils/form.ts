@@ -1,7 +1,7 @@
 import type { ChangeEvent, Dispatch, SetStateAction } from "react";
 import axios from "axios";
 
-export class Form {
+class Form {
   public static change<T>(e: ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>, form: T, setForm: Dispatch<SetStateAction<T>>) {
     setForm({ ...form, [e.target.name]: e.target.value });
   }
@@ -15,3 +15,7 @@ export class Form {
     }
   }
 }
+
+export const Change = Form.change;
+export const Get = Form.get;
+export { Form };

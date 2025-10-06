@@ -94,16 +94,14 @@ model rentang_uang {
 
 model pangan_keluarga {
   id_pangan_keluarga Int      @id @default(autoincrement())
-  id_pangan          Int
   id_keluarga        Int
+  nama_pangan        String   @db.VarChar(255) // baru
   urt                Decimal  @db.Decimal(8, 2)
   tanggal            DateTime @db.Date
 
-  pangan   pangan   @relation(fields: [id_pangan], references: [id_pangan])
   keluarga keluarga @relation(fields: [id_keluarga], references: [id_keluarga], onDelete: Cascade)
+  pangan   pangan[]
 
-  @@unique([id_pangan, id_keluarga, tanggal])
-  @@index([id_pangan])
   @@index([id_keluarga])
   @@index([tanggal])
 }

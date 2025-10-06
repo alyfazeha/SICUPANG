@@ -12,7 +12,18 @@ import type { Family, Foodstuff } from "@/types/family";
 
 export async function GET(): Promise<NextResponse> {
   try {
+    const token = (await cookies()).get(AUTH_TOKEN)?.value;
+    if (!token) return NextResponse.json({ error: "Pengguna tidak terautentikasi" }, { status: 401 });
+
+    const secret = new TextEncoder().encode(process.env.JWT_SECRET as string);
+    const { payload } = await jwtVerify(token, secret);
+    const decoded = payload as unknown as Auth;
+
+    const user = await Prisma.pengguna.findUnique({ where: { id_pengguna: decoded.id_pengguna } });
+    if (!user) return NextResponse.json({ message: "Pengguna tidak ditemukan" }, { status: 404 });
+
     const villages = (await Prisma.desa.findMany({
+      where: { id_kecamatan: user.id_kecamatan as number },
       select: { id_desa: true, nama_desa: true, kode_wilayah: true },
       distinct: ["id_desa"],
     })).map((village) => ({
@@ -107,7 +118,6 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
       village: values.village || "",
     };
 
-    // ✅ Validasi dengan Zod
     const validate = z.object({
       id_district: z.number(),
       id_surveyor: z.string().nullable(),
@@ -121,8 +131,6 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
       pregnant: z.enum(["Ya", "Tidak"]),
       breastfeeding: z.enum(["Ya", "Tidak"]),
       toddler: z.enum(["Ya", "Tidak"]),
-      id_foods: z.number(),
-      portion: z.number(),
     });
 
     const parsed = validate.safeParse(normalized);
@@ -164,7 +172,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
         await table.pangan_keluarga.create({
           data: {
             id_keluarga: keluarga.id_keluarga,
-            id_pangan: food.id,
+            nama_pangan: food.name,
             urt: food.portion,
             tanggal: new Date(),
           },

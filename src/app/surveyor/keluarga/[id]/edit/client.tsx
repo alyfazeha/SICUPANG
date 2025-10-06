@@ -5,8 +5,9 @@ import { useRouter } from "next/navigation";
 import { type FormEvent, useEffect, useState } from "react";
 import { FaUsers } from "react-icons/fa6";
 import { API_SURVEYOR_ADD_DATA_FAMILY, SURVEYOR_FAMILY } from "@/constants/routes";
-import { EditFamiliesData as E } from "@/services/family/edit/surveyor";
+import { AddFoodToList, MappingFoods, PreviewImage, Submit } from "@/services/family/edit/surveyor";
 import type { Family, Form, MultiConfirmation } from "@/types/family";
+import { Change, Get } from "@/utils/form";
 import Link from "next/link";
 import Image from "next/image";
 import Input from "@/components/shared/input";
@@ -19,7 +20,6 @@ export default function Page({ family }: { family: Omit<Family, "created_at" | "
   const [fileSize, setFileSize] = useState<string>("—");
   const [foodsList, setFoodsList] = useState<{ id: number; name: string; portion: number }[]>([]);
   const [preview, setPreview] = useState<string | null>(null);
-  const [processedFoods, setProcessedFoods] = useState<{ id: number; label: string }[]>([]);
   const [salary, setSalary] = useState<{ id: number; label: string }[]>([]);
   const [submitting, setSubmitting] = useState(false);
   const [villages, setVillages] = useState<{ id: number; label: string }[]>([]);
@@ -42,8 +42,7 @@ export default function Page({ family }: { family: Omit<Family, "created_at" | "
 
   useEffect(() => {
     (async () => {
-      const data = await E.get<Form>(API_SURVEYOR_ADD_DATA_FAMILY, { processed_foods: [], salary: [], villages: [] });
-      setProcessedFoods(data.processed_foods as { id: number; label: string }[] || []);
+      const data = await Get<Form>(API_SURVEYOR_ADD_DATA_FAMILY, { processed_foods: [], salary: [], villages: [] });
       setSalary(data.salary as { id: number; label: string }[] || []);
       setVillages(data.villages as { id: number; label: string }[] || []);
     })();
@@ -51,7 +50,7 @@ export default function Page({ family }: { family: Omit<Family, "created_at" | "
 
   useEffect(() => {
     setForm((prev) => ({ ...prev, ...family, village: String(family.village), income: String(family.income), spending: String(family.spending) }));
-    E.mappingFoods(family, setForm, setFoodsList);
+    MappingFoods(family, setForm, setFoodsList);
   }, [family]);
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
@@ -60,7 +59,7 @@ export default function Page({ family }: { family: Omit<Family, "created_at" | "
     setSubmitting(true);
 
     try {
-      await E.submit({ ...form, photo: form.photo ?? undefined }, family.id_family as string | number);
+      await Submit({ ...form, photo: form.photo ?? undefined }, family.id_family as string | number);
       router.push(SURVEYOR_FAMILY);
     } finally {
       setSubmitting(false);
@@ -74,7 +73,7 @@ export default function Page({ family }: { family: Omit<Family, "created_at" | "
           icon={<User className="h-4 w-4" />}
           label="Nama Kepala Keluarga"
           name="name"
-          onChange={(e) => E.change(e, form, setForm)}
+          onChange={(e) => Change(e, form, setForm)}
           placeholder="Cth. Agus Miftah"
           required={true}
           type="text"
@@ -85,7 +84,7 @@ export default function Page({ family }: { family: Omit<Family, "created_at" | "
           icon={<IdCard className="h-4 w-4" />}
           label="Nomor Kartu Keluarga"
           name="family_card_number"
-          onChange={(e) => E.change(e, form, setForm)}
+          onChange={(e) => Change(e, form, setForm)}
           placeholder="Cth. 1234567890123456"
           required={true}
           type="number"
@@ -104,7 +103,7 @@ export default function Page({ family }: { family: Omit<Family, "created_at" | "
           icon={<Home className="h-4 w-4" />}
           label="Alamat"
           name="address"
-          onChange={(e) => E.change(e, form, setForm)}
+          onChange={(e) => Change(e, form, setForm)}
           placeholder="Cth. Perumahan Meikarta"
           required={true}
           type="text"
@@ -118,7 +117,7 @@ export default function Page({ family }: { family: Omit<Family, "created_at" | "
           info="*Termasuk Kepala Keluarga"
           label="Jumlah Anggota"
           name="members"
-          onChange={(e) => E.change(e, form, setForm)}
+          onChange={(e) => Change(e, form, setForm)}
           placeholder="Cth. 11"
           required={true}
           type="number"
@@ -205,7 +204,7 @@ export default function Page({ family }: { family: Omit<Family, "created_at" | "
             accept="image/jpeg, image/jpg, image/png"
             className="hidden"
             onChange={(e) => {
-              E.previewImage(e, setFileSize, setPreview);
+              PreviewImage(e, setFileSize, setPreview);
               if (e.target.files && e.target.files[0]) setForm({ ...form, photo: e.target.files[0] });
             }}
           />
@@ -218,25 +217,31 @@ export default function Page({ family }: { family: Omit<Family, "created_at" | "
         </h6>
       </section>
       <section className="mt-6 flex flex-col gap-6 lg:flex-row">
-        <Select
+        <Input
+          icon={<CookingPot className="h-4 w-4" />}
           label="Nama Olahan Pangan"
           name="id_foods"
-          options={processedFoods.map((foods) => ({ label: foods.label, value: foods.id.toString() }))}
+          onChange={(e) => Change(e, form, setForm)}
+          placeholder="Cth. Nasi Goreng"
           required={false}
+          type="text"
+          variant="form"
+          value={form.id_foods ?? ""}
         />
         <Input
           icon={<CookingPot className="h-4 w-4" />}
           label="Porsi"
           name="portion"
-          onChange={(e) => E.change(e, form, setForm)}
+          onChange={(e) => Change(e, form, setForm)}
           placeholder="Cth. 11"
           required={false}
           type="number"
           variant="form"
+          value={form.portion?.toString() ?? ""}
         />
         <button
           type="button"
-          onClick={() => E.addFoodToList(foodsList, form, setForm, setFoodsList)}
+          onClick={() => AddFoodToList(foodsList, form, setForm, setFoodsList)}
           className="bg-primary duratio-300 hover:bg-primary/80 mt-auto cursor-pointer self-center rounded-lg px-10 py-4 text-sm text-white transition-all ease-in-out"
         >
           Tambah

@@ -1,6 +1,6 @@
 import { Home, TriangleAlert } from "lucide-react";
 import type { Metadata } from "next";
-import { API_SURVEYOR_EDIT_DATA_FAMILY, API_SURVEYOR_READ_DATA_FAMILY, SURVEYOR_DASHBOARD, SURVEYOR_FAMILY } from "@/constants/routes";
+import { API_SURVEYOR_EDIT_DATA_FAMILY, SURVEYOR_DASHBOARD, SURVEYOR_FAMILY } from "@/constants/routes";
 import { Prisma } from "@/lib/prisma";
 import Page from "./client";
 import { Family } from "@/types/family";
@@ -75,7 +75,7 @@ export default async function EditDataKeluarga({ params }: { params: Promise<{ i
       breastfeeding: families.menyusui === "Ya" ? "YA" : "TIDAK",
       toddler: families.balita === "Ya" ? "YA" : "TIDAK",
       photo: families.gambar,
-      foodstuff: (families.pangan_keluarga ?? []).map((food) => ({ id: food.id_pangan, name: food.pangan.nama_pangan, portion: Number(food.urt) })),
+      foodstuff: (families.pangan_keluarga ?? []).map((food) => ({ id: food.id_pangan_keluarga, name: food.nama_pangan, portion: Number(food.urt) })),
     };
 
     return (
@@ -106,7 +106,7 @@ export default async function EditDataKeluarga({ params }: { params: Promise<{ i
       </figure>
     );
   } catch (err: unknown) {
-    console.error(`❌ [pages] Error GET ${API_SURVEYOR_READ_DATA_FAMILY(id)}: ${err}`);
+    console.error(`❌ [pages] Error GET ${`/api/surveyor/family/${id}/get`}: ${err}`);
     return (
       <section className="flex h-screen flex-col items-center justify-center">
         <TriangleAlert className="text-yellow-500" size={40} />

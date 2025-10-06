@@ -4,35 +4,32 @@ import type { Family, Foodstuff } from "@/types/family";
 import { Form as BaseForm } from "@/utils/form";
 import axios from "axios";
 
-export class EditFamiliesData extends BaseForm {
+class EditFamiliesData extends BaseForm {
   constructor() {
     super();
   }
 
-  public static addFoodToList<T extends { foodstuff: Foodstuff[] }>(
+  public static addFoodToList<T extends { foodstuff: Foodstuff[]; id_foods?: string; portion?: number }>(
     foodsList: Foodstuff[],
     form: T,
     setForm: Dispatch<SetStateAction<T>>,
     setFoodsList: Dispatch<SetStateAction<Foodstuff[]>>,
   ) {
-    const element = document.querySelector("select[name='id_foods']") as HTMLSelectElement;
-    const portion = Number((document.querySelector("input[name='portion']") as HTMLInputElement)?.value);
+    const name = form.id_foods?.trim();
+    const portion = form.portion ?? 0;
 
-    if (element || portion) {
-      (document.querySelector("span[class='truncate']") as HTMLSelectElement).textContent = "";
-      (document.querySelector("input[name='portion']") as HTMLInputElement).value = "";
+    if (!name || !portion) {
+      alert("Nama olahan pangan dan porsi wajib diisi!");
+      return;
     }
 
-    if (!Number(element?.value) || !portion) return;
-
-    if (foodsList.some((food) => food.id === Number(element?.value))) {
+    if (foodsList.some((food) => food.name.toLowerCase() === name.toLowerCase())) {
       alert("Olahan pangan tersebut sudah ditambahkan!");
       return;
     }
 
-    const foodstuff: Foodstuff = { id: Number(element?.value), name: element?.selectedOptions[0]?.text ?? "", portion: portion };
-
-    setForm({ ...form, foodstuff: [...form.foodstuff, foodstuff], id_foods: "", portion: "" });
+    const foodstuff: Foodstuff = { id: Date.now(), name, portion };
+    setForm({ ...form, foodstuff: [...form.foodstuff, foodstuff], id_foods: "", portion: undefined });
     setFoodsList([...foodsList, foodstuff]);
   }
 
@@ -102,3 +99,9 @@ export class EditFamiliesData extends BaseForm {
     }
   }
 }
+
+export const AddFoodToList = EditFamiliesData.addFoodToList;
+export const MappingFoods = EditFamiliesData.mappingFoods;
+export const PreviewImage = EditFamiliesData.previewImage;
+export const Submit = EditFamiliesData.submit;
+export { EditFamiliesData };
