@@ -11,10 +11,10 @@ export default function Footer() {
       <section className="container mx-auto w-[92%] px-4 pt-16 pb-8">
         <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-4">
           <article className="flex flex-col items-start space-y-4 lg:col-span-1">
-            <div className="relative">
-              <Image height={1920} width={1080} src="/images/sehatin.svg" alt="SICUPANG Logo" className="h-12 w-auto" />
-              <div className="from-primary absolute -bottom-2 left-0 h-1 w-16 rounded-full bg-gradient-to-r to-cyan-400"></div>
-            </div>
+            <span className="flex cursor-pointer items-center gap-2">
+              <Image src="/images/favicon.svg" alt="Logo SICUPANG" width={36} height={36} className="object-contain" />
+              <h1 className="text-lg font-bold text-gray-800">SICUPANG</h1>
+            </span>
             <p className="text-text-secondary mt-2 text-sm leading-relaxed">
               Sistem terintegrasi untuk pencegahan dan monitoring PTM (Penyakit
               Tidak Menular) di Kabupaten Malang.
@@ -139,7 +139,7 @@ export default function Footer() {
       <section className="border-t border-gray-200 bg-gray-50">
         <div className="container mx-auto w-[92%] px-4 py-6">
           <div className="flex flex-col items-center justify-between gap-4 md:flex-row">
-            <div className="flex flex-col items-center gap-1 md:items-start">
+            <span className="flex flex-col items-center gap-1 md:items-start">
               <p className="text-sm font-medium text-gray-700">
                 © 2025 SICUPANG - Sistem Monitoring PTM Kabupaten Malang
               </p>
@@ -150,8 +150,8 @@ export default function Footer() {
                   Tim Gatranova
                 </span>
               </p>
-            </div>
-            <div className="flex items-center gap-4">
+            </span>
+            <span className="flex items-center gap-4">
               <Link href="https://instagram.com/sicupang" target="_blank" className="group hover:border-primary hover:bg-primary flex h-9 w-9 items-center justify-center rounded-full border border-gray-200 bg-white transition-all duration-200">
                 <FaInstagram className="text-gray-600 transition-colors group-hover:text-white" />
               </Link>
@@ -161,7 +161,7 @@ export default function Footer() {
               <Link href="https://twitter.com/sicupang" target="_blank" className="group hover:border-primary hover:bg-primary flex h-9 w-9 items-center justify-center rounded-full border border-gray-200 bg-white transition-all duration-200">
                 <FaXTwitter className="text-gray-600 transition-colors group-hover:text-white" />
               </Link>
-            </div>
+            </span>
           </div>
         </div>
       </section>

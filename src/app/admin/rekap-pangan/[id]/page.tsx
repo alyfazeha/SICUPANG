@@ -5,6 +5,8 @@ import { FOOD_RECORD_ATTRIBUTES } from "@/constants/admin";
 import { ADMIN_DASHBOARD, ADMIN_FOOD_RECORD } from "@/constants/routes";
 import { Prisma } from "@/lib/prisma";
 import { Truncate } from "@/utils/text";
+import Image from "next/image";
+import Table from "@/components/shared/table";
 
 // prettier-ignore
 export async function generateMetadata({ params }: { params: Promise<{ id: string }> }): Promise<Metadata> {
@@ -38,7 +40,17 @@ export async function generateMetadata({ params }: { params: Promise<{ id: strin
 
 export default async function DetailRekapPangan({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
-  const family = await Prisma.keluarga.findFirstOrThrow({ where: { id_keluarga: parseInt(id, 10) }});
+  const family = await Prisma.keluarga.findFirstOrThrow({
+    where: { id_keluarga: parseInt(id, 10) },
+    include: {
+      desa: true,
+      pendapatan: true,
+      pengeluaran: true,
+      pangan_keluarga: {
+        include: { pangan: { include: { takaran: true } } },
+      },
+    },
+  });
 
   return (
     <section className="flex flex-col rounded-lg bg-white p-6">
@@ -64,26 +76,50 @@ export default async function DetailRekapPangan({ params }: { params: Promise<{ 
           </BreadcrumbItem>
         </BreadcrumbList>
       </Breadcrumb>
-      {Object.entries(FOOD_RECORD_ATTRIBUTES).map(([key, label]) => {
-        const value = family[key as keyof typeof family];
-        if (value === null || value === undefined || value === "") return null;
+      <ul>
+        {Object.entries(FOOD_RECORD_ATTRIBUTES).map(([key, label]) => {
+          const value = family[key as keyof typeof family];
+          if (value === null || value === undefined || value === "") return null;
 
-        return (
-          <li key={key} className="grid grid-cols-1 border-b border-gray-100 text-sm transition-all duration-200 last:border-b-0 hover:bg-emerald-50/50 md:grid-cols-2">
-            <div className="flex items-center py-4 pr-5 md:py-5 md:pr-5">
-              <span className="bg-primary mr-4 h-12 w-1.5 rounded-full" />
-              <h5 className="text-primary cursor-default font-medium">
-                {label}
-              </h5>
-            </div>
-            <div className="flex items-center py-4 pl-5 md:py-5 md:pl-5">
-              <h5 className="cursor-default font-medium">
-                {typeof value === "boolean" ? value ? "Ya" : "Tidak" : String(value)}
-              </h5>
-            </div>
-          </li>
-        );
-      })}
+          return (
+            <li key={key} className="grid grid-cols-1 border-b border-gray-100 text-sm transition-all duration-200 last:border-b-0 hover:bg-emerald-50/50 md:grid-cols-2">
+              <div className="flex items-center py-4 pr-5 md:py-5 md:pr-5">
+                <span className="bg-primary mr-4 h-12 w-1.5 rounded-full" />
+                <h5 className="text-primary cursor-default font-medium">
+                  {label}
+                </h5>
+              </div>
+              <div className="flex items-center py-4 pl-5 md:py-5 md:pl-5">
+                <h5 className="cursor-default font-medium">
+                  {typeof value === "boolean" ? value ? "Ya" : "Tidak" : String(value)}
+                </h5>
+              </div>
+            </li>
+          );
+        })}
+      </ul>
+      <h5 className="text-primary mt-6 mb-4 flex items-center font-semibold">
+        <span className="bg-primary mr-4 h-12 w-1.5 rounded-full" />
+        Dokumentasi
+      </h5>
+      <div className="overflow-hidden rounded-xl border border-gray-200 shadow-md">
+        <Image
+          height={1920}
+          width={1080}
+          src={family.gambar}
+          alt={`Dokumentasi kegiatan survey ${family.nama_kepala_keluarga ?? ""}`}
+          className="h-[28rem] w-full object-cover"
+        />
+      </div>
+      <h5 className="text-primary mt-6 mb-4 flex items-center font-semibold">
+        <span className="bg-primary mr-4 h-12 w-1.5 rounded-full" />
+        Daftar Pangan Keluarga
+      </h5>
+      <Table
+        headers={["No", "Nama Pangan", "Takaran URT"]}
+        rows={family.pangan_keluarga.map((food, index) => [index + 1, food.pangan.nama_pangan, `${food.urt} ${food.pangan.takaran.nama_takaran ?? ""}`])}
+        sortable={[]}
+      />
     </section>
   );
 }

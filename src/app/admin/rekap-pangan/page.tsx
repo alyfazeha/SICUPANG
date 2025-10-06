@@ -1,7 +1,8 @@
 import { Info } from "lucide-react";
 import { FaCircleInfo } from "react-icons/fa6";
 import type { Metadata } from "next";
-import { ADMIN_FOOD_RECORD_DETAIL } from "@/constants/routes";
+import { Pagination, PaginationContent, PaginationEllipsis, PaginationItem, PaginationLink, PaginationNext, PaginationPrevious } from "@/components/ui/pagination";
+import { ADMIN_FOOD_RECORD, ADMIN_FOOD_RECORD_DETAIL } from "@/constants/routes";
 import { Prisma } from "@/lib/prisma";
 import type { TopCards } from "@/types/dashboard";
 import type { FamilyWithRegion } from "@/types/region";
@@ -21,20 +22,29 @@ export const metadata: Metadata = {
   },
 };
 
-export default async function RekapPangan() {
-  const [countDistricts, countFamily, countVillages, dataFamilies] = await Promise.all([
-    Prisma.keluarga.groupBy({ by: ["id_kecamatan"], _count: { id_keluarga: true } }),
-    Prisma.keluarga.count(),
-    Prisma.keluarga.groupBy({ by: ["id_desa"], _count: { id_keluarga: true } }),
-    Prisma.keluarga.findMany({
-      select: {
-        id_keluarga: true,
-        nama_kepala_keluarga: true,
-        desa: { select: { nama_desa: true, kode_wilayah: true } },
-        kecamatan: { select: { nama_kecamatan: true, kode_wilayah: true } },
-      },
-    }),
-  ]);
+export default async function RekapPangan({ searchParams }: { searchParams: Promise<{ data?: string }> }) {
+  const { data } = await searchParams;
+  const page = data ? parseInt(data, 10) : 1;
+
+  const [countDistricts, countFamily, countVillages, dataFamilies] =
+    await Promise.all([
+      Prisma.keluarga.groupBy({ by: ["id_kecamatan"], _count: { id_keluarga: true } }),
+      Prisma.keluarga.count(),
+      Prisma.keluarga.groupBy({ by: ["id_desa"], _count: { id_keluarga: true } }),
+      Prisma.keluarga.findMany({
+        skip: (page - 1) * 10,
+        take: 10,
+        orderBy: { id_keluarga: "asc" },
+        select: {
+          id_keluarga: true,
+          nama_kepala_keluarga: true,
+          desa: { select: { nama_desa: true, kode_wilayah: true } },
+          kecamatan: { select: { nama_kecamatan: true, kode_wilayah: true } },
+        },
+      }),
+    ]);
+
+  const totalPages = Math.ceil(countFamily / 10);
 
   const cards: TopCards[] = [
     { title: "Jumlah Kecamatan", value: countDistricts.length },
@@ -42,12 +52,20 @@ export default async function RekapPangan() {
     { title: "Jumlah Desa", value: countVillages.length },
   ];
 
-  const formattedDataFamilies: FamilyWithRegion[] = dataFamilies.map((family) => ({
-    id: family.id_keluarga,
-    name: family.nama_kepala_keluarga,
-    district: family.kecamatan && { name: family.kecamatan.nama_kecamatan, code: family.kecamatan.kode_wilayah },
-    village: family.desa && { name: family.desa.nama_desa, code: family.desa.kode_wilayah },
-  }));
+  const formattedDataFamilies: FamilyWithRegion[] = dataFamilies.map(
+    (family) => ({
+      id: family.id_keluarga,
+      name: family.nama_kepala_keluarga,
+      district: family.kecamatan && {
+        name: family.kecamatan.nama_kecamatan,
+        code: family.kecamatan.kode_wilayah,
+      },
+      village: family.desa && {
+        name: family.desa.nama_desa,
+        code: family.desa.kode_wilayah,
+      },
+    }),
+  );
 
   return (
     <>
@@ -90,12 +108,48 @@ export default async function RekapPangan() {
           family.village?.name ?? "-",
           family.district && family.village && `${family.district.code} - ${family.village.code}`,
           family.name ?? "-",
-          <Link key={index} href={ADMIN_FOOD_RECORD_DETAIL(family.id)} className="rounded-lg bg-blue-500 p-2.5 text-white transition-all duration-300 ease-in-out hover:bg-blue-600">
+          <Link
+            key={index}
+            href={ADMIN_FOOD_RECORD_DETAIL(family.id)}
+            className="rounded-lg bg-blue-500 p-2.5 text-white transition-all duration-300 ease-in-out hover:bg-blue-600"
+          >
             <Info className="h-4 w-4 text-white" />
           </Link>,
         ])}
         sortable={["Desa", "Nama Keluarga"]}
       />
+      <Pagination>
+        <PaginationContent>
+          <PaginationItem>
+            {page > 1 ? (
+              <PaginationPrevious href={page - 1 === 1 ? ADMIN_FOOD_RECORD : `?data=${page - 1}`} />
+            ) : (
+              <PaginationPrevious aria-disabled="true" className="pointer-events-none opacity-50" />
+            )}
+          </PaginationItem>
+          {Array.from({ length: totalPages }, (_, i) => i + 1).slice(Math.max(0, page - 3), Math.min(totalPages, page + 2)).map((p) => (
+            <PaginationItem key={p}>
+              <PaginationLink asChild isActive={p === page}>
+                <Link href={p === 1 ? ADMIN_FOOD_RECORD : `?data=${p}`}>
+                  {p}
+                </Link>
+              </PaginationLink>
+            </PaginationItem>
+          ))}
+          {page + 2 < totalPages && (
+            <PaginationItem>
+              <PaginationEllipsis />
+            </PaginationItem>
+          )}
+          <PaginationItem>
+            {page < totalPages ? (
+              <PaginationNext href={page + 1 === 1 ? ADMIN_FOOD_RECORD : `?data=${page + 1}`} />
+            ) : (
+              <PaginationNext aria-disabled="true" className="pointer-events-none opacity-50" />
+            )}
+          </PaginationItem>
+        </PaginationContent>
+      </Pagination>
     </>
   );
 }
