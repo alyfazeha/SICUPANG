@@ -2,6 +2,14 @@ import { Badge } from "@/components/ui/badge";
 import type { Status } from "@/types/family";
 
 class Text {
+  public static capitalizeEachWord(sentence: string) {
+    if (typeof sentence !== "string" || sentence.length === 0) return "";
+    return sentence.toLowerCase().split(" ").map((word) => {
+      if (word.length === 0) return "";
+      return word.charAt(0).toUpperCase() + word.slice(1);
+    }).join(" ");
+  }
+
   public static truncate(text?: string, mobileLength?: number, maxLength: number = 30) {
     if (!text) return "";
 
@@ -28,6 +36,7 @@ class Text {
   }
 }
 
+export const CapitalizeEachWord = Text.capitalizeEachWord;
 export const Truncate = Text.truncate;
 export const FamilyStatusBadge = Text.familyStatusBadge;
 export { Text };

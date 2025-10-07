@@ -4,7 +4,7 @@ import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbS
 import { FOOD_RECORD_ATTRIBUTES } from "@/constants/admin";
 import { ADMIN_DASHBOARD, ADMIN_FOOD_RECORD } from "@/constants/routes";
 import { Prisma } from "@/lib/prisma";
-import { Truncate } from "@/utils/text";
+import { CapitalizeEachWord, Truncate } from "@/utils/text";
 import Image from "next/image";
 import Table from "@/components/shared/table";
 
@@ -117,7 +117,11 @@ export default async function DetailRekapPangan({ params }: { params: Promise<{ 
       </h5>
       <Table
         headers={["No", "Nama Pangan", "Takaran URT"]}
-        rows={family.pangan_keluarga.map((food, index) => [index + 1, food.pangan.nama_pangan, `${food.urt} ${food.pangan.takaran.nama_takaran ?? ""}`])}
+        rows={family.pangan_keluarga.map((food, index) => [
+          index + 1,
+          CapitalizeEachWord(food.nama_pangan.toUpperCase()),
+          `${food.urt} ${food.pangan.map((item) => item.takaran.nama_takaran).join(", ") ?? ""}`,
+        ])}
         sortable={[]}
       />
     </section>
