@@ -1,10 +1,10 @@
 "use client";
 
 import { useState, ChangeEvent, WheelEvent } from "react";
-import type { Input } from "@/types/components";
+import type { Input as Component } from "@/types/components";
 import { Eye, EyeOff } from "lucide-react";
 
-export default function Input({ icon, label, name, onChange, placeholder, required, type, variant, errors = {}, info = null, value = undefined }: Input) {
+export default function Input({ icon, label, name, onChange, placeholder, required, type, variant, errors = {}, info = null, value = undefined }: Component) {
   const [showPassword, setShowPassword] = useState(false);
 
   const handleInput = (e: ChangeEvent<HTMLInputElement>) => {
