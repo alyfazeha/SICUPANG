@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "build": "next build",
+    "build": "prisma generate && next build",
     "dev": "next dev --turbopack",
     "lint": "next lint",
     "seed": "bun prisma/seed.ts",
