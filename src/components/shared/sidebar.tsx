@@ -4,11 +4,11 @@ import { ChevronDown, ChevronUp } from "lucide-react";
 import { usePathname } from "next/navigation";
 import { useState } from "react";
 import { SidebarMenus } from "@/constants/sidebar";
-import type { Sidebar } from "@/types/components";
+import type { Sidebar as Component } from "@/types/components";
 import Link from "next/link";
 import Image from "next/image";
 
-export default function Sidebar({ isOpen, role }: Pick<Sidebar, "isOpen" | "role">) {
+export default function Sidebar({ isOpen, role }: Pick<Component, "isOpen" | "role">) {
   const pathname = usePathname();
   const [openSubMenuId, setOpenSubMenuId] = useState<string | null>(null);
   const handleSubMenuToggle = (label: string) => setOpenSubMenuId(openSubMenuId === label ? null : label);
@@ -30,11 +30,11 @@ export default function Sidebar({ isOpen, role }: Pick<Sidebar, "isOpen" | "role
         <span className="h-px w-3 bg-gray-200/50"></span>
       </div>
       <nav className="flex h-full flex-col gap-1 overflow-y-auto px-3 pb-20">
-        {SidebarMenus[role].map((menu) => {
+        {SidebarMenus[role!].map((menu) => {
           if (menu.subMenu) {
             return (
               <div key={menu.label} className="flex flex-col">
-                <button onClick={() => handleSubMenuToggle(menu.label)} className={`flex cursor-pointer items-center gap-4 rounded-lg px-5 py-3 transition-all duration-300 ${openSubMenuId === menu.label ? "bg-white/20 text-white" : "text-white hover:bg-white/10"}`}>
+                <button onClick={() => handleSubMenuToggle(menu.label as string)} className={`flex cursor-pointer items-center gap-4 rounded-lg px-5 py-3 transition-all duration-300 ${openSubMenuId === menu.label ? "bg-white/20 text-white" : "text-white hover:bg-white/10"}`}>
                   {menu.icon}
                   <span className="text-sm">{menu.label}</span>
                   <span className="ml-auto">

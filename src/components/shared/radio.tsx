@@ -1,6 +1,6 @@
-import type { Radio } from "@/types/components";
+import type { Radio as Component } from "@/types/components";
 
-export default function Radio({ label, name, options, required, value, onChange }: Radio) {
+export default function Radio({ label, name, options, required, value, onChange }: Component) {
   return (
     <fieldset className="flex w-full flex-col justify-between space-y-4 text-sm">
       <h5 className="font-medium">
