@@ -63,7 +63,7 @@ export default function Page({ districts, params, surveyor }: { districts: { id:
           label="Kecamatan"
           name="kecamatan"
           options={districts.map((district) => ({ label: district.name, value: district.id.toString() }))}
-          value={form.district?.id.toString()}
+          value={form?.district?.id?.toString()}
           required
           onChange={(newValue) => (districts.find((district) => district.id.toString() === newValue)) && setForm({ ...form, district: districts.find((district) => district.id.toString() === newValue)! }) }
         />
