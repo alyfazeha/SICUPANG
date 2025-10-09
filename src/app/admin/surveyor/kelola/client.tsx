@@ -1,17 +1,20 @@
 "use client";
 
 import { LoaderCircle, Pencil, Search as ISearch, Trash } from "lucide-react";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { FaCircleInfo } from "react-icons/fa6";
-import { ADMIN_DELETE_SURVEYORS, ADMIN_DETAIL_SURVEYORS, ADMIN_EDIT_SURVEYORS } from "@/constants/routes";
+import { ADMIN_DETAIL_SURVEYORS, ADMIN_EDIT_SURVEYORS, API_ADMIN_DELETE_SURVEYOR } from "@/constants/routes";
 import { Surveyor } from "@/types/surveyor";
 import Link from "next/link";
 import Input from "@/components/shared/input";
 import CTable from "@/components/shared/table";
 
 export default function Client({ surveyors }: { surveyors: Surveyor[] }) {
+  const router = useRouter();
   const [filtered, setFiltered] = useState<Surveyor[]>(surveyors);
   const [loading, setLoading] = useState(false);
+  const [deleting, setDeleting] = useState<number | null>(null);
   const [query, setQuery] = useState("");
 
   const handleSearch = () => {
@@ -23,6 +26,24 @@ export default function Client({ surveyors }: { surveyors: Surveyor[] }) {
       setFiltered(result);
       setLoading(false);
     }, 500);
+  };
+
+  const handleDelete = async (idSurveyor: number, surveyorName: string) => {
+    const confirmed = window.confirm(`Apakah Anda yakin ingin menghapus surveyor ${surveyorName}?`);
+    if (!confirmed) return;
+    setDeleting(idSurveyor);
+
+    try {
+      const response = await fetch(API_ADMIN_DELETE_SURVEYOR(idSurveyor), { method: 'DELETE' });
+      if (!response.ok) throw new Error('Gagal menghapus data surveyor.');
+      setFiltered((currentSurveyors) => currentSurveyors.filter((s) => s.id !== idSurveyor));
+      router.refresh();
+    } catch (error) {
+      console.error(error);
+      alert('Terjadi kesalahan saat menghapus data.');
+    } finally {
+      setDeleting(null);
+    }
   };
 
   return (
@@ -68,9 +89,14 @@ export default function Client({ surveyors }: { surveyors: Surveyor[] }) {
             <Link href={ADMIN_EDIT_SURVEYORS(surveyor.id as number)} className="rounded-md bg-yellow-600 p-2.5 text-white transition hover:bg-yellow-700">
               <Pencil className="h-3.5 w-3.5" />
             </Link>
-            <a href={ADMIN_DELETE_SURVEYORS(surveyor.id as number)} className="rounded-md bg-red-600 p-2.5 text-white transition hover:bg-red-700">
-              <Trash className="h-3.5 w-3.5" />
-            </a>
+            <button
+              onClick={() => handleDelete(surveyor.id as number, surveyor.full_name as string)}
+              type="button"
+              className="cursor-pointer rounded-md bg-red-600 p-2.5 text-white transition hover:bg-red-700 disabled:cursor-not-allowed disabled:opacity-50"
+              disabled={deleting === surveyor.id}
+            >
+              {deleting === surveyor.id ? <LoaderCircle className="h-3.5 w-3.5 animate-spin" /> : <Trash className="h-3.5 w-3.5" />}
+            </button>
           </span>,
         ])}
         sortable={["Nama Surveyor", "Kecamatan"]}

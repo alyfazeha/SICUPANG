@@ -45,6 +45,7 @@ export const API_INGREDIENT_EXTRACT = `${FASTAPI_SERVICES}/api/ingredient-extrac
 
 export const API_ADMIN_MANAGE_SURVEYOR = (id: string | number) => `/api/admin/surveyors/${id}`;
 export const API_ADMIN_PPH_EXPORT = (id: number, year: number) => `/api/admin/pph?kecamatan=${id}&tahun=${year}`;
+export const API_ADMIN_DELETE_SURVEYOR = (id: string | number) => `/api/admin/surveyors/${id}`;
 
 export const API_SURVEYOR_DASHBOARD = "/api/surveyor/dashboard";
 export const API_SURVEYOR_FAMILY = "/api/surveyor/family";
