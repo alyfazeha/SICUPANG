@@ -73,7 +73,7 @@ export default async function DetailDataKeluarga({ params }: { params: Promise<{
       breastfeeding: families.menyusui === "Ya" ? "YA" : "TIDAK",
       toddler: families.balita === "Ya" ? "YA" : "TIDAK",
       photo: families.gambar,
-      foodstuff: (families.pangan_keluarga ?? []).map((food) => ({ id: food.id_pangan_keluarga, name: food.nama_pangan, portion: Number(food.urt) })),
+      foodstuff: (families.pangan_keluarga ?? []).map((food) => ({ id: food.id_pangan_keluarga, name: food.pangan.nama_pangan, portion: Number(food.urt) })),
     };
 
     return <Page family={family} />;

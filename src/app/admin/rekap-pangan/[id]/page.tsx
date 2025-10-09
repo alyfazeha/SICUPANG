@@ -119,8 +119,8 @@ export default async function DetailRekapPangan({ params }: { params: Promise<{ 
         headers={["No", "Nama Pangan", "Takaran URT"]}
         rows={family.pangan_keluarga.map((food, index) => [
           index + 1,
-          CapitalizeEachWord(food.nama_pangan.toUpperCase()),
-          `${food.urt} ${food.pangan.map((item) => item.takaran.nama_takaran).join(", ") ?? ""}`,
+          CapitalizeEachWord(food.pangan.nama_pangan.toUpperCase()),
+          `${food.urt} ${food.pangan.takaran?.nama_takaran ?? ""}`,
         ])}
         sortable={[]}
       />
