@@ -13,7 +13,7 @@ export async function PATCH(request: NextRequest, { params }: { params: Promise<
         nama_lengkap: body.full_name,
         nip: body.nip,
         nomor_telepon: body.phone_number,
-        id_kecamatan: body.district ? parseInt(body.district.id.toString(), 10) : null,
+        id_kecamatan: body.district ? parseInt((body.district.id as number).toString(), 10) : null,
         ...(body.password ? { kata_sandi: await hash(body.password, 10) } : {}),
       },
     });
