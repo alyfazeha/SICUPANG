@@ -49,7 +49,23 @@ export default function Page({ family }: { family: Omit<Family, "created_at" | "
   }, []);
 
   useEffect(() => {
-    setForm((prev) => ({ ...prev, ...family, village: String(family.village), income: String(family.income), spending: String(family.spending) }));
+    const normalizeConfirmation = (value: unknown): "Ya" | "Tidak" | null => {
+      if (value === "Ya" || value === true || value === "YA") return "Ya";
+      if (value === "Tidak" || value === false || value === "TIDAK") return "Tidak";
+      return null;
+    };
+
+    setForm((prev) => ({
+      ...prev,
+      ...family,
+      village: String(family.village),
+      income: String(family.income),
+      spending: String(family.spending),
+      pregnant: normalizeConfirmation(family.pregnant),
+      breastfeeding: normalizeConfirmation(family.breastfeeding),
+      toddler: normalizeConfirmation(family.toddler),
+    }));
+
     MappingFoods(family, setForm, setFoodsList);
   }, [family]);
 

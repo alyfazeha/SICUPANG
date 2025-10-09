@@ -46,34 +46,30 @@ model desa {
 }
 
 model keluarga {
-  id_keluarga          Int        @id @default(autoincrement())
-  nomor_kartu_keluarga String?    @db.VarChar(16)
-  nama_kepala_keluarga String     @db.VarChar(255)
+  id_keluarga          Int            @id @default(autoincrement())
+  nomor_kartu_keluarga String?        @db.VarChar(16)
+  nama_kepala_keluarga String         @db.VarChar(255)
   jumlah_keluarga      Int
-  alamat               String     @db.VarChar(255)
-  hamil                Konfirmasi @default(Tidak)
-  menyusui             Konfirmasi @default(Tidak)
-  balita               Konfirmasi @default(Tidak)
-  gambar               String     @db.VarChar(255)
+  alamat               String         @db.VarChar(255)
+  hamil                Konfirmasi     @default(Tidak)
+  menyusui             Konfirmasi     @default(Tidak)
+  balita               Konfirmasi     @default(Tidak)
+  gambar               String         @db.LongText
   id_kecamatan         Int
   id_desa              Int
   id_pengguna          Int
+  rentang_pendapatan   Int
+  rentang_pengeluaran  Int
+  status               StatusKeluarga @default(MENUNGGU)
+  komentar             String?        @db.VarChar(200)
+  created_at           DateTime       @default(now()) @db.DateTime(0)
+  updated_at           DateTime       @updatedAt
 
-  rentang_pendapatan  Int
-  rentang_pengeluaran Int
-
-  status     StatusKeluarga @default(MENUNGGU)
-  komentar   String?        @db.VarChar(200)
-  created_at DateTime       @default(now()) @db.DateTime(0)
-  updated_at DateTime       @updatedAt
-
-  pengguna  pengguna  @relation(fields: [id_pengguna], references: [id_pengguna])
-  kecamatan kecamatan @relation(fields: [id_kecamatan], references: [id_kecamatan])
-  desa      desa      @relation(fields: [id_desa], references: [id_desa])
-
-  pendapatan  rentang_uang @relation("pendapatan_keluarga", fields: [rentang_pendapatan], references: [id_rentang_uang], onDelete: Restrict, onUpdate: Cascade)
-  pengeluaran rentang_uang @relation("pengeluaran_keluarga", fields: [rentang_pengeluaran], references: [id_rentang_uang], onDelete: Restrict, onUpdate: Cascade)
-
+  pengguna        pengguna          @relation(fields: [id_pengguna], references: [id_pengguna])
+  kecamatan       kecamatan         @relation(fields: [id_kecamatan], references: [id_kecamatan])
+  desa            desa              @relation(fields: [id_desa], references: [id_desa])
+  pendapatan      rentang_uang      @relation("pendapatan_keluarga", fields: [rentang_pendapatan], references: [id_rentang_uang], onDelete: Restrict, onUpdate: Cascade)
+  pengeluaran     rentang_uang      @relation("pengeluaran_keluarga", fields: [rentang_pengeluaran], references: [id_rentang_uang], onDelete: Restrict, onUpdate: Cascade)
   pangan_keluarga pangan_keluarga[]
 
   @@index([id_desa], map: "id_desa")
@@ -95,14 +91,16 @@ model rentang_uang {
 model pangan_keluarga {
   id_pangan_keluarga Int      @id @default(autoincrement())
   id_keluarga        Int
-  nama_pangan        String   @db.VarChar(255) // baru
+  id_pangan          Int
+  nama_pangan        String?
   urt                Decimal  @db.Decimal(8, 2)
   tanggal            DateTime @db.Date
 
-  keluarga keluarga @relation(fields: [id_keluarga], references: [id_keluarga], onDelete: Cascade)
-  pangan   pangan[]
+  keluarga      keluarga       @relation(fields: [id_keluarga], references: [id_keluarga], onDelete: Cascade)
+  pangan        pangan         @relation(fields: [id_pangan], references: [id_pangan])
 
   @@index([id_keluarga])
+  @@index([id_pangan])
   @@index([tanggal])
 }
 

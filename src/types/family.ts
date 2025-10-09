@@ -1,7 +1,7 @@
 import { Interface } from "@/utils/decorator";
 
 export type Status = "DITERIMA" | "DITOLAK" | "MENUNGGU";
-export type MultiConfirmation = "YA" | "TIDAK";
+export type MultiConfirmation = "YA" | "TIDAK" | "Ya" | "Tidak";
 
 @Interface
 class Family {

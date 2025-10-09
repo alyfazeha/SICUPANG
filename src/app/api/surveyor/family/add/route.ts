@@ -4,7 +4,7 @@ import { cookies } from "next/headers";
 import { NextRequest, NextResponse } from "next/server";
 import { join } from "path";
 import { z } from "zod";
-import { API_SURVEYOR_ADD_DATA_FAMILY, SURVEYOR_ADD_DATA_FAMILY, SURVEYOR_FAMILY } from "@/constants/routes";
+import { API_INGREDIENT_EXTRACT, API_SURVEYOR_ADD_DATA_FAMILY, SURVEYOR_ADD_DATA_FAMILY, SURVEYOR_FAMILY } from "@/constants/routes";
 import { AUTH_TOKEN } from "@/constants/token";
 import { Prisma } from "@/lib/prisma";
 import type { Auth } from "@/types/auth";
@@ -58,13 +58,13 @@ export async function GET(): Promise<NextResponse> {
 }
 
 export async function POST(request: NextRequest): Promise<NextResponse> {
-  try {    
+  try {
     const token = (await cookies()).get(AUTH_TOKEN)?.value;
 
     if (!token) {
       return NextResponse.json({ error: "Pengguna tidak terautentikasi" }, { status: 401 });
     }
-    
+
     const secret = new TextEncoder().encode(process.env.JWT_SECRET as string);
     const { payload } = await jwtVerify(token, secret);
     const decoded = payload as unknown as Auth;
@@ -73,16 +73,10 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
       return NextResponse.json({ message: "Token surveyor tidak valid" }, { status: 401 });
     }
 
-    const user = await Prisma.pengguna.findUnique({  where: { id_pengguna: decoded.id_pengguna }  });
+    const user = await Prisma.pengguna.findUnique({ where: { id_pengguna: decoded.id_pengguna } });
     if (!user) return NextResponse.json({ message: "Pengguna tidak ditemukan" }, { status: 404 });
 
-    if (!process.env.NEXT_PUBLIC_APP_URL) {
-      throw new Error("NEXT_PUBLIC_APP_URL belum di-set di environment!");
-    }
-
     const formData = await request.formData();
-
-    // ✅ Ambil file dari formData
     const file = formData.get("photo") as File | null;
     if (!file) {
       return NextResponse.json({ message: "Foto wajib diunggah." }, { status: 400 });
@@ -147,38 +141,41 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
     await mkdir(join(process.cwd(), "public", "storage", "family"), { recursive: true });
     await writeFile(join(process.cwd(), "public", "storage", "family", filename), Buffer.from(await file.arrayBuffer()));
 
-    // ✅ Simpan ke database
-    await Prisma.$transaction(async (table) => {
-      const keluarga = await table.keluarga.create({
-        data: {
-          id_kecamatan: Number(user.id_kecamatan),
-          id_pengguna: decoded.id_pengguna,
-          nama_kepala_keluarga: parsed.data.name,
-          nomor_kartu_keluarga: parsed.data.family_card_number,
-          id_desa: Number(parsed.data.village),
-          alamat: parsed.data.address,
-          jumlah_keluarga: Number(parsed.data.members),
-          rentang_pendapatan: Number(parsed.data.income),
-          rentang_pengeluaran: Number(parsed.data.spending),
-          hamil: parsed.data.pregnant,
-          menyusui: parsed.data.breastfeeding,
-          balita: parsed.data.toddler,
-          gambar: `/storage/family/${filename}`,
-        },
-      });
-
-      // ✅ Loop semua foodstuff lalu simpan ke pangan_keluarga
-      for (const food of foodstuff) {
-        await table.pangan_keluarga.create({
-          data: {
-            id_keluarga: keluarga.id_keluarga,
-            nama_pangan: food.name,
-            urt: food.portion,
-            tanggal: new Date(),
-          },
-        });
-      }
+    const keluarga = await Prisma.keluarga.create({
+      data: {
+        id_kecamatan: Number(user.id_kecamatan),
+        id_pengguna: decoded.id_pengguna,
+        nama_kepala_keluarga: parsed.data.name,
+        nomor_kartu_keluarga: parsed.data.family_card_number,
+        id_desa: Number(parsed.data.village),
+        alamat: parsed.data.address,
+        jumlah_keluarga: Number(parsed.data.members),
+        rentang_pendapatan: Number(parsed.data.income),
+        rentang_pengeluaran: Number(parsed.data.spending),
+        hamil: parsed.data.pregnant,
+        menyusui: parsed.data.breastfeeding,
+        balita: parsed.data.toddler,
+        gambar: `/storage/family/${filename}`,
+      },
     });
+
+    if (foodstuff && foodstuff.length > 0) {
+      const payloadToAI = {
+        family_id: keluarga.id_keluarga,
+        items: foodstuff.map(food => ({
+          food_name: food.name,
+          portion: food.portion,
+        })),
+      };
+
+      fetch(API_INGREDIENT_EXTRACT, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payloadToAI),
+      }).catch(err => {
+        console.error("Gagal memicu proses ekstraksi AI di latar belakang:", err);
+      });
+    }
 
     return NextResponse.redirect(new URL(SURVEYOR_FAMILY, process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000"), 303);
   } catch (err) {

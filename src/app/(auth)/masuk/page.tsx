@@ -20,7 +20,7 @@ export const metadata: Metadata = {
 export default function Masuk() {
   return (
     <>
-      <Link href="/" className="bg-primary lg:hover:bg-primary/90 absolute top-6 left-6 z-30 flex cursor-pointer items-center gap-2 rounded-lg px-5 py-3 text-slate-50 transition-all duration-300 ease-in-out">
+      <Link href="/" className="bg-primary lg:hover:bg-primary/90 absolute top-6 left-6 z-30 hidden cursor-pointer items-center gap-2 rounded-lg px-5 py-3 text-slate-50 transition-all duration-300 ease-in-out lg:flex">
         <ArrowLeft className="mr-2 h-4 w-4" aria-label="Kembali ke halaman sebelumnya" />
         <h5 className="text-sm font-bold">Kembali</h5>
       </Link>

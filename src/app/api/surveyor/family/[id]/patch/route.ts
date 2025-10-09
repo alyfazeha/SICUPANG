@@ -106,16 +106,28 @@ export async function PATCH(request: NextRequest, context: { params: Promise<{ i
           ...(filename && { gambar: `/storage/family/${filename}` }),
         },
       });
+
       await tx.pangan_keluarga.deleteMany({ where: { id_keluarga } });
+
       for (const food of foodstuff) {
-        await tx.pangan_keluarga.create({
-          data: {
-            id_keluarga,
-            nama_pangan: food.name,
-            urt: food.portion,
-            tanggal: new Date(),
-          },
+        const foodsRecord = await tx.pangan.findFirst({
+          where: { nama_pangan: { equals: food.name }},
+          select: { id_pangan: true },
         });
+
+        if (foodsRecord) {
+          await tx.pangan_keluarga.create({
+            data: {
+              id_keluarga,
+              id_pangan: foodsRecord.id_pangan,
+              nama_pangan: food.name,
+              urt: food.portion,
+              tanggal: new Date(),
+            },
+          });
+        } else {
+          console.warn(`[EDIT] Pangan dengan nama "${food.name}" tidak ditemukan dan dilewati.`);
+        }
       }
 
       if (old?.gambar && filename) {
