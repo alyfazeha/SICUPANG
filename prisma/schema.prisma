@@ -4,7 +4,7 @@ generator client {
 }
 
 datasource db {
-  provider = "mysql"
+  provider = "postgresql"
   url      = env("DATABASE_URL")
 }
 
@@ -17,32 +17,31 @@ model pengguna {
   id_kecamatan  Int?
   nomor_telepon String?
 
-  kecamatan kecamatan? @relation(fields: [id_kecamatan], references: [id_kecamatan])
-
+  kecamatan  kecamatan? @relation(fields: [id_kecamatan], references: [id_kecamatan])
   created_at DateTime   @default(now())
   updated_at DateTime   @updatedAt
   keluarga   keluarga[]
 }
 
 model kecamatan {
-  id_kecamatan   Int        @id @unique(map: "id_kecamatan") @default(autoincrement())
-  kode_wilayah   String     @db.VarChar(255)
-  nama_kecamatan String     @db.VarChar(255)
+  id_kecamatan   Int        @id @default(autoincrement())
+  kode_wilayah   String
+  nama_kecamatan String
   pengguna       pengguna[]
   desa           desa[]
   keluarga       keluarga[]
 }
 
 model desa {
-  id_desa      Int    @id @unique(map: "id_desa") @default(autoincrement())
-  kode_wilayah String @db.VarChar(255)
-  nama_desa    String @db.VarChar(255)
+  id_desa      Int    @id @default(autoincrement())
+  kode_wilayah String
+  nama_desa    String
   id_kecamatan Int
 
   kecamatan kecamatan  @relation(fields: [id_kecamatan], references: [id_kecamatan])
   keluarga  keluarga[]
 
-  @@index([id_kecamatan], map: "id_kecamatan")
+  @@index([id_kecamatan])
 }
 
 model keluarga {
@@ -54,7 +53,7 @@ model keluarga {
   hamil                Konfirmasi     @default(Tidak)
   menyusui             Konfirmasi     @default(Tidak)
   balita               Konfirmasi     @default(Tidak)
-  gambar               String         @db.LongText
+  gambar               String
   id_kecamatan         Int
   id_desa              Int
   id_pengguna          Int
@@ -62,7 +61,7 @@ model keluarga {
   rentang_pengeluaran  Int
   status               StatusKeluarga @default(MENUNGGU)
   komentar             String?        @db.VarChar(200)
-  created_at           DateTime       @default(now()) @db.DateTime(0)
+  created_at           DateTime       @default(now())
   updated_at           DateTime       @updatedAt
 
   pengguna        pengguna          @relation(fields: [id_pengguna], references: [id_pengguna])
@@ -72,11 +71,10 @@ model keluarga {
   pengeluaran     rentang_uang      @relation("pengeluaran_keluarga", fields: [rentang_pengeluaran], references: [id_rentang_uang], onDelete: Restrict, onUpdate: Cascade)
   pangan_keluarga pangan_keluarga[]
 
-  @@index([id_desa], map: "id_desa")
-  @@index([id_kecamatan], map: "id_kecamatan")
-  @@index([id_kecamatan, id_desa], map: "id_kecamatan_desa")
-  @@index([rentang_pendapatan], map: "rentang_pendapatan")
-  @@index([rentang_pengeluaran], map: "rentang_pengeluaran")
+  @@index([id_desa])
+  @@index([id_kecamatan])
+  @@index([rentang_pendapatan])
+  @@index([rentang_pengeluaran])
 }
 
 model rentang_uang {
@@ -93,11 +91,11 @@ model pangan_keluarga {
   id_keluarga        Int
   id_pangan          Int
   nama_pangan        String?
-  urt                Decimal  @db.Decimal(8, 2)
+  urt                Decimal
   tanggal            DateTime @db.Date
 
-  keluarga      keluarga       @relation(fields: [id_keluarga], references: [id_keluarga], onDelete: Cascade)
-  pangan        pangan         @relation(fields: [id_pangan], references: [id_pangan])
+  keluarga keluarga @relation(fields: [id_keluarga], references: [id_keluarga], onDelete: Cascade)
+  pangan   pangan   @relation(fields: [id_pangan], references: [id_pangan])
 
   @@index([id_keluarga])
   @@index([id_pangan])
@@ -109,17 +107,15 @@ model takaran {
   nama_takaran String
   created_at   DateTime @default(now())
   updated_at   DateTime @updatedAt
-
-  pangan pangan[]
+  pangan       pangan[]
 }
 
 model jenis_pangan {
-  id_jenis_pangan     Int    @id @default(autoincrement())
+  id_jenis_pangan     Int      @id @default(autoincrement())
   nama_jenis          String
   bobot_jenis         Float
   skor_maksimal_jenis Float
-
-  pangan pangan[]
+  pangan              pangan[]
 }
 
 model pangan {
@@ -135,13 +131,12 @@ model pangan {
   referensi_urt        String
   referensi_gram_berat Float
 
-  jenis_pangan jenis_pangan @relation(fields: [id_jenis_pangan], references: [id_jenis_pangan])
-  takaran      takaran      @relation(fields: [id_takaran], references: [id_takaran])
-
+  jenis_pangan    jenis_pangan      @relation(fields: [id_jenis_pangan], references: [id_jenis_pangan])
+  takaran         takaran           @relation(fields: [id_takaran], references: [id_takaran])
   pangan_keluarga pangan_keluarga[]
 
-  @@index([id_jenis_pangan], map: "id_jenis_pangan")
-  @@index([id_takaran], map: "id_takaran")
+  @@index([id_jenis_pangan])
+  @@index([id_takaran])
 }
 
 model resep_makanan {
@@ -156,25 +151,24 @@ model resep_makanan {
   @@index([id_resep_vektor_db])
 }
 
-/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
+// Model di bawah ini diabaikan oleh Prisma, jadi tidak perlu diubah,
+// tapi atribut @db yang spesifik MySQL dihapus untuk kebersihan.
 model migrations {
-  id        Int    @db.UnsignedInt
+  id        Int
   migration String @db.VarChar(255)
   batch     Int
 
   @@ignore
 }
 
-/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
 model cache {
   key        String @db.VarChar(255)
-  value      String @db.MediumText
+  value      String
   expiration Int
 
   @@ignore
 }
 
-/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
 model cache_locks {
   key        String @db.VarChar(255)
   owner      String @db.VarChar(255)
