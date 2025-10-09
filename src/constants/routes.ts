@@ -40,8 +40,8 @@ export const API_ACCOUNT = "/api/auth/account";
 export const API_LOGIN = "/api/auth/login";
 export const API_LOGOUT = "/api/auth/logout";
 
-export const FASTAPI_SERVICES = process.env.FASTAPI_SERVICES || "http://127.0.0.1:8000";
-export const API_INGREDIENT_EXTRACT = `${FASTAPI_SERVICES}/api/ingredient-extract`;
+export const DEVELOPMENT_URL = process.env.AI_SERVICES_URL || "http://127.0.0.1:8000";
+export const API_EXTRACT_INGREDIENTS = "/api/surveyor/extract-ingredients";
 
 export const API_ADMIN_MANAGE_SURVEYOR = (id: string | number) => `/api/admin/surveyors/${id}`;
 export const API_ADMIN_PPH_EXPORT = (id: number, year: number) => `/api/admin/pph?kecamatan=${id}&tahun=${year}`;

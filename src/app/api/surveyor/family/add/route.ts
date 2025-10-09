@@ -4,9 +4,10 @@ import { cookies } from "next/headers";
 import { NextRequest, NextResponse } from "next/server";
 import { join } from "path";
 import { z } from "zod";
-import { API_INGREDIENT_EXTRACT, API_SURVEYOR_ADD_DATA_FAMILY, SURVEYOR_ADD_DATA_FAMILY, SURVEYOR_FAMILY } from "@/constants/routes";
+import { API_SURVEYOR_ADD_DATA_FAMILY, SURVEYOR_ADD_DATA_FAMILY, SURVEYOR_FAMILY } from "@/constants/routes";
 import { AUTH_TOKEN } from "@/constants/token";
 import { Prisma } from "@/lib/prisma";
+import { extractAndSaveIngredients } from "@/services/ingredient-extract";
 import type { Auth } from "@/types/auth";
 import type { Family, Foodstuff } from "@/types/family";
 
@@ -160,24 +161,11 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
     });
 
     if (foodstuff && foodstuff.length > 0) {
-      const payloadToAI = {
-        family_id: keluarga.id_keluarga,
-        items: foodstuff.map(food => ({
-          food_name: food.name,
-          portion: food.portion,
-        })),
-      };
-
-      fetch(API_INGREDIENT_EXTRACT, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(payloadToAI),
-      }).catch(err => {
-        console.error("Gagal memicu proses ekstraksi AI di latar belakang:", err);
-      });
+      const itemsToProcess = foodstuff.map(food => ({ food_name: food.name, portion: food.portion }));
+      extractAndSaveIngredients(keluarga.id_keluarga, itemsToProcess).catch(err => console.error(`Gagal menjalankan ekstraksi AI di latar belakang: ${err}`));
     }
 
-    return NextResponse.redirect(new URL(SURVEYOR_FAMILY, process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000"), 303);
+    return NextResponse.redirect(new URL(SURVEYOR_FAMILY, request.url), 303);
   } catch (err) {
     console.error(`❌ Error POST ${SURVEYOR_ADD_DATA_FAMILY}:`, err);
     return NextResponse.json({ message: "Gagal menambah data keluarga" }, { status: 500 });
