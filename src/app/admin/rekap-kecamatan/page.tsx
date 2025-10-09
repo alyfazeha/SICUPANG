@@ -8,6 +8,8 @@ import type { District } from "@/types/region";
 import Link from "next/link";
 import DownloadExcel from "./download-excel";
 
+export const dynamic = "force-dynamic";
+
 export const metadata: Metadata = {
   title: "Rekap Kecamatan | SICUPANG",
   description: "",

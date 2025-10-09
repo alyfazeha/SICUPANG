@@ -8,6 +8,8 @@ import { CapitalizeEachWord, Truncate } from "@/utils/text";
 import Image from "next/image";
 import Table from "@/components/shared/table";
 
+export const dynamic = "force-dynamic";
+
 // prettier-ignore
 export async function generateMetadata({ params }: { params: Promise<{ id: string }> }): Promise<Metadata> {
   const { id } = await params;

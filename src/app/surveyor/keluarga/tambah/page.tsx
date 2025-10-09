@@ -4,6 +4,8 @@ import { SURVEYOR_DASHBOARD, SURVEYOR_FAMILY } from "@/constants/routes";
 import { Home } from "lucide-react";
 import Page from "./client";
 
+export const dynamic = "force-dynamic";
+
 export const metadata: Metadata = {
   title: "Tambah Data Keluarga | SICUPANG",
   description: "",

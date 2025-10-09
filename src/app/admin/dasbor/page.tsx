@@ -3,6 +3,8 @@ import { ADMIN_DASHBOARD } from "@/constants/routes";
 import { Prisma } from "@/lib/prisma";
 import Page from "./client";
 
+export const dynamic = "force-dynamic";
+
 export const metadata: Metadata = {
   title: "Dasbor | SICUPANG",
   description: "",

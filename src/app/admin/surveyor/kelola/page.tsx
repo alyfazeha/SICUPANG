@@ -8,6 +8,8 @@ import { Surveyor } from "@/types/surveyor";
 import Link from "next/link";
 import Client from "@/app/admin/surveyor/kelola/client";
 
+export const dynamic = "force-dynamic";
+
 export const metadata: Metadata = {
   title: "Kelola Surveyor | SICUPANG",
   description: "",

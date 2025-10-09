@@ -8,6 +8,8 @@ import Page from "./client";
 import { Surveyor } from "@/types/surveyor";
 import { District } from "@/types/region";
 
+export const dynamic = "force-dynamic";
+
 export async function generateMetadata({ params }: { params: Promise<{ id: string }> }): Promise<Metadata> {
   const { id } = await params;
 

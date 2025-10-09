@@ -7,6 +7,8 @@ import { AUTH_TOKEN } from "@/constants/token";
 import { Prisma } from "@/lib/prisma";
 import type { Auth } from "@/types/auth";
 
+export const dynamic = "force-dynamic";
+
 export const metadata: Metadata = {
   title: "Dasbor | SICUPANG",
   description: "",

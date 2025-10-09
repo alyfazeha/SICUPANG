@@ -6,6 +6,8 @@ import { SURVEYOR_ATTRIBUTES } from "@/constants/admin";
 import { Prisma } from "@/lib/prisma";
 import { Truncate } from "@/utils/text";
 
+export const dynamic = "force-dynamic";
+
 // prettier-ignore
 export async function generateMetadata({ params }: { params: Promise<{ id: string }> }): Promise<Metadata> {
   const { id } = await params;

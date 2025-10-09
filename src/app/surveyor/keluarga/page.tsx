@@ -4,6 +4,8 @@ import { SURVEYOR_ADD_DATA_FAMILY } from "@/constants/routes";
 import Link from "next/link";
 import Page from "./client";
 
+export const dynamic = "force-dynamic";
+
 export const metadata: Metadata = {
   title: "Keluarga | SICUPANG",
   description: "",

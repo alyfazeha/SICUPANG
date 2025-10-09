@@ -4,6 +4,8 @@ import type { ReactNode } from "react";
 import Auth from "@/app/client/auth";
 import "@/app/globals.css";
 
+export const dynamic = "force-dynamic";
+
 const fonts = Plus_Jakarta_Sans({
   variable: "--font-plus-jakarta-sans",
   subsets: ["latin"],

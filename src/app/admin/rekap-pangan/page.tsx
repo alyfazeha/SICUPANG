@@ -9,6 +9,8 @@ import type { FamilyWithRegion } from "@/types/region";
 import Table from "@/components/shared/table";
 import Link from "next/link";
 
+export const dynamic = "force-dynamic";
+
 export const metadata: Metadata = {
   title: "Rekap Pangan | SICUPANG",
   description: "",

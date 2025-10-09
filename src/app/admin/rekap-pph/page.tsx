@@ -5,6 +5,8 @@ import { Prisma } from "@/lib/prisma";
 import Card from "@/app/admin/rekap-pph/card";
 import Filter from "@/app/admin/rekap-pph/filter";
 
+export const dynamic = "force-dynamic";
+
 export const metadata: Metadata = {
   title: "Rekap PPH | SICUPANG",
   description: "",
