@@ -25,7 +25,7 @@ export async function PATCH(request: NextRequest, { params }: { params: Promise<
   }
 }
 
-export async function DELETE(_req: Request, { params }: { params: Promise<{ id: string }> }) {
+export async function DELETE(_request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   try {
     await Prisma.pengguna.delete({ where: { id_pengguna: parseInt((await params).id, 10) }});
     return NextResponse.json({ message: "Data surveyor berhasil dihapus." }, { status: 200 });
