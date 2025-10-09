@@ -26,6 +26,27 @@ Bersama ini, kami lampirkan seluruh berkas dan dokumen yang diperlukan untuk pro
 
    [Akses Surat Pernyataan](https://drive.google.com/file/d/1I91ReLGyzJSM9vwy7IJRF1R3oMgzSgoF/view?usp=drive_link)
 
+6. Kunci Akses SICUPANG
+   [Kunci Akses](https://github.com/alyfazeha/SICUPANG/blob/main/public/data/username-password-sicupang.xlsx)
+
+   Jika tidak bisa, maka bisa gunakan ini.
+
+   **ADMIN**
+
+   NIP: 1234567890
+
+   Kata Sandi: WRI@explore
+
+   <br />
+
+   **SURVEYOR (Kecamatan Pakis)**
+
+   NIP: 198409212017062001
+
+   Kata Sandi: 21091984
+
+   <br />
+
 Demikian informasi yang dapat kami sampaikan. Atas perhatian Bapak/Ibu Dewan Juri KMIPN VII Tahun 2025, kami ucapkan terima kasih.
 
 Hormat kami,
