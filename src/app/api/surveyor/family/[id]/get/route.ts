@@ -1,7 +1,7 @@
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { Prisma } from "@/lib/prisma";
 
-export async function GET(context: { params: Promise<{ id: string }> }): Promise<NextResponse> {
+export async function GET(_request: NextRequest, context: { params: Promise<{ id: string }> }): Promise<NextResponse> {
   try {
     const { id } = await context.params;
     const family = await Prisma.keluarga.findUnique({ where: { id_keluarga: parseInt(id, 10) } });

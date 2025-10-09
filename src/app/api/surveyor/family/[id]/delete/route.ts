@@ -1,10 +1,10 @@
 import { unlink } from "fs/promises";
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { join } from "path";
 import { cwd } from "process";
 import { Prisma } from "@/lib/prisma";
 
-export async function DELETE(_request: Request, context: { params: Promise<{ id: string }> }): Promise<NextResponse> {
+export async function DELETE(_request: NextRequest, context: { params: Promise<{ id: string }> }): Promise<NextResponse> {
   try {
     const { id } = await context.params;
 
