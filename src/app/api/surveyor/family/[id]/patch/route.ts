@@ -68,7 +68,7 @@ export async function PATCH(request: NextRequest, { params }: { params: Promise<
     let newImageUrl = oldFamilyData?.gambar;
 
     if (file && file.size > 0) {
-      const blob = await put(file.name, file, { access: "public" });
+      const blob = await put(file.name, file, { access: "public", addRandomSuffix: true });
       newImageUrl = blob.url;
 
       if (oldFamilyData?.gambar) {

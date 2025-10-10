@@ -1,9 +1,7 @@
 import { put } from "@vercel/blob";
-import { mkdir, writeFile } from "fs/promises";
 import { jwtVerify } from "jose";
 import { cookies } from "next/headers";
 import { NextRequest, NextResponse } from "next/server";
-import { join } from "path";
 import { z } from "zod";
 import { API_SURVEYOR_ADD_DATA_FAMILY, SURVEYOR_ADD_DATA_FAMILY, SURVEYOR_FAMILY } from "@/constants/routes";
 import { AUTH_TOKEN } from "@/constants/token";
@@ -84,7 +82,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
       return NextResponse.json({ message: "Foto wajib diunggah." }, { status: 400 });
     }
 
-    const blob = await put(file.name, file, { access: 'public' });
+    const blob = await put(file.name, file, { access: "public", addRandomSuffix: true });
 
     // ✅ Convert FormData ke object JS
     const values: Record<string, string> = {};
@@ -135,15 +133,6 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
     if (!parsed.success) {
       return NextResponse.json({ errors: parsed.error.issues }, { status: 400 });
     }
-
-    // ✅ Simpan file
-    const formattedDate = `${String(new Date().getDate()).padStart(2, "0")}-${String(new Date().getMonth() + 1).padStart(2, "0")}-${new Date().getFullYear()}`;
-    const nameWithoutExtension = file.name.replace(/\.[^/.]+$/, "").toLowerCase().replace(/[\s_]+/g, "-").replace(/[^a-z0-9-]/g, "-");
-    const extension = file.name.split(".").pop()?.toLowerCase();
-    const filename = `${formattedDate}-${nameWithoutExtension}.${extension}`;
-
-    await mkdir(join(process.cwd(), "public", "storage", "family"), { recursive: true });
-    await writeFile(join(process.cwd(), "public", "storage", "family", filename), Buffer.from(await file.arrayBuffer()));
 
     const keluarga = await Prisma.keluarga.create({
       data: {
