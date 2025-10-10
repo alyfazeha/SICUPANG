@@ -15,6 +15,7 @@
     "@pinecone-database/pinecone": "^6.1.2",
     "@prisma/client": "^6.13.0",
     "@radix-ui/react-slot": "^1.2.3",
+    "@vercel/blob": "^2.0.0",
     "bcrypt": "^6.0.0",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",

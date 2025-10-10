@@ -1,17 +1,16 @@
-import { mkdir, unlink, writeFile, access } from "fs/promises";
-import { constants } from "fs";
+import { put, del } from "@vercel/blob";
+import { NextRequest, NextResponse } from "next/server";
 import { jwtVerify } from "jose";
 import { cookies } from "next/headers";
-import { NextRequest, NextResponse } from "next/server";
-import { join } from "path";
 import { z } from "zod";
-import { API_SURVEYOR_EDIT_DATA_FAMILY, SURVEYOR_FAMILY } from "@/constants/routes";
-import { AUTH_TOKEN } from "@/constants/token";
 import { Prisma } from "@/lib/prisma";
+import { AUTH_TOKEN } from "@/constants/token";
+import { SURVEYOR_FAMILY } from "@/constants/routes";
+import { extractAndSaveIngredients } from "@/services/ingredient-extract";
 import type { Auth } from "@/types/auth";
 import type { Foodstuff } from "@/types/family";
 
-export async function PATCH(request: NextRequest, context: { params: Promise<{ id: string }> }) {
+export async function PATCH(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   try {
     const token = (await cookies()).get(AUTH_TOKEN)?.value;
     if (!token) return NextResponse.json({ error: "Pengguna tidak terautentikasi" }, { status: 401 });
@@ -20,16 +19,15 @@ export async function PATCH(request: NextRequest, context: { params: Promise<{ i
     const { payload } = await jwtVerify(token, secret);
     const decoded = payload as unknown as Auth;
 
-    if (!decoded.id_pengguna) return NextResponse.json({ message: "Token surveyor tidak valid" }, { status: 401 });
-
     const user = await Prisma.pengguna.findUnique({ where: { id_pengguna: decoded.id_pengguna } });
     if (!user) return NextResponse.json({ message: "Pengguna tidak ditemukan" }, { status: 404 });
 
-    const formData = await request.formData();
-    const { params } = context;
     const { id } = await params;
     const id_keluarga = Number(id);
     if (!id_keluarga) return NextResponse.json({ message: "ID keluarga tidak valid" }, { status: 400 });
+
+    const formData = await request.formData();
+    const file = formData.get("photo") as File | null;
 
     const values: Record<string, string> = {};
     formData.forEach((value, key) => {
@@ -45,7 +43,6 @@ export async function PATCH(request: NextRequest, context: { params: Promise<{ i
       }
     }
 
-    // Validasi data text
     const validate = z.object({
       id_district: z.string(),
       id_surveyor: z.string().nullable(),
@@ -63,85 +60,53 @@ export async function PATCH(request: NextRequest, context: { params: Promise<{ i
 
     const parsed = validate.safeParse(values);
     if (!parsed.success) {
-      console.error(`❌ Error VALIDATION ${API_SURVEYOR_EDIT_DATA_FAMILY(id)}:`, parsed.error.issues);
+      console.error(`❌ Error VALIDATION /api/surveyor/family/${id}/patch: `, parsed.error.issues);
       return NextResponse.json({ errors: parsed.error.issues }, { status: 400 });
     }
 
-    const file = formData.get("photo") as File | null;
-    let filename: string | undefined;
+    const oldFamilyData = await Prisma.keluarga.findUnique({ where: { id_keluarga }, select: { gambar: true } });
+    let newImageUrl = oldFamilyData?.gambar;
+
     if (file && file.size > 0) {
-      if (!["image/jpeg", "image/jpg", "image/png"].includes(file.type) || file.size > 5 * 1024 * 1024) {
-        return NextResponse.json({ message: "File bukan gambar atau terlalu besar." }, { status: 400 });
+      const blob = await put(file.name, file, { access: "public" });
+      newImageUrl = blob.url;
+
+      if (oldFamilyData?.gambar) {
+        try {
+          await del(oldFamilyData.gambar);
+        } catch (delError) {
+          console.warn(`Gagal menghapus file lama dari Blob: ${delError}`);
+        }
       }
-
-      const formattedDate = `${String(new Date().getDate()).padStart(2, "0")}-${String(new Date().getMonth() + 1).padStart(2, "0")}-${new Date().getFullYear()}`;
-      const nameWithoutExtension = file.name.replace(/\.[^/.]+$/, "").toLowerCase().replace(/[\s_]+/g, "-").replace(/[^a-z0-9-]/g, "-");
-      const extension = file.name.split(".").pop()?.toLowerCase();
-      filename = `${formattedDate}-${nameWithoutExtension}.${extension}`;
-
-      await mkdir(join(process.cwd(), "public", "storage", "family"), { recursive: true });
-      await writeFile(join(process.cwd(), "public", "storage", "family", filename), Buffer.from(await file.arrayBuffer()));
     }
 
-    await Prisma.$transaction(async (tx) => {
-      const old = await tx.keluarga.findUnique({
-        where: { id_keluarga },
-        select: { gambar: true },
-      });
-      await tx.keluarga.update({
-        where: { id_keluarga },
-        data: {
-          id_kecamatan: Number(user.id_kecamatan),
-          id_pengguna: decoded.id_pengguna,
-          nama_kepala_keluarga: parsed.data.name,
-          nomor_kartu_keluarga: parsed.data.family_card_number,
-          id_desa: Number(parsed.data.village),
-          alamat: parsed.data.address,
-          jumlah_keluarga: Number(parsed.data.members),
-          rentang_pendapatan: Number(parsed.data.income),
-          rentang_pengeluaran: Number(parsed.data.spending),
-          hamil: parsed.data.pregnant,
-          menyusui: parsed.data.breastfeeding,
-          balita: parsed.data.toddler,
-          ...(filename && { gambar: `/storage/family/${filename}` }),
-        },
-      });
-
-      await tx.pangan_keluarga.deleteMany({ where: { id_keluarga } });
-
-      for (const food of foodstuff) {
-        const foodsRecord = await tx.pangan.findFirst({
-          where: { nama_pangan: { equals: food.name }},
-          select: { id_pangan: true },
-        });
-
-        if (foodsRecord) {
-          await tx.pangan_keluarga.create({
-            data: {
-              id_keluarga,
-              id_pangan: foodsRecord.id_pangan,
-              nama_pangan: food.name,
-              urt: food.portion,
-              tanggal: new Date(),
-            },
-          });
-        } else {
-          console.warn(`[EDIT] Pangan dengan nama "${food.name}" tidak ditemukan dan dilewati.`);
-        }
-      }
-
-      if (old?.gambar && filename) {
-        const oldPath = join(process.cwd(), "public", old.gambar.replace(/^\/+/, ""));
-        try {
-          await access(oldPath, constants.F_OK);
-          await unlink(oldPath);
-        } catch {
-          console.warn(`File lama tidak ditemukan: ${oldPath}`);
-        }
-      }
+    await Prisma.keluarga.update({
+      where: { id_keluarga },
+      data: {
+        id_kecamatan: Number(user.id_kecamatan),
+        id_pengguna: decoded.id_pengguna,
+        nama_kepala_keluarga: parsed.data.name,
+        nomor_kartu_keluarga: parsed.data.family_card_number,
+        id_desa: Number(parsed.data.village),
+        alamat: parsed.data.address,
+        jumlah_keluarga: Number(parsed.data.members),
+        rentang_pendapatan: Number(parsed.data.income),
+        rentang_pengeluaran: Number(parsed.data.spending),
+        hamil: parsed.data.pregnant,
+        menyusui: parsed.data.breastfeeding,
+        balita: parsed.data.toddler,
+        gambar: newImageUrl,
+      },
     });
 
-    return NextResponse.redirect(new URL(SURVEYOR_FAMILY, process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000"));
+    await Prisma.pangan_keluarga.deleteMany({ where: { id_keluarga } });
+
+    if (foodstuff && foodstuff.length > 0) {
+      const itemsToProcess = foodstuff.map((food) => ({ food_name: food.name, portion: food.portion }));
+      extractAndSaveIngredients(id_keluarga, itemsToProcess).catch((err) => console.error(`Gagal menjalankan ekstraksi AI di latar belakang (edit): ${err}`));
+    }
+
+    return NextResponse.redirect(new URL(SURVEYOR_FAMILY, request.url), 303);
   } catch (err) {
     console.error("Gagal mengedit data keluarga:", err);
     return NextResponse.json({ message: "Gagal mengedit data keluarga" }, { status: 500 });

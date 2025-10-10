@@ -1,16 +1,16 @@
-// src/app/api/auth/account/route.ts
-import { Prisma } from "@/lib/prisma";
-import { cookies } from "next/headers";
 import { jwtVerify } from "jose";
+import { cookies } from "next/headers";
+import { NextResponse } from "next/server";
+import { Prisma } from "@/lib/prisma";
 import { AUTH_TOKEN } from "@/constants/token";
 import type { Auth } from "@/types/auth";
 
-export async function GET(): Promise<Response> {
+export async function GET(): Promise<NextResponse> {
   try {
     const token = (await cookies()).get(AUTH_TOKEN)?.value;
 
     if (!token) {
-      return new Response(JSON.stringify({ data: null }), { status: 401 });
+      return NextResponse.json({ error: "Pengguna tidak terautentikasi" }, { status: 401 });
     }
 
     const secret = new TextEncoder().encode(process.env.JWT_SECRET as string);
@@ -22,9 +22,9 @@ export async function GET(): Promise<Response> {
       select: { nama_lengkap: true, nip: true },
     });
 
-    return new Response(JSON.stringify({ data: pengguna }), { status: 200 });
+    return NextResponse.json({ data: pengguna }, { status: 200 });
   } catch (err: unknown) {
     console.error(`Server gagal mengambil data pengguna karena ${err}`);
-    return new Response(JSON.stringify({ error: "Gagal mengambil data pengguna" }), { status: 500 });
+    return NextResponse.json({ error: "Gagal mengambil data pengguna" }, { status: 500 });
   }
 }

@@ -9,11 +9,11 @@ export async function extractAndSaveIngredients(idFamily: number, items: { food_
   const pinecone = new Pinecone({ apiKey: process.env.PINECONE_API_KEY! });
   const index = pinecone.index(process.env.PINECONE_INDEX_NAME!);
   const embeddings = new OpenAIEmbeddings({ modelName: "text-embedding-3-small" });
-  
+
   if (!process.env.GOOGLE_API_KEY || !process.env.PINECONE_API_KEY || !process.env.PINECONE_INDEX_NAME) {
     throw new Error("Missing required environment variables for Google API or Pinecone.");
   }
-  
+
   const SYSTEM_INSTRUCTION = `
     You are an expert nutritionist assistant. Your task is to map all given recipes into a structured JSON data format. Provide ONLY one JSON object in your entire output.
   

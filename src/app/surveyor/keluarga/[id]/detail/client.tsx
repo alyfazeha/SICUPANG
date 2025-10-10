@@ -75,6 +75,7 @@ export default function Page({ family }: { family: Omit<Family, "created_at" | "
         width={1920}
         height={1080}
         className="h-100 w-full rounded-2xl border border-gray-200 bg-no-repeat object-cover object-center p-6"
+        loading="lazy"
       />
     </figure>
   );

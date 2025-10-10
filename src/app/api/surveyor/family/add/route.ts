@@ -1,3 +1,4 @@
+import { put } from "@vercel/blob";
 import { mkdir, writeFile } from "fs/promises";
 import { jwtVerify } from "jose";
 import { cookies } from "next/headers";
@@ -83,6 +84,8 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
       return NextResponse.json({ message: "Foto wajib diunggah." }, { status: 400 });
     }
 
+    const blob = await put(file.name, file, { access: 'public' });
+
     // ✅ Convert FormData ke object JS
     const values: Record<string, string> = {};
     formData.forEach((value, key) => {
@@ -156,7 +159,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
         hamil: parsed.data.pregnant,
         menyusui: parsed.data.breastfeeding,
         balita: parsed.data.toddler,
-        gambar: `/storage/family/${filename}`,
+        gambar: blob.url,
       },
     });
 
