@@ -71,10 +71,10 @@ export default function Header({ isOpen, setIsOpen, title }: { isOpen: boolean; 
         </header>
       ) : (
         <header className="fixed top-0 right-0 left-0 z-50 container mx-auto pt-8">
-          <section className="border-primary/20 mx-auto flex w-[92%] items-center justify-between rounded-lg border bg-white/95 px-8 py-4 backdrop-blur-lg transition-all duration-300">
+          <section className="border-primary/20 mx-auto flex w-[92%] items-center justify-between rounded-lg border bg-white/95 p-4 backdrop-blur-lg transition-all duration-300 lg:px-8">
             <div className="flex cursor-pointer items-center gap-2">
               <Image src="/images/favicon.svg" alt="Logo SICUPANG" width={36} height={36} className="object-contain" />
-              <h1 className="text-lg font-bold text-gray-800">SICUPANG</h1>
+              <h1 className="hidden text-lg font-bold text-gray-800 lg:inline">SICUPANG</h1>
             </div>
             <nav className="hidden items-center gap-8 font-medium text-gray-700 md:flex">
               <Link href={LOGIN} className="bg-primary hover:bg-primary/90 rounded-md px-5 py-2 text-sm text-white shadow transition">
@@ -82,7 +82,9 @@ export default function Header({ isOpen, setIsOpen, title }: { isOpen: boolean; 
               </Link>
             </nav>
             <div className="md:hidden">
-              <Menu className="h-6 w-6 cursor-pointer text-gray-700" />
+              <Link href={LOGIN} className="bg-primary hover:bg-primary/90 px-5 py-3 rounded-md text-sm text-white shadow transition">
+                Masuk
+              </Link>
             </div>
           </section>
         </header>

@@ -37,9 +37,8 @@ export default function Beranda() {
   return (
     <>
       {/* Hero */}
-      <section className="relative mx-auto max-w-5xl cursor-default px-6 pt-40 pb-20 text-center">
+      <section className="relative mx-auto cursor-default pt-40 pb-20 text-center lg:max-w-5xl lg:px-6">
         <div className="bg-primary/10 absolute top-[-60px] left-[-60px] z-0 h-[180px] w-[180px] rounded-full blur-xl" />
-        <div className="bg-accent/20 absolute right-[-80px] bottom-[-80px] z-0 h-[220px] w-[220px] rounded-full blur-xl" />
         <div className="absolute top-24 right-8 z-0 grid grid-cols-3 gap-2">
           {Array.from({ length: 9 }).map((_, i) => <span key={i} className="bg-primary block h-2 w-2 animate-pulse rounded-full opacity-30" />)}
         </div>
@@ -61,7 +60,7 @@ export default function Beranda() {
       </section>
 
       {/* Manfaat */}
-      <section className="relative mx-auto max-w-6xl px-6 py-20">
+      <section className="relative mx-auto py-10 lg:max-w-6xl lg:px-6 lg:py-20">
         <div className="bg-primary/10 absolute -top-10 -left-10 h-32 w-32 rounded-full blur-2xl" />
         <div className="bg-accent/20 absolute right-0 -bottom-12 h-40 w-40 rounded-full blur-3xl" />
         <Star className="text-primary/20 absolute top-12 right-16 h-8 w-8 animate-pulse" />

@@ -12,11 +12,11 @@ Bersama ini, kami lampirkan seluruh berkas dan dokumen yang diperlukan untuk pro
 
    Aplikasi Web: https://github.com/alyfazeha/SICUPANG
 
-   Layanan AI: https://github.com/Atherizz/rag-sicupang
+   Layanan AI: https://github.com/Atherizz/RAG-sicupang-prod
 
 3. Berkas Presentasi
 
-   [Akses Berkas Presentasi](https://drive.google.com/file/d/11GYbZKRjOqODtkPnlU388QKzCoNt7-DH/view?usp=drive_link)
+   [Akses Berkas Presentasi](https://www.figma.com/slides/5xJbqLK3aWsONQtF9qD0cF/E-Government_Gatranova_SICUPANG_Politeknik-Negeri-Malang?node-id=1-560&t=PikXCRJRve6lE2Du-1)
 
 4. Bukti Pembayaran Final
 
