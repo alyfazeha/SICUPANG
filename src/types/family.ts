@@ -58,6 +58,7 @@ class Foodstuff {
   id!: number;
   name!: string;
   portion!: number;
+  unit?: string;
 };
 
 @Interface

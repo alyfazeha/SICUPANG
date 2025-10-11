@@ -20,6 +20,10 @@ export async function GET(): Promise<NextResponse> {
     const { payload } = await jwtVerify(token, secret);
     const decoded = payload as unknown as Auth;
 
+    if (!decoded.id_pengguna) {
+      return NextResponse.json({ message: "Token surveyor tidak valid" }, { status: 401 });
+    }
+
     const surveyor = await Prisma.pengguna.findUnique({
       where: { id_pengguna: decoded.id_pengguna },
       select: { id_kecamatan: true },

@@ -2,9 +2,9 @@ import { Home, TriangleAlert } from "lucide-react";
 import type { Metadata } from "next";
 import { API_SURVEYOR_EDIT_DATA_FAMILY, SURVEYOR_DASHBOARD, SURVEYOR_FAMILY } from "@/constants/routes";
 import { Prisma } from "@/lib/prisma";
-import Page from "./client";
 import { Family } from "@/types/family";
 import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbSeparator } from "@/components/ui/breadcrumb";
+import Page from "@/app/surveyor/keluarga/[id]/edit/client";
 
 export const dynamic = "force-dynamic";
 
@@ -77,7 +77,7 @@ export default async function EditDataKeluarga({ params }: { params: Promise<{ i
       breastfeeding: families.menyusui === "Ya" ? "YA" : "TIDAK",
       toddler: families.balita === "Ya" ? "YA" : "TIDAK",
       photo: families.gambar,
-      foodstuff: (families.pangan_keluarga ?? []).map((food) => ({ id: food.id_pangan_keluarga, name: food.pangan.nama_pangan, portion: Number(food.urt) })),
+      foodstuff: (families.pangan_keluarga ?? []).map((food) => ({ id: food.pangan.id_pangan, name: food.pangan.nama_pangan, portion: Number(food.urt), unit: food.pangan.referensi_urt })),
     };
 
     return (

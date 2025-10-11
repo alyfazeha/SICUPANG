@@ -5,11 +5,30 @@ import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbS
 import { FAMILY_ATTRIBUTES, KEYS_TO_EXCLUDE } from "@/constants/family";
 import { SURVEYOR_DASHBOARD, SURVEYOR_FAMILY } from "@/constants/routes";
 import type { Family } from "@/types/family";
-import { Truncate } from "@/utils/text";
 import Table from "@/components/shared/table";
 import Image from "next/image";
 
 export default function Page({ family }: { family: Omit<Family, "created_at" | "updated_at"> }) {
+  const getUrtBaseValue = (urtString: string): number => {
+    if (!urtString) return 0;
+    const numericPart = urtString.split(" ")[0];
+
+    if (numericPart.includes("/")) {
+      const [numerator, denominator] = numericPart.split("/").map(Number);
+      if (isNaN(numerator) || isNaN(denominator) || denominator === 0) return 0;
+      return numerator / denominator;
+    }
+
+    return isNaN(parseFloat(numericPart)) ? 1 : parseFloat(numericPart);
+  };
+
+  const getUnitName = (urtString: string): string => {
+    if (!urtString) return "";
+    const parts = urtString.split(" ");
+    if (isNaN(parseFloat(parts[0]))) return urtString;
+    return parts.slice(1).join(" ");
+  };
+
   return (
     <figure className="flex w-auto flex-col rounded-xl bg-white p-6">
       <Breadcrumb>
@@ -29,7 +48,7 @@ export default function Page({ family }: { family: Omit<Family, "created_at" | "
           <BreadcrumbSeparator />
           <BreadcrumbItem>
             <h5 className="flex cursor-default items-center font-semibold">
-              {Truncate(`${family.name}`, 15, 50)}
+              {family.name}
             </h5>
           </BreadcrumbItem>
         </BreadcrumbList>
@@ -62,9 +81,9 @@ export default function Page({ family }: { family: Omit<Family, "created_at" | "
         <CookingPot className="mr-4 h-5 w-5" /> Daftar Olahan Pangan
       </h5>
       <Table
-        headers={["No", "Nama Olahan Pangan", "Porsi"]}
-        rows={family.foodstuff.map((foodstuff, index) => [index + 1, foodstuff.name, `${foodstuff.portion} porsi`])}
-        sortable={["Nama Olahan Pangan"]}
+        headers={["No", "Nama Bahan Pangan", "Jumlah (URT)"]}
+        rows={family.foodstuff.map((food, index) => [index + 1, food.name, `${(food.portion * getUrtBaseValue(food.unit || '')).toFixed(1)} ${getUnitName(food.unit || '')}`])}
+        sortable={["Nama Bahan Pangan"]}
       />
       <h5 className="text-primary my-6 flex cursor-default items-center text-lg font-semibold">
         <Camera className="mr-4 h-5 w-5" /> Dokumentasi
@@ -75,7 +94,7 @@ export default function Page({ family }: { family: Omit<Family, "created_at" | "
         width={1920}
         height={1080}
         className="h-100 w-full rounded-2xl border border-gray-200 bg-no-repeat object-cover object-center p-6"
-        loading="lazy"
+        priority={true}
       />
     </figure>
   );

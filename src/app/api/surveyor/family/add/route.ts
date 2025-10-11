@@ -3,10 +3,9 @@ import { jwtVerify } from "jose";
 import { cookies } from "next/headers";
 import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
-import { API_SURVEYOR_ADD_DATA_FAMILY, SURVEYOR_ADD_DATA_FAMILY, SURVEYOR_FAMILY } from "@/constants/routes";
+import { AI_SERVICES_URL, API_SURVEYOR_ADD_DATA_FAMILY, SURVEYOR_ADD_DATA_FAMILY, SURVEYOR_FAMILY } from "@/constants/routes";
 import { AUTH_TOKEN } from "@/constants/token";
 import { Prisma } from "@/lib/prisma";
-import { extractAndSaveIngredients } from "@/services/ingredient-extract";
 import type { Auth } from "@/types/auth";
 import type { Family, Foodstuff } from "@/types/family";
 
@@ -153,8 +152,16 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
     });
 
     if (foodstuff && foodstuff.length > 0) {
-      const itemsToProcess = foodstuff.map(food => ({ food_name: food.name, portion: food.portion }));
-      extractAndSaveIngredients(keluarga.id_keluarga, itemsToProcess).catch(err => console.error(`Gagal menjalankan ekstraksi AI di latar belakang: ${err}`));
+      fetch(`${AI_SERVICES_URL}/api/ingredient-extract`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          family_id: keluarga.id_keluarga,
+          items: foodstuff.map((food) => ({ food_name: food.name, portion: food.portion })),
+        }),
+      }).catch((err) => {
+        console.error("Gagal memicu proses ekstraksi AI di Azure:", err);
+      });
     }
 
     return NextResponse.redirect(new URL(SURVEYOR_FAMILY, request.url), 303);

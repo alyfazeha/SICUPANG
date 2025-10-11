@@ -2,7 +2,8 @@ import { TriangleAlert } from "lucide-react";
 import type { Metadata } from "next";
 import { Prisma } from "@/lib/prisma";
 import type { Family } from "@/types/family";
-import Page from "./client";
+import { Truncate } from "@/utils/text";
+import Page from "@/app/surveyor/keluarga/[id]/detail/client";
 
 export const dynamic = "force-dynamic";
 
@@ -13,14 +14,14 @@ export async function generateMetadata({ params }: { params: Promise<{ id: strin
     const family = await Prisma.keluarga.findUniqueOrThrow({ where: { id_keluarga: parseInt(id, 10) } });
 
     return {
-      title: `${family?.nama_kepala_keluarga ?? ""} | SICUPANG`,
+      title: `Data ${family?.nama_kepala_keluarga ?? ""} | SICUPANG`,
       description: "",
       openGraph: {
-        title: `${family?.nama_kepala_keluarga ?? ""} | SICUPANG`,
+        title: `Data ${family?.nama_kepala_keluarga ?? ""} | SICUPANG`,
         description: "",
       },
       twitter: {
-        title: `${family?.nama_kepala_keluarga ?? ""} | SICUPANG`,
+        title: `Data ${family?.nama_kepala_keluarga ?? ""} | SICUPANG`,
         description: "",
       },
     };
@@ -64,7 +65,7 @@ export default async function DetailDataKeluarga({ params }: { params: Promise<{
       id_district: families.id_kecamatan,
       id_family: families.id_keluarga,
       id_surveyor: families.id_pengguna,
-      name: families.nama_kepala_keluarga,
+      name: Truncate(families.nama_kepala_keluarga, 15, 50),
       family_card_number: families.nomor_kartu_keluarga,
       village: families.desa.nama_desa,
       address: families.alamat,
@@ -75,7 +76,7 @@ export default async function DetailDataKeluarga({ params }: { params: Promise<{
       breastfeeding: families.menyusui === "Ya" ? "YA" : "TIDAK",
       toddler: families.balita === "Ya" ? "YA" : "TIDAK",
       photo: families.gambar,
-      foodstuff: (families.pangan_keluarga ?? []).map((food) => ({ id: food.id_pangan_keluarga, name: food.pangan.nama_pangan, portion: Number(food.urt) })),
+      foodstuff: (families.pangan_keluarga ?? []).map((food) => ({ id: food.id_pangan, name: food.pangan.nama_pangan, portion: Number(food.urt), unit: food.pangan.referensi_urt })),
     };
 
     return <Page family={family} />;

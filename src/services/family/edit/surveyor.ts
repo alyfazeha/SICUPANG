@@ -18,8 +18,8 @@ class EditFamiliesData extends BaseForm {
     const name = form.id_foods?.trim();
     const portion = form.portion ?? 0;
 
-    if (!name || !portion) {
-      alert("Nama olahan pangan dan porsi wajib diisi!");
+    if (!name || portion <= 0) {
+      alert("Nama olahan pangan dan porsi wajib diisi dengan benar!");
       return;
     }
 
@@ -28,13 +28,16 @@ class EditFamiliesData extends BaseForm {
       return;
     }
 
-    const foodstuff: Foodstuff = { id: Date.now(), name, portion };
-    setForm({ ...form, foodstuff: [...form.foodstuff, foodstuff], id_foods: "", portion: undefined });
-    setFoodsList([...foodsList, foodstuff]);
+    setFoodsList([...foodsList, { id: Date.now(), name, portion } as Foodstuff]);
+    setForm({ ...form, foodstuff: [...foodsList, { id: Date.now(), name, portion } as Foodstuff], id_foods: "", portion: 0 });
   }
 
-  public static mappingFoods<T>(family: Omit<Family, "created_at" | "updated_at">, setForm: Dispatch<SetStateAction<T>>, setFoodsList: Dispatch<SetStateAction<Foodstuff[]>>) {
-    if (!family.foodstuff || family.foodstuff.length === 0) return setFoodsList([] as Foodstuff[]);
+  public static mappingFoods(family: Omit<Family, "created_at" | "updated_at">, setForm: Dispatch<SetStateAction<Omit<Family, "id_family" | "created_at" | "updated_at">>>, setFoodsList: Dispatch<SetStateAction<Foodstuff[]>>) {
+    if (!family.foodstuff || family.foodstuff.length === 0) {
+      setFoodsList([]);
+      return;
+    }
+
     setForm((prev) => ({ ...prev, foodstuff: family.foodstuff }));
     setFoodsList(family.foodstuff);
   }

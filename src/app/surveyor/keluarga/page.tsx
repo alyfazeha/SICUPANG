@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { FaCircleInfo } from "react-icons/fa6";
 import { SURVEYOR_ADD_DATA_FAMILY } from "@/constants/routes";
 import Link from "next/link";
-import Page from "./client";
+import Page from "@/app/surveyor/keluarga/client";
 
 export const dynamic = "force-dynamic";
 
@@ -41,14 +41,9 @@ export default function Keluarga() {
           keluarga. Data yang konsisten akan mendukung ketahanan pangan di
           Kabupaten Malang.
         </h5>
-        <span className="mt-5 ml-auto flex gap-2 text-xs font-medium">
-          <Link href={SURVEYOR_ADD_DATA_FAMILY} className="rounded-md bg-blue-500 px-5 py-2.5 text-white transition hover:bg-blue-600">
-            Isi Sekarang
-          </Link>
-          <Link href="/pengguna/rekap-kesehatan/lihat-panduan" className="rounded-md border border-blue-400 px-5 py-2.5 text-blue-500 transition hover:bg-blue-100">
-            Lihat Panduan
-          </Link>
-        </span>
+        <Link href={SURVEYOR_ADD_DATA_FAMILY} className="mt-5 ml-auto rounded-md bg-blue-500 px-5 py-2.5 text-xs font-medium text-white transition hover:bg-blue-600">
+          Isi Sekarang
+        </Link>
       </figure>
       <Page />
     </>

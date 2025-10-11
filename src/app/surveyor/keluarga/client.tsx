@@ -18,6 +18,7 @@ export default function Page() {
     (async () => {
       try {
         const response = await axios.get<{ family: Family[] }>(API_SURVEYOR_FAMILY);
+        if (response.status === 404) console.warn(`❌ Data keluarga tidak ditemukan: ${response.statusText}`);
         setData(response.data.family);
       } catch (err: unknown) {
         console.warn(`❌ Error GET ${API_SURVEYOR_FAMILY}: ${err}`);

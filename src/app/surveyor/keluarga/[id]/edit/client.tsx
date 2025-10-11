@@ -258,7 +258,7 @@ export default function Page({ family }: { family: Omit<Family, "created_at" | "
         <button
           type="button"
           onClick={() => AddFoodToList(foodsList, form, setForm, setFoodsList)}
-          className="bg-primary duratio-300 hover:bg-primary/80 mt-auto cursor-pointer self-center rounded-lg px-10 py-4 text-sm text-white transition-all ease-in-out"
+          className="bg-primary duratio-300 hover:bg-primary/80 mt-auto cursor-pointer self-end rounded-lg px-10 py-4 text-sm text-white transition-all ease-in-out"
         >
           Tambah
         </button>

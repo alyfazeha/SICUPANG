@@ -22,22 +22,23 @@ export async function GET(request: NextRequest) {
       return NextResponse.json({ error: "Kecamatan tidak ditemukan." }, { status: 404 });
     }
 
+// SESUDAH (PostgreSQL)
     const pphQuery: Pph[] = await Prisma.$queryRaw`
-        SELECT 
-          k.nama_kecamatan,
-          jp.nama_jenis,
-          (SUM(p.kalori * pk.urt) / kl.jumlah_keluarga) AS kalori_per_orang,
-          (SUM(p.lemak * pk.urt) / kl.jumlah_keluarga) AS lemak_per_orang,
-          (SUM(p.karbohidrat * pk.urt) / kl.jumlah_keluarga) AS karbo_per_orang,
-          (SUM(p.protein * pk.urt) / kl.jumlah_keluarga) AS protein_per_orang
-        FROM pangan_keluarga pk
-        JOIN keluarga kl ON pk.id_keluarga = kl.id_keluarga
-        JOIN pangan p ON pk.id_pangan = p.id_pangan
-        JOIN jenis_pangan jp ON p.id_jenis_pangan = jp.id_jenis_pangan
-        JOIN kecamatan k ON kl.id_kecamatan = k.id_kecamatan
-        WHERE kl.id_kecamatan = ${Number(idDistrict)} AND YEAR(pk.tanggal) = ${Number(year)}
-        GROUP BY k.nama_kecamatan, jp.nama_jenis, kl.jumlah_keluarga
-        ORDER BY jp.nama_jenis ASC;
+      SELECT 
+        k.nama_kecamatan,
+        jp.nama_jenis,
+        (SUM(p.kalori * pk.urt) / kl.jumlah_keluarga) AS kalori_per_orang,
+        (SUM(p.lemak * pk.urt) / kl.jumlah_keluarga) AS lemak_per_orang,
+        (SUM(p.karbohidrat * pk.urt) / kl.jumlah_keluarga) AS karbo_per_orang,
+        (SUM(p.protein * pk.urt) / kl.jumlah_keluarga) AS protein_per_orang
+      FROM pangan_keluarga pk
+      JOIN keluarga kl ON pk.id_keluarga = kl.id_keluarga
+      JOIN pangan p ON pk.id_pangan = p.id_pangan
+      JOIN jenis_pangan jp ON p.id_jenis_pangan = jp.id_jenis_pangan
+      JOIN kecamatan k ON kl.id_kecamatan = k.id_kecamatan
+      WHERE kl.id_kecamatan = ${Number(idDistrict)} AND EXTRACT(YEAR FROM pk.tanggal) = ${Number(year)}
+      GROUP BY k.nama_kecamatan, jp.nama_jenis, kl.jumlah_keluarga
+      ORDER BY jp.nama_jenis ASC;
     `;
 
     if (pphQuery.length === 0) {
