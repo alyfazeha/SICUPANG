@@ -45,13 +45,11 @@ export default function Page() {
         </span>
       </section>
       <Table
-        headers={["Nama Kepala Keluarga", "Nomor Kartu Keluarga", "Desa", "Status", "Komentar", "Aksi"]}
+        headers={["Nama Kepala Keluarga", "Nomor Kartu Keluarga", "Desa", "Aksi"]}
         rows={data.map((family, index) => [
           family.name,
           family.family_card_number,
           family.village,
-          FamilyStatusBadge(family.status as Status),
-          family.comment ?? "-",
           <span key={index} className="flex items-center gap-4">
             <Link href={SURVEYOR_DETAIL_DATA_FAMILY(family.id_family as number)} className="cursor-pointer flex items-center justify-center p-3 bg-blue-500 text-white rounded-lg transition-colors duration-150 shadow-sm hover:bg-blue-600 text-xs">
               <FaCircleInfo className="h-3.5 w-3.5" />
