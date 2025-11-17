@@ -4,7 +4,7 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
+  provider = "mysql"
   url      = env("DATABASE_URL")
 }
 
@@ -151,18 +151,16 @@ model resep_makanan {
   @@index([id_resep_vektor_db])
 }
 
-// Model di bawah ini diabaikan oleh Prisma, jadi tidak perlu diubah,
-// tapi atribut @db yang spesifik MySQL dihapus untuk kebersihan.
 model migrations {
   id        Int
-  migration String @db.VarChar(255)
+  migration String
   batch     Int
 
   @@ignore
 }
 
 model cache {
-  key        String @db.VarChar(255)
+  key        String
   value      String
   expiration Int
 
@@ -170,8 +168,8 @@ model cache {
 }
 
 model cache_locks {
-  key        String @db.VarChar(255)
-  owner      String @db.VarChar(255)
+  key        String
+  owner      String
   expiration Int
 
   @@ignore

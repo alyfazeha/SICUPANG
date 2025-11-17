@@ -26,3 +26,4 @@ venv
 prisma/migrations
 storage/
 .vercel
+test-results
